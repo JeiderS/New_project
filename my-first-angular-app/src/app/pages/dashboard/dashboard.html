@@ -1,0 +1,97 @@
+<div class="flex min-h-screen bg-white dark:bg-gray-900">
+  <aside
+    class="w-64 bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-6 hidden lg:flex flex-col border-r border-gray-200 dark:border-white/10"
+  >
+    <div class="flex items-center gap-3 mb-10">
+      <img
+        src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+        class="h-8 w-auto dark:hidden"
+      />
+      <img
+        src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+        class="h-8 w-auto not-dark:hidden"
+      />
+      <span class="text-xl font-bold tracking-tight">Mi Empresa</span>
+    </div>
+
+    <nav class="flex flex-col gap-2">
+      <a
+        href="#"
+        class="bg-indigo-600 text-white px-3 py-2 rounded-md text-sm font-semibold shadow-sm"
+      >
+        Inicio
+      </a>
+
+      <a
+        href="#"
+        class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+      >
+        Proyectos
+      </a>
+
+      <a
+        href="#"
+        class="text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+      >
+        Configuración
+      </a>
+    </nav>
+
+    <div class="mt-auto pt-6 border-t border-gray-200 dark:border-white/10 overflow-visible">
+      <div class="relative group">
+        <div
+          class="absolute bottom-full left-0 w-full pb-2 hidden group-hover:block z-50 transition-all"
+        >
+          <div
+            class="bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-white/10 overflow-hidden"
+          >
+            <button
+              (click)="signOut()"
+              type="button"
+              class="w-full text-left px-4 py-2 text-sm text-red-600 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+            >
+              Cerrar sesión
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="flex items-center gap-3 cursor-pointer p-2 -m-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+        >
+          <div class="relative">
+            <img
+              src="https://i.pravatar.cc/40"
+              alt="Avatar"
+              class="h-9 w-9 rounded-full border border-gray-300 dark:border-white/20"
+            />
+            <span
+              class="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white dark:ring-gray-900"
+            ></span>
+          </div>
+
+          <div class="flex flex-col">
+            <span class="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
+              Admin
+            </span>
+            <span class="text-xs text-gray-500 dark:text-gray-400"> Administrador </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="flex-1 bg-white dark:bg-gray-900 p-10">
+    <header class="mb-8">
+      <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+        Panel de Control
+      </h1>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Bienvenido de nuevo a tu cuenta.</p>
+    </header>
+
+    <div
+      class="rounded-lg border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 p-6"
+    >
+      <p class="text-gray-700 dark:text-gray-300">Tu contenido principal aquí...</p>
+    </div>
+  </main>
+</div>
