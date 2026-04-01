@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SupabaseService } from '../../services/supabase.service';
 import { Router } from '@angular/router';
+import { AlertHelper } from '../../helper/alert.helper';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class Login {
     private readonly supabase: SupabaseService,
     private readonly formBuilder: FormBuilder,
     private readonly router: Router,
+    private readonly alert: AlertHelper,
   ) {
     this.initForm();
   }
@@ -40,9 +42,7 @@ export class Login {
       if (error) throw error;
       this.router.navigate(['/dashboard']);
     } catch (error) {
-      if (error instanceof Error) {
-        alert('Error: ' + error.message);
-      }
+      this.alert.showError(error, 'No se pudo iniciar sesion');
     } finally {
       this.loading = false;
     }

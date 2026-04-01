@@ -1,0 +1,55 @@
+<div class="admin-shell">
+  <header class="admin-header">
+    <div>
+      <p class="admin-kicker">Panel de administracion</p>
+      <h1>Control global de plataforma</h1>
+      <p>
+        Supervisa metricas globales y define la configuracion general para mantener estabilidad
+        operativa.
+      </p>
+    </div>
+    <button type="button">Guardar cambios</button>
+  </header>
+
+  <section class="admin-metrics">
+    @for (metric of metrics; track metric.label) {
+      <article class="admin-metric-card">
+        <p>{{ metric.label }}</p>
+        <h2>{{ metric.value }}</h2>
+        <span [class.is-positive]="metric.trendType === 'positive'" [class.is-warning]="metric.trendType === 'warning'">
+          {{ metric.trend }}
+        </span>
+      </article>
+    }
+  </section>
+
+  <section class="admin-grid">
+    <article class="admin-card">
+      <h3>Configuracion general</h3>
+      <ul>
+        @for (setting of settings; track setting.title) {
+          <li>
+            <div>
+              <strong>{{ setting.title }}</strong>
+              <p>{{ setting.description }}</p>
+            </div>
+            <label class="admin-toggle">
+              <input type="checkbox" [checked]="setting.enabled" />
+              <span></span>
+            </label>
+          </li>
+        }
+      </ul>
+    </article>
+
+    <article class="admin-card">
+      <h3>Resumen rapido</h3>
+      <ul class="admin-summary">
+        <li><span>Version de app</span><strong>v1.4.2</strong></li>
+        <li><span>Ultimo deploy</span><strong>Hoy, 11:35</strong></li>
+        <li><span>Uptime</span><strong>99.93%</strong></li>
+        <li><span>Backups diarios</span><strong>Completados</strong></li>
+      </ul>
+    </article>
+  </section>
+</div>

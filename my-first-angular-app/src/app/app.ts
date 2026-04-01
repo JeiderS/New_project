@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { AlertHelper } from './helper/alert.helper';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,10 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('my-first-angular-app');
+
+  constructor(readonly alertHelper: AlertHelper) {}
+
+  closeAlert(): void {
+    this.alertHelper.close();
+  }
 }

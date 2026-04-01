@@ -1,0 +1,134 @@
+.products-shell {
+  min-height: 100vh;
+  padding: 1.25rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.products-header {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.78);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.products-kicker {
+  margin: 0;
+  color: var(--accent-route-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.products-header h1 {
+  margin: 0.38rem 0 0;
+  font-size: clamp(1.35rem, 3vw, 2rem);
+}
+
+.products-header p {
+  margin: 0.4rem 0 0;
+  color: var(--ink-secondary);
+}
+
+.products-card {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.78);
+  padding: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.products-toolbar {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.products-toolbar label {
+  font-size: 0.83rem;
+  color: var(--ink-tertiary);
+  font-weight: 600;
+}
+
+.products-toolbar input {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-2);
+  color: var(--ink-primary);
+  font: inherit;
+  padding: 0.6rem 0.68rem;
+}
+
+.products-toolbar input:focus-visible {
+  outline: 2px solid rgba(15, 118, 110, 0.32);
+  outline-offset: 1px;
+}
+
+.products-grid {
+  width: 100%;
+  height: 420px;
+  --ag-background-color: rgba(255, 255, 255, 0.3);
+  --ag-foreground-color: var(--ink-primary);
+  --ag-header-background-color: var(--surface-elev-1);
+  --ag-header-foreground-color: var(--ink-primary);
+  --ag-border-color: var(--border-soft);
+  --ag-row-border-color: rgba(71, 85, 105, 0.12);
+  --ag-font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --ag-cell-horizontal-padding: 10px;
+  --ag-wrapper-border-radius: var(--radius-sm);
+}
+
+:host ::ng-deep .product-status {
+  font-weight: 700;
+}
+
+:host ::ng-deep .status-activo {
+  color: var(--success);
+}
+
+:host ::ng-deep .status-bajo-stock,
+:host ::ng-deep .status-sin-stock {
+  color: #9a3412;
+}
+
+:host ::ng-deep .status-inactivo {
+  color: var(--ink-tertiary);
+}
+
+.products-empty {
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-1);
+  min-height: 180px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 0.35rem;
+  padding: 1rem;
+}
+
+.products-empty h2,
+.products-empty p {
+  margin: 0;
+}
+
+.products-empty h2 {
+  font-size: 1.05rem;
+}
+
+.products-empty p {
+  color: var(--ink-secondary);
+}
+
+@media (min-width: 980px) {
+  .products-shell {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "angular-architect": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "computedHash": "22612f3693ee5dec28370502d07ceceaed81f2856ba128ea4c0b06ab3ae4ad54"
+    },
+    "interface-design": {
+      "source": "dammyjay93/interface-design",
+      "sourceType": "github",
+      "computedHash": "4d5fe1dacfebc0c1b3837b061405150ed2e4971c096543afc46c23161c5a4f7a"
+    }
+  }
+}

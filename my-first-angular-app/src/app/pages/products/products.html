@@ -1,0 +1,37 @@
+<div class="products-shell">
+  <header class="products-header">
+    <div>
+      <p class="products-kicker">Inventario</p>
+      <h1>Catalogo de productos</h1>
+      <p>Control rapido de productos multirubro para kioscos, almacenes y tiendas de barrio.</p>
+    </div>
+  </header>
+
+  <section class="products-card" aria-label="Inventario de productos">
+    <div class="products-toolbar">
+      <label for="products-search">Buscar</label>
+      <input
+        id="products-search"
+        type="search"
+        placeholder="Buscar por nombre, SKU o categoria"
+        [value]="searchTerm()"
+        (input)="onSearch($any($event.target).value)"
+      />
+    </div>
+
+    @if (hasRows()) {
+      <ag-grid-angular
+        class="ag-theme-quartz products-grid"
+        [rowData]="filteredProducts()"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+      />
+    } @else {
+      <div class="products-empty" role="status" aria-live="polite">
+        <h2>Sin resultados</h2>
+        <p>No encontramos productos con ese criterio. Proba otro texto de busqueda.</p>
+      </div>
+    }
+  </section>
+</div>
