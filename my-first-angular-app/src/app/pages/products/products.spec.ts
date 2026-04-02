@@ -32,6 +32,15 @@ describe('Products', () => {
     expect(rows[0]?.name).toBe('Yerba Mate 1kg');
   });
 
+  it('should filter rows by brand text when available', () => {
+    fixture.componentInstance.onSearch('tranquera');
+    fixture.detectChanges();
+
+    const rows = fixture.componentInstance.filteredProducts();
+    expect(rows.length).toBe(1);
+    expect(rows[0]?.brand).toBe('La Tranquera');
+  });
+
   it('should show empty state when search has no matches', () => {
     fixture.componentInstance.onSearch('producto-que-no-existe');
     fixture.detectChanges();

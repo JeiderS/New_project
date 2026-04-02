@@ -1,15 +1,11 @@
 <div class="admin-shell">
-  <header class="admin-header">
-    <div>
-      <p class="admin-kicker">Panel de administracion</p>
-      <h1>Control global de plataforma</h1>
-      <p>
-        Supervisa metricas globales y define la configuracion general para mantener estabilidad
-        operativa.
-      </p>
-    </div>
+  <app-header
+    kicker="Panel de administracion"
+    title="Control global de plataforma"
+    description="Supervisa metricas globales y define la configuracion general para mantener estabilidad operativa."
+  >
     <button type="button">Guardar cambios</button>
-  </header>
+  </app-header>
 
   <section class="admin-metrics">
     @for (metric of metrics; track metric.label) {

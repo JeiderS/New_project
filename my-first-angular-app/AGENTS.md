@@ -96,52 +96,116 @@ Si este repositorio crece a monorepo:
 
 ## 10) Uso obligatorio de skills (auto-load por contexto)
 
-Este proyecto tiene 2 skills clave que deben cargarse automaticamente cuando aplique:
+Este proyecto tiene skills obligatorias que deben cargarse automaticamente segun el tipo de tarea.
 
-- `angular-architect`
-- `interface-design`
-
-Regla general:
+### 10.1 Regla general de carga
 
 - Si una tarea coincide con un trigger de skill, el agente DEBE cargar ese skill ANTES de proponer cambios o escribir codigo.
-- Si aplican ambos skills, cargar ambos y resolver primero arquitectura/flujo, luego interfaz.
+- Si aplican multiples skills, cargar todas las relevantes y resolver en este orden:
+  1. Estructura/arquitectura
+  2. Tipado y estilo de codigo
+  3. UI/UX
 
-### 10.1 Triggers de `angular-architect`
+### 10.2 Catalogo de skills y cuando cargarlas
 
-Cargar `angular-architect` cuando la tarea incluya alguno de estos puntos:
+#### `angular-architect`
 
-- Crear o refactorizar componentes standalone de Angular.
-- Routing avanzado (lazy loading, guards, resolvers).
-- Estado global/local con Signals, RxJS o NgRx.
-- Performance de Angular (change detection, bundle, code splitting).
-- Testing Angular (unit/integration) de componentes, servicios o guards.
+Cargar cuando la tarea incluya:
+- Componentes standalone Angular.
+- Routing (lazy loading, guards, resolvers).
+- Estado con Signals, RxJS o NgRx.
+- Performance Angular (change detection, code splitting, bundle).
+- Testing Angular de componentes/servicios/guards.
 
-### 10.2 Triggers de `interface-design`
+#### `angular-architecture`
 
-Cargar `interface-design` cuando la tarea incluya:
+Cargar cuando la tarea incluya:
+- Crear o reorganizar estructura de carpetas en `src/app`.
+- Definir limites entre `core`, `features`, `shared`.
+- Decidir si crear carpeta nueva o archivo nuevo.
+- Diseñar estructura por dominio o por rutas de navegacion.
 
+Reglas clave al usarla:
+- Organizar por dominio de negocio (no por tipo tecnico) en `features`.
+- No importar `features` -> `core`.
+- No importar `core/features` -> `shared`.
+
+#### `typescript-best-practice`
+
+Cargar cuando la tarea incluya:
+- Crear/refactorizar clases TypeScript de componentes Angular.
+- Definir orden interno de miembros de clase.
+- Migrar/usar `input()`, `output()`, `model()`.
+- Revisar uso de lifecycle hooks y acceso al DOM.
+
+Reglas clave al usarla:
+- Miembros de clase ordenados (dependencias, constantes, inputs, outputs, estado, metodos).
+- Priorizar señales y patrones reactivos sobre lifecycle hooks.
+- Evitar acceso directo al DOM.
+
+#### `best-practices-in-coding-style`
+
+Cargar cuando la tarea incluya:
+- Estandarizacion de naming.
+- Mejoras de legibilidad y consistencia TypeScript.
+- Refactors de estilo (funciones, variables, comentarios).
+
+Reglas clave al usarla:
+- PascalCase para tipos/clases/enums/interfaces; camelCase para variables/metodos.
+- Evitar `var`, preferir `const` y `let` cuando haga falta.
+- Usar `===` / `!==`, single quotes y template literals.
+- TODO/FIXME con referencia de ticket (`#issue` o Jira).
+
+#### `best-practices-for-typing`
+
+Cargar cuando la tarea incluya:
+- Definir modelos, DTOs o contratos TypeScript.
+- Corregir o endurecer tipado estricto.
+- Mejorar null safety.
+- Ajustar `tsconfig` para reglas de typing.
+
+Reglas clave al usarla:
+- Evitar `any` (usar `unknown` cuando corresponda).
+- Tipar explicitamente cuando la inferencia no sea segura.
+- Usar unions/tuples para modelado preciso.
+- Aplicar strict typing y aliases de imports cuando corresponda.
+
+#### `interface-design`
+
+Cargar cuando la tarea incluya:
 - Diseño de dashboards, paneles admin, herramientas internas o flujos de app.
 - Definicion de layout, jerarquia visual, UX de formularios o tablas.
 - Mejoras de usabilidad, consistencia visual o accesibilidad UI.
 - Sistemas de componentes, tokens visuales, estados de interfaz.
 
-No usar `interface-design` para marketing pages (landing, campañas, sitios de marca).
+No usar para landing pages o marketing sites.
 
-### 10.3 Si hay duda, aplicar matriz rapida
+### 10.3 Matriz rapida de decision
 
-- Cambio centrado en arquitectura Angular, estado, routing o performance -> `angular-architect`.
-- Cambio centrado en experiencia de usuario, layout o sistema visual -> `interface-design`.
-- Cambio mixto (arquitectura + UX) -> ambos skills.
+- Estructura de carpetas / limites de arquitectura -> `angular-architecture` (+ `angular-architect` si tambien hay logica Angular).
+- Clase de componente Angular (inputs/outputs/lifecycle) -> `typescript-best-practice` + `angular-architect`.
+- Naming, consistencia y legibilidad TS -> `best-practices-in-coding-style`.
+- Tipado estricto, modelos, null safety, tsconfig typing -> `best-practices-for-typing`.
+- UX/UI de producto -> `interface-design` (+ `angular-architect` si hay impacto tecnico Angular).
 
 ### 10.4 Protocolo minimo antes de editar
 
-1. Identificar tipo de tarea.
-2. Cargar skill(s) correspondiente(s).
-3. Explicar en 1-2 lineas por que esos skills aplican.
+1. Identificar tipo de tarea (estructura, logica Angular, tipado, estilo, UI).
+2. Cargar skill(s) correspondientes.
+3. Explicar en 1-2 lineas por que aplican.
 4. Recien despues proponer implementacion o editar archivos.
 
-### 10.5 Ejemplos rapidos
+### 10.5 Casos mixtos (obligatorio)
+
+- Si la tarea combina **estructura + tipado + UI**, cargar todas las skills necesarias.
+- No limitarse a una sola skill si el cambio cruza responsabilidades.
+- En caso de duda, priorizar precision: mejor cargar una skill extra que omitir una critica.
+
+### 10.6 Ejemplos rapidos
 
 - "Crear dashboard con cards, filtros y tabla" -> `interface-design` + `angular-architect`.
+- "Reordenar carpetas de blog por dominios y rutas" -> `angular-architecture`.
 - "Arreglar guard de autenticacion y lazy routes" -> `angular-architect`.
-- "Mejorar UX del formulario de login" -> `interface-design`.
+- "Refactorizar inputs/outputs a signals" -> `typescript-best-practice` + `angular-architect`.
+- "Eliminar any y reforzar null safety" -> `best-practices-for-typing`.
+- "Normalizar naming y comentarios TODO" -> `best-practices-in-coding-style`.

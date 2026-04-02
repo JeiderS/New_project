@@ -1,0 +1,15 @@
+<header class="app-header">
+  <div>
+    @if (kicker()) {
+      <p class="app-header-kicker">{{ kicker() }}</p>
+    }
+
+    <h1>{{ title() }}</h1>
+
+    @if (description()) {
+      <p class="app-header-description">{{ description() }}</p>
+    }
+  </div>
+
+  <ng-content />
+</header>

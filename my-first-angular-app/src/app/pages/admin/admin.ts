@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Header } from '../../components/header/header';
 
 interface GlobalMetric {
   label: string;
@@ -15,7 +16,7 @@ interface SettingItem {
 
 @Component({
   selector: 'app-admin',
-  imports: [],
+  imports: [Header],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
 })

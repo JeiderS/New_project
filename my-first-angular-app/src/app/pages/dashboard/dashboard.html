@@ -1,12 +1,11 @@
 <main class="ops-main">
-  <header class="ops-header">
-    <div>
-      <p class="ops-kicker">Monitoreo en vivo</p>
-      <h1>Dashboard operativo</h1>
-      <p>Resumen rapido de la jornada para detectar desvio y actuar en minutos.</p>
-    </div>
+  <app-header
+    kicker="Monitoreo en vivo"
+    title="Dashboard operativo"
+    description="Resumen rapido de la jornada para detectar desvio y actuar en minutos."
+  >
     <div class="ops-pill">Actualizado hace 2 min</div>
-  </header>
+  </app-header>
 
   <section class="ops-metrics">
     <article>
@@ -18,6 +17,11 @@
       <p>Entregas a tiempo</p>
       <h2>93%</h2>
       <span class="ok">Objetivo superado</span>
+    </article>
+    <article>
+      <p>Alertas abiertas</p>
+      <h2>4</h2>
+      <span class="warn">Requiere atencion</span>
     </article>
     <article>
       <p>Alertas abiertas</p>
