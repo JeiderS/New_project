@@ -51,23 +51,23 @@ export class Products {
     `product-status status-${value ?? 'unknown'}`;
 
   readonly columnDefs: ColDef<Product>[] = [
-    { 
-      headerName: 'Nombre', 
-      field: 'name', 
-      minWidth: 220, 
-      flex: 1.4 
+    {
+      headerName: 'Nombre',
+      field: 'name',
+      minWidth: 220,
+      flex: 1.4,
     },
-    { 
-      headerName: 'SKU', 
-      field: 'sku', 
-      minWidth: 140, 
-      flex: 1 
+    {
+      headerName: 'SKU',
+      field: 'sku',
+      minWidth: 140,
+      flex: 1,
     },
-    { 
-      headerName: 'Categoria', 
-      field: 'category', 
-      minWidth: 140, 
-      flex: 1 
+    {
+      headerName: 'Categoria',
+      field: 'category',
+      minWidth: 140,
+      flex: 1,
     },
     {
       headerName: 'Precio',
