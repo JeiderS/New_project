@@ -1,0 +1,16 @@
+.sidebar-wrapper {
+  float: left;
+}
+
+.side-panel {
+  position: absolute;
+  left: 85px;
+  top: 55px;
+  width: 200px;
+  height: 100%;
+  background: #fff;
+  border-left: 1px solid #ddd;
+  padding: 17px;
+  cursor: pointer;
+  font-size: 14px;
+}

@@ -1,0 +1,62 @@
+<!-- <div class="sidebar-wrapper">
+
+  @for (mod of modulos; track mod.nombre) {
+    <app-menu [item]="mod"></app-menu>
+  }
+
+</div> -->
+
+
+<div class="sidebar-wrapper" #sidebar>
+
+  @for (mod of modulos; track mod.nombre) {
+
+    <div class="sidebar-item"
+         (click)="selectMod(mod)">
+
+      <span class="{{mod.icon}}"></span>
+      <p>{{mod.nombre}}</p>
+
+    </div>
+
+  }
+
+</div>
+
+@if (selectedMod) {
+
+  <div class="side-panel" #panel>
+
+    <div class="search-box">
+        <input type="text" placeholder="Search">
+        <i class="fa fa-search"></i>
+      </div>
+
+    @for (child of selectedMod.children; track child.nombre) {
+      <div class="panel-item"
+           (click)="selectChild(child)">
+      <i class="{{child.icon}}"></i>
+
+        {{ child.nombre }}
+
+      </div>
+
+      @if (expandedChild === child && child.children?.length) {
+
+        <div class="sub-panel">
+
+          @for (sub of child.children; track sub.nombre) {
+            <div class="sub-item">
+              <span>{{ sub.nombre }}</span>
+            </div>
+          }
+
+        </div>
+
+      }
+
+    }
+
+  </div>
+
+}

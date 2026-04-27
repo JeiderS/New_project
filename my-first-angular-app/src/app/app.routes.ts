@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
-import { Login } from './public/login/login';
-import { NotFound } from './public/not-found/not-found';
-import { Dashboard } from './pages/dashboard/dashboard';
-import { Admin } from './pages/admin/admin';
-import { Products } from './pages/products/products';
+import { Login } from './core/auth/pages/login/login';
+import { NotFound } from './core/auth/pages/not-found/not-found';
+import { Dashboard } from './features/dashboard/pages/dashboard/dashboard.component';
+import { Admin } from './features/admin/pages/admin/admin.component';
+import { Products } from './features/products/pages/products/products.component';
 import { AppShell } from './core/layout/app-shell/app-shell';
-import { authGuard, authGuardLoggedIn } from './core/guards/auth.guard';
+import { authGuard, authGuardLoggedIn } from './core/auth/guards/auth.guard';
+import { LayoutComponent } from '@core/layout/layout/layout.component';
 
 export const routes: Routes = [
   {
@@ -20,7 +21,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: AppShell,
+    component: LayoutComponent,
     canActivate: [authGuard],
     children: [
       {

@@ -1,0 +1,40 @@
+<nav class="navbar-trip2">
+  <div class="nav-left">
+    <div class="logo-container">
+      <img
+        src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=teal&shade=700"
+        alt="Logo"
+        class="main-logo"
+      />
+      <span class="module-title">Modules</span>
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <div class="user-profile" (click)="toggleMenu()">
+      <span class="user-name">{{ userName() }}</span>
+      <img src="https://i.pravatar.cc/100" class="avatar-circle" />
+      <div class="dropdown-menu" *ngIf="menuOpen">
+        <div class="menu-item">
+          <i class="fa fa-image"></i>
+          <span>Picture</span>
+        </div>
+
+        <div class="menu-item support">
+          <i class="fa fa-life-ring"></i>
+          <span>Support</span>
+        </div>
+
+        <div class="menu-item">
+          <i class="fa fa-cog"></i>
+          <span>Change Password</span>
+        </div>
+
+        <div class="menu-item danger" (click)="signOut()">
+          <i class="fa fa-power-off"></i>
+          <span>Sign Out</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

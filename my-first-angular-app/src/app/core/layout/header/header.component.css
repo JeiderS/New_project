@@ -1,0 +1,132 @@
+.navbar-trip2 {
+    background-color: #1D386E; /* Azul intermedio del header */
+    height: 55px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.main-logo {
+    width: 35px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.module-title {
+    font-size: 20px;
+    font-weight: 300;
+}
+
+.timer-badge {
+    background-color: #2979ff; /* Azul brillante del timer */
+    padding: 5px 15px;
+    border-radius: 4px;
+    margin-right: 15px;
+    font-weight: bold;
+}
+
+.btn-camera {
+    background-color: #1976d2;
+    border: none;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 5px;
+}
+
+.alert-update {
+    background-color: #fbc02d; /* Amarillo de advertencia */
+    color: #333;
+    padding: 5px 15px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-left: 1px solid rgba(255,255,255,0.2);
+    padding-left: 15px;
+}
+
+.avatar-circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.user-profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* Dropdown container */
+.dropdown-menu {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 150px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  overflow: hidden;
+  border: 1px solid #eee;
+  z-index: 1000;
+  font-size: 12px;
+}
+
+/* Items */
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  color: #333;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.menu-item:hover {
+  background: #f5f7fb;
+}
+
+/* Support rojo */
+.menu-item.support {
+  color: #ff3b3b;
+}
+
+/* Logout estilo fuerte */
+.menu-item.danger {
+  color: #333;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+/* Avatar */
+.avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+

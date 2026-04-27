@@ -38,3 +38,9 @@ body {
     radial-gradient(900px 500px at 110% 10%, rgba(194, 65, 12, 0.07), transparent 60%),
     var(--surface-canvas);
 }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-size: 16px;
+}

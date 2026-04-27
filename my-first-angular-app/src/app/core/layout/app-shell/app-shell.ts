@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { AlertHelper } from '../../../helper/alert.helper';
-import { SupabaseService } from '../../../services/supabase.service';
+import { AlertHelper } from '../../../shared/utils/alert.helper';
+import { SupabaseService } from '../../auth/services/supabase.service';
 
 @Component({
   selector: 'app-shell',

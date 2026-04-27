@@ -32,12 +32,12 @@
     "@supabase/supabase-js": "^2.93.3",
     "ag-grid-angular": "^35.2.0",
     "ag-grid-community": "^35.2.0",
+    "font-awesome": "^4.7.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@angular/build": "^21.1.2",
-    "@angular/cli": "^21.1.2",
     "@angular/compiler-cli": "^21.1.0",
     "@tailwindcss/postcss": "^4.1.12",
     "jsdom": "^27.1.0",

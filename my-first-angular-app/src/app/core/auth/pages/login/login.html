@@ -1,0 +1,45 @@
+<div class="auth-shell">
+  <section class="auth-layout">
+
+    <div class="auth-card">
+      <div class="auth-brand">
+        <img
+          src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=teal&shade=700"
+          alt="Mi Empresa"
+        />
+        <div>
+          <p class="auth-brand-title">Mi Empresa</p>
+          <p class="auth-brand-subtitle">Inventario multirubro</p>
+        </div>
+      </div>
+
+      <h2>Iniciar sesion</h2>
+      <p class="auth-card-copy">Ingresa tus credenciales para gestionar el inventario.</p>
+
+      <form [formGroup]="signInForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <label for="email">Correo</label>
+        <input id="email" type="email" formControlName="email" required autocomplete="email" />
+
+        <div class="auth-form-row">
+          <label for="password">Contrasena</label>
+          <a href="#">Recuperar acceso</a>
+        </div>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          required
+          autocomplete="current-password"
+        />
+
+        <button type="submit" [disabled]="signInForm.invalid || loading">
+          {{ loading ? 'Ingresando...' : 'Entrar al inventario' }}
+        </button>
+      </form>
+
+      <p class="auth-signup-copy">
+        No tenes cuenta? <a href="#">Solicita acceso para tu tienda</a>
+      </p>
+    </div>
+  </section>
+</div>

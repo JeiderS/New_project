@@ -1,0 +1,18 @@
+<div class="node" (click)="toggle()">
+
+  <i class="{{item.icon}}"></i>
+  <span>{{ item.nombre }}</span>
+
+</div>
+
+@if (expanded && item.children?.length) {
+
+  <div class="children">
+
+    @for (child of item.children; track child.nombre) {
+      <app-menu [item]="child"></app-menu>
+    }
+
+  </div>
+
+}
