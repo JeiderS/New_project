@@ -8,7 +8,7 @@ import {
   HostListener,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { SupabaseService } from '@core/auth/services/supabase.service';
+import { AuthService } from '@core/auth/services/auth.service';
 import { AlertHelper } from '@shared/utils/alert.helper';
 
 @Component({
@@ -20,10 +20,10 @@ import { AlertHelper } from '@shared/utils/alert.helper';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
-  private supabaseService = inject(SupabaseService);
+  private authService = inject(AuthService);
   menuOpen = false;
 
-  userName = computed(() => this.supabaseService.getUserName());
+  userName = computed(() => this.authService.getUserName());
   readonly title = input.required<string>();
   readonly kicker = input<string>('');
   readonly description = input<string>('');
@@ -37,13 +37,8 @@ export class HeaderComponent {
     this.menuOpen = !this.menuOpen;
   }
 
-  async signOut(): Promise<void> {
-    const { error } = await this.supabaseService.signOut();
-    if (error) {
-      this.alert.showError(error, 'No se pudo cerrar sesion');
-      return;
-    }
-
+  signOut(): void {
+    this.authService.signOut();
     this.alert.showSuccess('Sesion cerrada correctamente');
     this.router.navigate(['/login']);
   }

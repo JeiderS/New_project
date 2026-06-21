@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SupabaseService } from '../../services/supabase.service';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertHelper } from '../../../../shared/utils/alert.helper';
 
@@ -15,7 +15,7 @@ export class Login {
   loading = false;
 
   constructor(
-    private readonly supabase: SupabaseService,
+    private readonly authService: AuthService,
     private readonly formBuilder: FormBuilder,
     private readonly router: Router,
     private readonly alert: AlertHelper,
@@ -38,8 +38,7 @@ export class Login {
       const email = this.signInForm.value.email as string;
       const password = this.signInForm.value.password as string;
 
-      const { error } = await this.supabase.signInWithPassword(email, password);
-      if (error) throw error;
+      await this.authService.login(email, password);
       this.router.navigate(['/dashboard']);
     } catch (error) {
       this.alert.showError(error, 'No se pudo iniciar sesion');

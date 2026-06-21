@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { SupabaseService } from '@core/auth/services/supabase.service';
+import { AuthService } from '@core/auth/services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -11,9 +11,9 @@ import { SupabaseService } from '@core/auth/services/supabase.service';
   styleUrls: ['./layout.component.css'],
 })
 export class LayoutComponent {
-  private supabaseService = inject(SupabaseService);
+  private authService = inject(AuthService);
 
   ngOnInit() {
-    this.supabaseService.loadUser();
+    this.authService.loadUser();
   }
 }

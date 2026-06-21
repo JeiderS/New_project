@@ -1,26 +1,17 @@
 import { CanActivateFn, Router } from '@angular/router';
-import { SupabaseService } from '../services/supabase.service';
+import { AuthService } from '../services/auth.service';
 import { inject } from '@angular/core';
 
-export const authGuard: CanActivateFn = async () => {
-  const supabaseService = inject(SupabaseService);
+export const authGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
   const router = inject(Router);
 
-  const { data } = await supabaseService.supabase.auth.getSession();
-  if (data && data.session) {
-    return true;
-  } else {
-    return router.parseUrl('/login');
-  }
+  return authService.isAuthenticated() ? true : router.parseUrl('/login');
 };
 
-export const authGuardLoggedIn: CanActivateFn = async () => {
-  const supabaseService = inject(SupabaseService);
+export const authGuardLoggedIn: CanActivateFn = () => {
+  const authService = inject(AuthService);
   const router = inject(Router);
-  const { data } = await supabaseService.supabase.auth.getSession();
-  if (data && data.session) {
-    return router.parseUrl('/dashboard');
-  } else {
-    return true;
-  }
+
+  return authService.isAuthenticated() ? router.parseUrl('/dashboard') : true;
 };

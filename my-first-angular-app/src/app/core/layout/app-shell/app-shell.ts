@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AlertHelper } from '../../../shared/utils/alert.helper';
-import { SupabaseService } from '../../auth/services/supabase.service';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   selector: 'app-shell',
@@ -12,18 +12,13 @@ import { SupabaseService } from '../../auth/services/supabase.service';
 })
 export class AppShell {
   constructor(
-    private readonly supabase: SupabaseService,
+    private readonly authService: AuthService,
     private readonly router: Router,
     private readonly alert: AlertHelper,
   ) {}
 
-  async signOut(): Promise<void> {
-    const { error } = await this.supabase.signOut();
-    if (error) {
-      this.alert.showError(error, 'No se pudo cerrar sesion');
-      return;
-    }
-
+  signOut(): void {
+    this.authService.signOut();
     this.alert.showSuccess('Sesion cerrada correctamente');
     this.router.navigate(['/login']);
   }
