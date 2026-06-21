@@ -9,7 +9,7 @@
 
 <div class="sidebar-wrapper" #sidebar>
 
-  @for (mod of modulos; track mod.nombre) {
+  @for (mod of modulos(); track mod.nombre) {
 
     <div class="sidebar-item"
          (click)="selectMod(mod)">

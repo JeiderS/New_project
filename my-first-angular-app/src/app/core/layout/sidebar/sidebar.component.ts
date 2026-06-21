@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { ModulesService } from '@core/services/modules.service';
+import { MenuItem } from '@shared/models/menu-item.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,102 +13,33 @@ export class SidebarComponent implements OnInit {
   @ViewChild('panel') panelRef!: ElementRef;
   @ViewChild('sidebar') sidebarRef!: ElementRef;
 
-  selectedMod: any = null;
-  expandedChild: any = null;
+  private readonly modulesService = inject(ModulesService);
 
-  modulos = [
-    {
-      nombre: 'Administration',
-      icon: 'fa fa-cog',
-      children: [
-        {
-          nombre: 'Security',
-          icon: 'fa fa-lock',
-          route: '/dashboard',
-          children: [
-            { nombre: 'Analytics', icon: 'fa fa-chart-bar', route: '/dashboard/analytics' },
-            { nombre: 'Reports', icon: 'fa fa-file-alt', route: '/dashboard/reports' },
-            { nombre: 'Analytics', icon: 'fa fa-chart-bar', route: '/dashboard/analytics' },
-            { nombre: 'Reports', icon: 'fa fa-file-alt', route: '/dashboard/reports' },
-            { nombre: 'Analytics', icon: 'fa fa-chart-bar', route: '/dashboard/analytics' },
-            { nombre: 'Reports', icon: 'fa fa-file-alt', route: '/dashboard/reports' },
-          ],
-        },
-        {
-          nombre: 'Security',
-           icon: 'fa fa-chart-bar',
-          route: '/dashboard',
-          children: [
-            { nombre: 'Analytics', icon: 'fa fa-chart-bar', route: '/dashboard/analytics' },
-            { nombre: 'Reports', icon: 'fa fa-file-alt', route: '/dashboard/reports' },
-            { nombre: 'Analytics', icon: 'fa fa-chart-bar', route: '/dashboard/analytics' },
-            { nombre: 'Reports', icon: 'fa fa-file-alt', route: '/dashboard/reports' },
-            { nombre: 'Analytics', icon: 'fa fa-chart-bar', route: '/dashboard/analytics' },
-            { nombre: 'Reports', icon: 'fa fa-file-alt', route: '/dashboard/reports' },
-          ],
-        },
-        {
-          nombre: 'Security',
-          icon: 'fa fa-lock',
-          route: '/dashboard',
-          children: [
-            { nombre: 'Analytics', icon: 'fa fa-chart-bar', route: '/dashboard/analytics' },
-            { nombre: 'Reports', icon: 'fa fa-file-alt', route: '/dashboard/reports' },
-          ],
-        },
-        {
-          nombre: 'Security',
-          icon: 'fa fa-lock',
-          route: '/dashboard',
-          children: [
-            { nombre: 'Analytics', icon: 'fa fa-chart-bar', route: '/dashboard/analytics' },
-            { nombre: 'Reports', icon: 'fa fa-file-alt', route: '/dashboard/reports' },
-          ],
-        },
-      ],
-    },
-    {
-      nombre: 'Productos',
-      icon: 'fa fa-box',
-      children: [
-        {
-          nombre: 'Security1',
-          icon: 'fa fa-lock',
-          route: '/dashboard',
-          children: [
-            { nombre: 'Analytics', icon: 'fa fa-chart-bar', route: '/dashboard/analytics' },
-            { nombre: 'Reports', icon: 'fa fa-file-alt', route: '/dashboard/reports' },
-          ],
-        },
-      ],
-    },
-    {
-      nombre: 'Categorias',
-      icon: 'fa fa-tags',
-      children: [
-        {
-          nombre: 'Security2',
-          icon: 'fa fa-lock',
-          route: '/dashboard',
-          children: [
-            { nombre: 'Analytics', icon: 'fa fa-chart-bar', route: '/dashboard/analytics' },
-            { nombre: 'Reports', icon: 'fa fa-file-alt', route: '/dashboard/reports' },
-          ],
-        },
-      ],
-    },
-  ];
+  selectedMod: MenuItem | null = null;
+  expandedChild: MenuItem | null = null;
+
+  // App zoneless (sin zone.js): una reasignación de propiedad normal tras un
+  // await no dispara detección de cambios. Con signal() sí, sin importar
+  // desde dónde se actualice.
+  modulos = signal<MenuItem[]>([]);
 
   constructor() {}
 
-  ngOnInit(): void {}
+  async ngOnInit(): Promise<void> {
+    try {
+      const menu = await this.modulesService.getMenu();
+      this.modulos.set(menu);
+    } catch {
+      this.modulos.set([]);
+    }
+  }
 
-  selectMod(mod: any) {
+  selectMod(mod: MenuItem) {
     this.selectedMod = mod;
     this.expandedChild = null;
   }
 
-  selectChild(child: any) {
+  selectChild(child: MenuItem) {
     this.expandedChild = this.expandedChild === child ? null : child;
   }
 
