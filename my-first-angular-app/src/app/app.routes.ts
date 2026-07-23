@@ -4,6 +4,7 @@ import { NotFound } from './core/auth/pages/not-found/not-found';
 import { Dashboard } from './features/dashboard/pages/dashboard/dashboard.component';
 import { Admin } from './features/admin/pages/admin/admin.component';
 import { Products } from './features/products/pages/products/products.component';
+import { UserManagement } from './features/users/pages/user-management/user-management';
 import { AppShell } from './core/layout/app-shell/app-shell';
 import { authGuard, authGuardLoggedIn } from './core/auth/guards/auth.guard';
 import { LayoutComponent } from '@core/layout/layout/layout.component';
@@ -35,6 +36,10 @@ export const routes: Routes = [
       {
         path: 'products',
         component: Products,
+      },
+      {
+        path: 'users',
+        component: UserManagement,
       },
     ],
   },

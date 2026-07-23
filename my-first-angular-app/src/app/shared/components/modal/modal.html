@@ -1,0 +1,39 @@
+<div #backdrop class="modal-backdrop" [class.hidden]="!open()" (click)="onBackdrop($event)">
+  <div
+    #dialog
+    class="modal-dialog"
+    [class.modal-sm]="size() === 'sm'"
+    [class.modal-md]="size() === 'md'"
+    [class.modal-lg]="size() === 'lg'"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    [attr.aria-labelledby]="title() ? titleId : null"
+  >
+    @if (title() || closable()) {
+      <div class="modal-header">
+        @if (title()) {
+          <h2 [id]="titleId" class="modal-title">{{ title() }}</h2>
+        }
+        @if (closable()) {
+          <button
+            type="button"
+            class="modal-close-btn"
+            aria-label="Close"
+            (click)="close()"
+          >
+            &times;
+          </button>
+        }
+      </div>
+    }
+
+    <div class="modal-body">
+      <ng-content />
+    </div>
+
+    <div class="modal-footer">
+      <ng-content select="[modal-footer]" />
+    </div>
+  </div>
+</div>

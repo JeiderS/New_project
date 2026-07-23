@@ -23,14 +23,18 @@
     <article class="admin-card">
       <h3>Configuracion general</h3>
       <ul>
-        @for (setting of settings; track setting.title) {
+        @for (setting of settings(); track setting.title) {
           <li>
             <div>
               <strong>{{ setting.title }}</strong>
               <p>{{ setting.description }}</p>
             </div>
             <label class="admin-toggle">
-              <input type="checkbox" [checked]="setting.enabled" />
+              <input
+                type="checkbox"
+                [checked]="setting.enabled"
+                (click)="onToggleClick($event, setting)"
+              />
               <span></span>
             </label>
           </li>
@@ -48,4 +52,15 @@
       </ul>
     </article>
   </section>
+
+  <app-modal [(open)]="showConfirm" title="Deshabilitar configuracion" size="sm">
+    <p>
+      ¿Seguro que querés deshabilitar «{{ pendingSettingTitle() }}»? Esta accion puede afectar
+      procesos administrativos en curso.
+    </p>
+    <div modal-footer>
+      <button type="button" (click)="cancelDisable()">Cancelar</button>
+      <button type="button" (click)="confirmDisable()">Deshabilitar</button>
+    </div>
+  </app-modal>
 </div>

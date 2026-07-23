@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { HeaderComponent } from '@core/layout/header/header.component';
+import { Modal } from '@shared/components/modal/modal';
 
 interface GlobalMetric {
   label: string;
@@ -17,7 +18,7 @@ interface SettingItem {
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [HeaderComponent, Modal],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css'],
 })
@@ -49,7 +50,7 @@ export class Admin {
     },
   ];
 
-  readonly settings: SettingItem[] = [
+  readonly settings = signal<SettingItem[]>([
     {
       title: 'Mantenimiento programado',
       description: 'Habilita la ventana de mantenimiento para tareas de infraestructura.',
@@ -65,5 +66,50 @@ export class Admin {
       description: 'Registra eventos sensibles para trazabilidad completa.',
       enabled: true,
     },
-  ];
+  ]);
+
+  /** Confirmation modal state for disabling a setting — [(open)] target for <app-modal>. */
+  readonly showConfirm = signal(false);
+  private readonly pendingSetting = signal<SettingItem | null>(null);
+
+  /** Title of the setting pending confirmation, for the modal body copy. */
+  readonly pendingSettingTitle = () => this.pendingSetting()?.title ?? '';
+
+  /**
+   * Disabling a setting requires confirmation; re-enabling does not.
+   * Prevents a checkbox click from mutating state directly.
+   */
+  onToggleClick(event: Event, setting: SettingItem): void {
+    event.preventDefault();
+
+    if (setting.enabled) {
+      this.pendingSetting.set(setting);
+      this.showConfirm.set(true);
+      return;
+    }
+
+    this.applyToggle(setting);
+  }
+
+  confirmDisable(): void {
+    const setting = this.pendingSetting();
+
+    if (setting) {
+      this.applyToggle(setting);
+    }
+
+    this.pendingSetting.set(null);
+    this.showConfirm.set(false);
+  }
+
+  cancelDisable(): void {
+    this.pendingSetting.set(null);
+    this.showConfirm.set(false);
+  }
+
+  private applyToggle(setting: SettingItem): void {
+    this.settings.update((list) =>
+      list.map((item) => (item.title === setting.title ? { ...item, enabled: !item.enabled } : item)),
+    );
+  }
 }
