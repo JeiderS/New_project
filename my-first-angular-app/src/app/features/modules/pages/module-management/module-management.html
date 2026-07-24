@@ -1,0 +1,91 @@
+<div class="modules-shell">
+  <section class="modules-card" aria-label="Modulos registrados">
+    <div class="modules-toolbar">
+      <div class="modules-search">
+        <label for="modules-search">Buscar</label>
+        <input
+          id="modules-search"
+          type="search"
+          placeholder="Buscar por nombre o ruta"
+          [value]="searchTerm()"
+          (input)="onSearch($any($event.target).value)"
+        />
+      </div>
+
+      <button type="button" class="modules-new-btn" (click)="openCreate()">Nuevo modulo</button>
+    </div>
+
+    @if (hasRows()) {
+      <ag-grid-angular
+        class="ag-theme-quartz modules-grid"
+        [rowData]="filteredModules()"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+        (cellClicked)="onCellClicked($event)"
+      />
+    } @else {
+      <div class="modules-empty" role="status" aria-live="polite">
+        <h2>Sin resultados</h2>
+        <p>
+          {{
+            loading()
+              ? 'Cargando modulos...'
+              : 'No encontramos modulos con ese criterio. Proba otro texto de busqueda.'
+          }}
+        </p>
+      </div>
+    }
+  </section>
+</div>
+
+<app-modal [(open)]="modalOpen" [title]="modalTitle()" position="side">
+  <form [formGroup]="moduleForm" class="module-form">
+    <label for="module-name">Nombre</label>
+    <input id="module-name" type="text" formControlName="name" />
+
+    <div class="module-form-row">
+      <div>
+        <label for="module-icon">Icono</label>
+        <input id="module-icon" type="text" formControlName="icon" placeholder="fa fa-chart-bar" />
+      </div>
+      <div>
+        <label for="module-route">Ruta</label>
+        <input id="module-route" type="text" formControlName="route" placeholder="/dashboard" />
+      </div>
+    </div>
+
+    <div class="module-form-row">
+      <div>
+        <label for="module-parent">Modulo padre</label>
+        <select id="module-parent" formControlName="parentId">
+          <option [ngValue]="null">Sin padre</option>
+          @for (option of parentOptions(); track option.id) {
+            <option [ngValue]="option.id">{{ option.name }}</option>
+          }
+        </select>
+      </div>
+      <div>
+        <label for="module-sort-order">Orden</label>
+        <input id="module-sort-order" type="number" formControlName="sortOrder" />
+      </div>
+    </div>
+  </form>
+
+  <div modal-footer>
+    @if (canDeactivate()) {
+      <button type="button" class="module-btn-danger" [disabled]="saving()" (click)="deactivate()">
+        Desactivar modulo
+      </button>
+    }
+    <button type="button" class="module-btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+    <button
+      type="button"
+      class="module-btn-primary"
+      [disabled]="moduleForm.invalid || saving()"
+      (click)="save()"
+    >
+      {{ saving() ? 'Guardando...' : 'Guardar' }}
+    </button>
+  </div>
+</app-modal>

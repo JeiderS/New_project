@@ -58,8 +58,16 @@ export class Modal {
   /** Shows/hides the built-in close (X) button. Does not affect ESC/backdrop dismissal. */
   closable = input<boolean>(true);
 
-  /** Dialog width tier. */
+  /** Dialog width tier. Ignored when `position` is `'side'` (side panel sizes itself). */
   size = input<'sm' | 'md' | 'lg'>('md');
+
+  /**
+   * Layout of the dialog: `'center'` (default) overlays centered with a dimmed backdrop;
+   * `'side'` docks a full-height panel to the right, leaving the rest of the screen visible
+   * and undimmed — for flows where the underlying view (e.g. a grid) stays usable alongside
+   * the form, like the reference layout this consumer asked to match.
+   */
+  position = input<'center' | 'side'>('center');
 
   /** Emitted whenever the modal closes, regardless of trigger. */
   closed = output<void>();

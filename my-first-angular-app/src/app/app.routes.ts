@@ -5,6 +5,7 @@ import { Dashboard } from './features/dashboard/pages/dashboard/dashboard.compon
 import { Admin } from './features/admin/pages/admin/admin.component';
 import { Products } from './features/products/pages/products/products.component';
 import { UserManagement } from './features/users/pages/user-management/user-management';
+import { ModuleManagement } from './features/modules/pages/module-management/module-management';
 import { AppShell } from './core/layout/app-shell/app-shell';
 import { authGuard, authGuardLoggedIn } from './core/auth/guards/auth.guard';
 import { LayoutComponent } from '@core/layout/layout/layout.component';
@@ -40,6 +41,10 @@ export const routes: Routes = [
       {
         path: 'users',
         component: UserManagement,
+      },
+      {
+        path: 'modules',
+        component: ModuleManagement,
       },
     ],
   },

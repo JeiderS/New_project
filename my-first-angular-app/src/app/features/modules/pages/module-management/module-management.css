@@ -1,0 +1,206 @@
+.modules-shell {
+  min-height: 100vh;
+  padding: 1.25rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.modules-card {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.78);
+  padding: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.modules-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.modules-search {
+  display: grid;
+  gap: 0.35rem;
+  flex: 1;
+}
+
+.modules-search label {
+  font-size: 0.83rem;
+  color: var(--ink-tertiary);
+  font-weight: 600;
+}
+
+.modules-search input {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-2);
+  color: var(--ink-primary);
+  font: inherit;
+  padding: 0.6rem 0.68rem;
+}
+
+.modules-search input:focus-visible {
+  outline: 2px solid rgba(15, 118, 110, 0.32);
+  outline-offset: 1px;
+}
+
+.modules-new-btn {
+  border: 0;
+  background: linear-gradient(140deg, var(--accent-route), var(--accent-route-strong));
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.modules-grid {
+  width: 100%;
+  height: 420px;
+  --ag-background-color: #fff;
+  --ag-foreground-color: var(--ink-primary);
+  --ag-header-background-color: var(--accent-route);
+  --ag-header-foreground-color: #fff;
+  --ag-border-color: var(--border-soft);
+  --ag-row-border-color: rgba(71, 85, 105, 0.16);
+  --ag-font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --ag-cell-horizontal-padding: 10px;
+  --ag-wrapper-border-radius: var(--radius-sm);
+  --ag-header-column-separator-display: block;
+  --ag-header-column-separator-color: rgba(255, 255, 255, 0.35);
+}
+
+:host ::ng-deep .status-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+:host ::ng-deep .status-dot-active {
+  background: var(--success);
+}
+
+:host ::ng-deep .status-dot-inactive {
+  background: var(--danger);
+}
+
+.modules-empty {
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-1);
+  min-height: 180px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 0.35rem;
+  padding: 1rem;
+}
+
+.modules-empty h2,
+.modules-empty p {
+  margin: 0;
+}
+
+.modules-empty h2 {
+  font-size: 1.05rem;
+}
+
+.modules-empty p {
+  color: var(--ink-secondary);
+}
+
+.module-form {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.module-form label {
+  font-size: 0.83rem;
+  color: var(--ink-tertiary);
+  font-weight: 600;
+  margin-top: 0.4rem;
+}
+
+.module-form input,
+.module-form select {
+  border: 1px solid var(--accent-route);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-2);
+  color: var(--ink-primary);
+  font: inherit;
+  padding: 0.55rem 0.65rem;
+}
+
+.module-form input:focus-visible,
+.module-form select:focus-visible {
+  outline: 2px solid rgba(15, 118, 110, 0.32);
+  outline-offset: 1px;
+}
+
+.module-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.module-btn-primary {
+  border: 0;
+  background: linear-gradient(140deg, var(--accent-route), var(--accent-route-strong));
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.module-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.module-btn-ghost {
+  border: 1px solid var(--border-soft);
+  background: transparent;
+  color: var(--ink-secondary);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.module-btn-danger {
+  border: 0;
+  background: var(--danger);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-right: auto;
+}
+
+.module-btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (min-width: 980px) {
+  .modules-shell {
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .modules-card {
+    max-width: 50%;
+  }
+}

@@ -1,10 +1,17 @@
-<div #backdrop class="modal-backdrop" [class.hidden]="!open()" (click)="onBackdrop($event)">
+<div
+  #backdrop
+  class="modal-backdrop"
+  [class.modal-backdrop-side]="position() === 'side'"
+  [class.hidden]="!open()"
+  (click)="onBackdrop($event)"
+>
   <div
     #dialog
     class="modal-dialog"
-    [class.modal-sm]="size() === 'sm'"
-    [class.modal-md]="size() === 'md'"
-    [class.modal-lg]="size() === 'lg'"
+    [class.modal-sm]="size() === 'sm' && position() === 'center'"
+    [class.modal-md]="size() === 'md' && position() === 'center'"
+    [class.modal-lg]="size() === 'lg' && position() === 'center'"
+    [class.modal-dialog-side]="position() === 'side'"
     role="dialog"
     aria-modal="true"
     tabindex="-1"
