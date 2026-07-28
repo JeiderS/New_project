@@ -10,7 +10,6 @@ import {
   ValueFormatterParams,
 } from 'ag-grid-community';
 import { CreateUserPayload, UpdateUserPayload, User } from '@core/interfaces/user.interface';
-import { HeaderComponent } from '@core/layout/header/header.component';
 import { UserService } from '@core/services/user.service';
 import { AlertHelper } from '@shared/utils/alert.helper';
 import { Modal } from '@shared/components/modal/modal';
@@ -22,7 +21,7 @@ type ModalMode = 'create' | 'edit';
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [AgGridAngular, HeaderComponent, Modal, ReactiveFormsModule],
+  imports: [AgGridAngular, Modal, ReactiveFormsModule],
   templateUrl: './user-management.html',
   styleUrl: './user-management.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

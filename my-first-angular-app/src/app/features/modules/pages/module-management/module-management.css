@@ -1,15 +1,12 @@
 .modules-shell {
-  min-height: 100vh;
-  padding: 1.25rem;
-  display: grid;
-  gap: 0.9rem;
+
 }
 
 .modules-card {
-  border: 1px solid var(--border-soft);
+  /* border: 1px solid var(--border-soft);
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.78);
-  padding: 1rem;
+  padding: 1rem; */
   display: grid;
   gap: 0.8rem;
 }
@@ -22,19 +19,14 @@
 }
 
 .modules-search {
+
   display: grid;
   gap: 0.35rem;
   flex: 1;
 }
 
-.modules-search label {
-  font-size: 0.83rem;
-  color: var(--ink-tertiary);
-  font-weight: 600;
-}
-
 .modules-search input {
-  border: 1px solid var(--border-soft);
+  border: 1px solid var(--borde);
   border-radius: var(--radius-sm);
   background: var(--surface-elev-2);
   color: var(--ink-primary);
@@ -42,10 +34,10 @@
   padding: 0.6rem 0.68rem;
 }
 
-.modules-search input:focus-visible {
+/* .modules-search input:focus-visible {
   outline: 2px solid rgba(15, 118, 110, 0.32);
   outline-offset: 1px;
-}
+} */
 
 .modules-new-btn {
   border: 0;

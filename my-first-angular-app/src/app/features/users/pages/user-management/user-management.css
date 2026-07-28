@@ -1,9 +1,4 @@
-.users-shell {
-  min-height: 100vh;
-  padding: 1.25rem;
-  display: grid;
-  gap: 0.9rem;
-}
+
 
 .users-card {
   border: 1px solid var(--border-soft);
