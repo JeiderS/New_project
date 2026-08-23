@@ -16,15 +16,6 @@ interface ApiResponse<T> {
   data: T;
 }
 
-export interface RegisterPayload {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  phone?: string;
-  address?: string;
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -39,13 +30,6 @@ export class AuthService {
   async login(email: string, password: string): Promise<void> {
     const res = await firstValueFrom(
       this.http.post<ApiResponse<AuthData>>(`${this.apiUrl}/login`, { email, password }),
-    );
-    this.setSession(res.data);
-  }
-
-  async register(payload: RegisterPayload): Promise<void> {
-    const res = await firstValueFrom(
-      this.http.post<ApiResponse<AuthData>>(`${this.apiUrl}/register`, payload),
     );
     this.setSession(res.data);
   }
