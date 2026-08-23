@@ -14,6 +14,7 @@ describe('MenuComponent', () => {
 
     fixture = TestBed.createComponent(MenuComponent);
     component = fixture.componentInstance;
+    component.item = { nombre: 'Dashboard', icon: 'fa fa-home' };
     await fixture.whenStable();
   });
 

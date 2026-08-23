@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "open-pencil": {
+      "type": "stdio",
+      "command": "openpencil-mcp",
+      "args": [],
+      "env": {}
+    }
+  }
+}

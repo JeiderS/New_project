@@ -49,6 +49,13 @@ Thumbs.db
 !.env.example
 *.local.ts
 *.local.json
+.claude/settings.local.json
+
+# Regenerable tool caches
+.atl/*.cache.json
+
+# SDD process docs (proposals/specs/design/tasks history) — not app runtime content
+/openspec
 
 # Logs
 *.log
