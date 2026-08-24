@@ -33,28 +33,7 @@
       </div>
 
     @for (child of selectedMod.children; track child.nombre) {
-      <div class="panel-item"
-           (click)="selectChild(child)">
-      <i class="{{child.icon}}"></i>
-
-        {{ child.nombre }}
-
-      </div>
-
-      @if (expandedChild === child && child.children?.length) {
-
-        <div class="sub-panel">
-
-          @for (sub of child.children; track sub.nombre) {
-            <div class="sub-item">
-              <span>{{ sub.nombre }}</span>
-            </div>
-          }
-
-        </div>
-
-      }
-
+      <app-menu [item]="child" (navigated)="selectedMod = null"></app-menu>
     }
 
   </div>

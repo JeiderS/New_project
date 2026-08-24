@@ -52,6 +52,7 @@
   padding: 17px;
   cursor: pointer;
   font-size: 14px;
+  z-index: 100;
 }
 
 .module-group {

@@ -1,0 +1,46 @@
+.tree-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  padding-right: 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--ink-secondary);
+  user-select: none;
+}
+
+.tree-row:hover {
+  background: var(--surface-inset);
+}
+
+.tree-row.selected {
+  background: rgba(29, 56, 110, 0.12);
+  color: var(--accent-route-strong);
+  font-weight: 600;
+}
+
+.tree-row i {
+  width: 14px;
+  flex: none;
+  text-align: center;
+  color: var(--ink-tertiary);
+  font-size: 0.8rem;
+}
+
+.tree-row.selected i {
+  color: var(--accent-route-strong);
+}
+
+.tree-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-children {
+  border-left: 1px dashed var(--border-soft);
+  margin-left: 1.2rem;
+}

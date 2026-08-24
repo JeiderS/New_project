@@ -7,6 +7,8 @@ export interface User {
   address?: string;
   active: boolean;
   createdAt?: string;
+  roleId?: number;
+  roleName?: string;
 }
 
 export interface CreateUserPayload {
@@ -16,11 +18,14 @@ export interface CreateUserPayload {
   lastName: string;
   phone?: string;
   address?: string;
+  roleId?: number;
 }
 
 export interface UpdateUserPayload {
+  email: string;
   firstName: string;
   lastName: string;
   phone?: string;
   address?: string;
+  roleId?: number;
 }

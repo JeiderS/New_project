@@ -1,24 +1,42 @@
-<div>
-  <section class="users-card" aria-label="Usuarios registrados">
-    <div class="users-toolbar">
-      <div class="users-search">
-        <label for="users-search">Buscar</label>
-        <input
-          id="users-search"
-          type="search"
-          placeholder="Buscar por nombre o email"
-          [value]="searchTerm()"
-          (input)="onSearch($any($event.target).value)"
-        />
+<div class="data-pane workspace">
+  <section class="grid-pane" aria-label="Usuarios registrados">
+    <div class="pane-header">
+      <div class="toolbar">
+        <div class="search-field">
+          <label for="users-search">Buscar</label>
+          <input
+            id="users-search"
+            type="search"
+            placeholder="Buscar por nombre o email"
+            [value]="searchTerm()"
+            (input)="onSearch($any($event.target).value)"
+          />
+        </div>
+
+        <button type="button" class="btn btn-primary" (click)="openCreate()">Nuevo usuario</button>
       </div>
 
-      <button type="button" class="users-new-btn" (click)="openCreate()">Nuevo usuario</button>
+      <div class="toggle-row">
+        <div class="toggle-field">
+          <span>Mostrar inactivos</span>
+          <span class="switch">
+            <input
+              type="checkbox"
+              [checked]="showInactive()"
+              (change)="onShowInactiveChange($any($event.target).checked)"
+            />
+            <span class="switch-track"></span>
+          </span>
+        </div>
+
+        <span class="grid-total">Total: {{ visibleUsers().length }} usuarios</span>
+      </div>
     </div>
 
     @if (hasRows()) {
       <ag-grid-angular
         class="ag-theme-quartz users-grid"
-        [rowData]="filteredUsers()"
+        [rowData]="visibleUsers()"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         [gridOptions]="gridOptions"
@@ -37,55 +55,83 @@
       </div>
     }
   </section>
-</div>
 
-<app-modal [(open)]="modalOpen" [title]="modalTitle()" size="md">
-  <form [formGroup]="userForm" class="user-form">
-    <label for="user-email">Email</label>
-    <input id="user-email" type="email" formControlName="email" autocomplete="email" />
+  <app-modal
+    [(open)]="modalOpen"
+    [title]="modalTitle()"
+    [eyebrow]="modalEyebrow()"
+    position="float"
+  >
+    <form [formGroup]="userForm" class="user-form">
+      @if (mode() === 'edit') {
+        <div class="toggle-field">
+          <span>Activo</span>
+          <span class="switch">
+            <input
+              type="checkbox"
+              [checked]="activeToggle()"
+              (change)="onActiveToggleChange($any($event.target).checked)"
+            />
+            <span class="switch-track"></span>
+          </span>
+        </div>
+      }
 
-    @if (mode() === 'create') {
-      <label for="user-password">Contrasena</label>
-      <input
-        id="user-password"
-        type="password"
-        formControlName="password"
-        autocomplete="new-password"
-      />
-    }
-
-    <div class="user-form-row">
-      <div>
-        <label for="user-first-name">Nombre</label>
-        <input id="user-first-name" type="text" formControlName="firstName" />
+      <div class="field-group">
+        <label for="user-email">Email</label>
+        <input id="user-email" type="email" formControlName="email" autocomplete="email" />
       </div>
-      <div>
-        <label for="user-last-name">Apellido</label>
-        <input id="user-last-name" type="text" formControlName="lastName" />
+
+      @if (mode() === 'create') {
+        <div class="field-group">
+          <label for="user-password">Contrasena</label>
+          <input
+            id="user-password"
+            type="password"
+            formControlName="password"
+            autocomplete="new-password"
+          />
+        </div>
+      }
+
+      <div class="field-row">
+        <div class="field-group">
+          <label for="user-first-name">Nombre</label>
+          <input id="user-first-name" type="text" formControlName="firstName" />
+        </div>
+        <div class="field-group">
+          <label for="user-last-name">Apellido</label>
+          <input id="user-last-name" type="text" formControlName="lastName" />
+        </div>
       </div>
-    </div>
 
-    <label for="user-phone">Telefono</label>
-    <input id="user-phone" type="tel" formControlName="phone" />
+      <div class="field-row">
+        <div class="field-group">
+          <label for="user-phone">Telefono</label>
+          <input id="user-phone" type="tel" formControlName="phone" />
+        </div>
+        <div class="field-group">
+          <label for="user-role">Rol</label>
+          <select id="user-role" formControlName="roleId">
+            <option [ngValue]="null">Sin rol</option>
+            @for (role of roles(); track role.id) {
+              <option [ngValue]="role.id">{{ role.name }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </form>
 
-    <label for="user-address">Direccion</label>
-    <input id="user-address" type="text" formControlName="address" />
-  </form>
-
-  <div modal-footer>
-    @if (canDeactivate()) {
-      <button type="button" class="user-btn-danger" [disabled]="saving()" (click)="deactivate()">
-        Desactivar usuario
+    <div modal-footer>
+      <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="userForm.invalid || saving()"
+        (click)="save()"
+      >
+        {{ saving() ? 'Guardando...' : 'Guardar' }}
       </button>
-    }
-    <button type="button" class="user-btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
-    <button
-      type="button"
-      class="user-btn-primary"
-      [disabled]="userForm.invalid || saving()"
-      (click)="save()"
-    >
-      {{ saving() ? 'Guardando...' : 'Guardar' }}
-    </button>
-  </div>
-</app-modal>
+    </div>
+  </app-modal>
+</div>

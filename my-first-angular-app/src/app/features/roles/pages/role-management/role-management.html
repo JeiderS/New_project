@@ -1,0 +1,116 @@
+<div class="data-pane workspace">
+  <section class="grid-pane" aria-label="Roles registrados">
+    <div class="pane-header">
+      <div class="toolbar">
+        <div class="search-field">
+          <label for="roles-search">Buscar</label>
+          <input
+            id="roles-search"
+            type="search"
+            placeholder="Buscar por nombre"
+            [value]="searchTerm()"
+            (input)="onSearch($any($event.target).value)"
+          />
+        </div>
+
+        <button type="button" class="btn btn-primary" (click)="openCreate()">Nuevo rol</button>
+      </div>
+
+      <div class="toggle-row">
+        <span class="grid-total">Total: {{ visibleRoles().length }} roles</span>
+      </div>
+    </div>
+
+    @if (hasRows()) {
+      <ag-grid-angular
+        class="ag-theme-quartz roles-grid"
+        [rowData]="visibleRoles()"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+        (cellClicked)="onCellClicked($event)"
+      />
+    } @else {
+      <div class="roles-empty" role="status" aria-live="polite">
+        <h2>Sin resultados</h2>
+        <p>
+          {{
+            loading()
+              ? 'Cargando roles...'
+              : 'No encontramos roles con ese criterio. Proba otro texto de busqueda.'
+          }}
+        </p>
+      </div>
+    }
+  </section>
+
+  <app-modal
+    [(open)]="modalOpen"
+    [title]="modalTitle()"
+    [eyebrow]="modalEyebrow()"
+    position="float"
+  >
+    <form [formGroup]="roleForm" class="role-form">
+      <div class="field-group">
+        <label for="role-name">Nombre</label>
+        <input id="role-name" type="text" formControlName="name" />
+      </div>
+
+      <div class="permissions-section">
+        <h3>Permisos</h3>
+
+        <div class="permissions-columns">
+          <div class="permissions-tree-pane">
+            <h4 class="permissions-column-title">Modulos</h4>
+            <div class="tree-scroll">
+              @for (node of moduleTree(); track node.module.id) {
+                <app-module-tree-node
+                  [node]="node"
+                  [selectedModuleId]="selectedTreeModuleId()"
+                  (select)="selectTreeModule($event)"
+                />
+              }
+            </div>
+          </div>
+
+          <div class="permissions-actions-pane">
+            <h4 class="permissions-column-title">Acciones</h4>
+            <div class="actions-scroll">
+              @if (selectedTreeModuleId() === null) {
+                <p class="permissions-empty-hint">Selecciona un modulo para ver sus permisos.</p>
+              } @else if (selectedModuleActions().length === 0) {
+                <p class="permissions-empty-hint">Este modulo no tiene acciones configuradas.</p>
+              } @else {
+                @for (action of selectedModuleActions(); track action.id) {
+                  <div class="permission-check toggle-field">
+                    <span>{{ actionLabel(action) }}</span>
+                    <span class="switch">
+                      <input
+                        type="checkbox"
+                        [checked]="isActionChecked(action.id)"
+                        (change)="onActionToggle(action.id, $any($event.target).checked)"
+                      />
+                      <span class="switch-track"></span>
+                    </span>
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div modal-footer>
+      <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="roleForm.invalid || saving()"
+        (click)="save()"
+      >
+        {{ saving() ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </app-modal>
+</div>

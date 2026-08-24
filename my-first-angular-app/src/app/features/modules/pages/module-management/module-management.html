@@ -1,23 +1,42 @@
-<div class="modules-shell">
-  <section class="modules-card" aria-label="Modulos registrados">
-    <div class="modules-toolbar">
-      <div class="modules-search">
-        <input
-          id="modules-search"
-          type="search"
-          placeholder="Buscar por nombre o ruta"
-          [value]="searchTerm()"
-          (input)="onSearch($any($event.target).value)"
-        />
+<div class="data-pane workspace">
+  <section class="grid-pane" aria-label="Modulos registrados">
+    <div class="pane-header">
+      <div class="toolbar">
+        <div class="search-field">
+          <label for="modules-search">Buscar</label>
+          <input
+            id="modules-search"
+            type="search"
+            placeholder="Buscar por nombre o ruta"
+            [value]="searchTerm()"
+            (input)="onSearch($any($event.target).value)"
+          />
+        </div>
+
+        <button type="button" class="btn btn-primary" (click)="openCreate()">Nuevo modulo</button>
       </div>
 
-      <button type="button" class="modules-new-btn" (click)="openCreate()">Nuevo modulo</button>
+      <div class="toggle-row">
+        <div class="toggle-field">
+          <span>Mostrar inactivos</span>
+          <span class="switch">
+            <input
+              type="checkbox"
+              [checked]="showInactive()"
+              (change)="onShowInactiveChange($any($event.target).checked)"
+            />
+            <span class="switch-track"></span>
+          </span>
+        </div>
+
+        <span class="grid-total">Total: {{ visibleModules().length }} modulos</span>
+      </div>
     </div>
 
     @if (hasRows()) {
       <ag-grid-angular
         class="ag-theme-quartz modules-grid"
-        [rowData]="filteredModules()"
+        [rowData]="visibleModules()"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         [gridOptions]="gridOptions"
@@ -36,55 +55,106 @@
       </div>
     }
   </section>
-</div>
 
-<app-modal [(open)]="modalOpen" [title]="modalTitle()" position="side">
-  <form [formGroup]="moduleForm" class="module-form">
-    <label for="module-name">Nombre</label>
-    <input id="module-name" type="text" formControlName="name" />
+  <app-modal
+    [(open)]="modalOpen"
+    [title]="modalTitle()"
+    [eyebrow]="modalEyebrow()"
+    position="float"
+  >
+    <form [formGroup]="moduleForm" class="module-form">
+      @if (mode() === 'edit') {
+        <div class="toggle-field">
+          <span>Activo</span>
+          <span class="switch">
+            <input
+              type="checkbox"
+              [checked]="activeToggle()"
+              (change)="onActiveToggleChange($any($event.target).checked)"
+            />
+            <span class="switch-track"></span>
+          </span>
+        </div>
+      }
 
-    <div class="module-form-row">
-      <div>
-        <label for="module-icon">Icono</label>
-        <input id="module-icon" type="text" formControlName="icon" placeholder="fa fa-chart-bar" />
+      <div class="field-group">
+        <label for="module-name">Nombre</label>
+        <input id="module-name" type="text" formControlName="name" />
       </div>
-      <div>
-        <label for="module-route">Ruta</label>
-        <input id="module-route" type="text" formControlName="route" placeholder="/dashboard" />
-      </div>
-    </div>
 
-    <div class="module-form-row">
-      <div>
-        <label for="module-parent">Modulo padre</label>
-        <select id="module-parent" formControlName="parentId">
-          <option [ngValue]="null">Sin padre</option>
-          @for (option of parentOptions(); track option.id) {
-            <option [ngValue]="option.id">{{ option.name }}</option>
-          }
-        </select>
+      <div class="field-row">
+        <div class="field-group">
+          <label for="module-icon">Icono</label>
+          <input id="module-icon" type="text" formControlName="icon" placeholder="fa fa-chart-bar" />
+        </div>
+        <div class="field-group">
+          <label for="module-route">Ruta</label>
+          <input id="module-route" type="text" formControlName="route" placeholder="/dashboard" />
+        </div>
       </div>
-      <div>
-        <label for="module-sort-order">Orden</label>
-        <input id="module-sort-order" type="number" formControlName="sortOrder" />
-      </div>
-    </div>
-  </form>
 
-  <div modal-footer>
-    @if (canDeactivate()) {
-      <button type="button" class="module-btn-danger" [disabled]="saving()" (click)="deactivate()">
-        Desactivar modulo
-      </button>
+      <div class="field-row">
+        <div class="field-group">
+          <label for="module-parent">Modulo padre</label>
+          <select id="module-parent" formControlName="parentId">
+            <option [ngValue]="null">Sin padre</option>
+            @for (option of parentOptions(); track option.id) {
+              <option [ngValue]="option.id">{{ option.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="module-sort-order">Orden</label>
+          <input id="module-sort-order" type="number" formControlName="sortOrder" />
+        </div>
+      </div>
+    </form>
+
+    @if (showActionsSection()) {
+      <div class="module-actions-section">
+        <h3 class="module-actions-title">Acciones</h3>
+
+        @if (loadingActions()) {
+          <p class="module-actions-empty">Cargando acciones...</p>
+        } @else if (moduleActions().length === 0) {
+          <p class="module-actions-empty">Este modulo aun no tiene acciones.</p>
+        } @else {
+          <ul class="module-actions-list">
+            @for (action of moduleActions(); track action.id) {
+              <li class="module-action-chip">{{ action.name }}</li>
+            }
+          </ul>
+        }
+
+        <div class="module-actions-add">
+          <input
+            type="text"
+            placeholder="Nueva accion (ej. Exportar reporte)"
+            [value]="newActionName()"
+            (input)="newActionName.set($any($event.target).value)"
+          />
+          <button
+            type="button"
+            class="btn btn-ghost"
+            [disabled]="!canAddAction()"
+            (click)="addAction()"
+          >
+            {{ addingAction() ? 'Agregando...' : 'Agregar' }}
+          </button>
+        </div>
+      </div>
     }
-    <button type="button" class="module-btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
-    <button
-      type="button"
-      class="module-btn-primary"
-      [disabled]="moduleForm.invalid || saving()"
-      (click)="save()"
-    >
-      {{ saving() ? 'Guardando...' : 'Guardar' }}
-    </button>
-  </div>
-</app-modal>
+
+    <div modal-footer>
+      <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="moduleForm.invalid || saving()"
+        (click)="save()"
+      >
+        {{ saving() ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </app-modal>
+</div>

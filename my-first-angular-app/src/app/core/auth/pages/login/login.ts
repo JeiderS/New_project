@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { AlertHelper } from '../../../../shared/utils/alert.helper';
+import { ModulesService } from '@core/services/modules.service';
+import { MenuItem } from '@shared/models/menu-item.model';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +21,7 @@ export class Login {
     private readonly formBuilder: FormBuilder,
     private readonly router: Router,
     private readonly alert: AlertHelper,
+    private readonly modulesService: ModulesService,
   ) {
     this.initForm();
   }
@@ -39,11 +42,27 @@ export class Login {
       const password = this.signInForm.value.password as string;
 
       await this.authService.login(email, password);
-      this.router.navigate(['/dashboard']);
+      const landingRoute = await this.resolveLandingRoute();
+      this.router.navigate([landingRoute]);
     } catch (error) {
       this.alert.showError(error, 'No se pudo iniciar sesion');
     } finally {
       this.loading = false;
     }
+  }
+
+  private async resolveLandingRoute(): Promise<string> {
+    try {
+      const menu = await this.modulesService.getMenu();
+      return this.containsUsersRoute(menu) ? '/users' : '/dashboard';
+    } catch {
+      return '/dashboard';
+    }
+  }
+
+  private containsUsersRoute(items: MenuItem[]): boolean {
+    return items.some(
+      (item) => item.route === 'users' || (item.children ? this.containsUsersRoute(item.children) : false),
+    );
   }
 }

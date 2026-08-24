@@ -1,0 +1,26 @@
+<div
+  class="tree-row"
+  [class.selected]="selectedModuleId === node.module.id"
+  [style.paddingLeft.rem]="0.5 + depth * 1"
+  (click)="onRowClick()"
+>
+  @if (hasChildren) {
+    <i class="fas" [class.fa-folder-open]="expanded()" [class.fa-folder]="!expanded()"></i>
+  } @else {
+    <i class="fas fa-bolt"></i>
+  }
+  <span>{{ node.module.name }}</span>
+</div>
+
+@if (hasChildren && expanded()) {
+  <div class="tree-children">
+    @for (child of node.children; track child.module.id) {
+      <app-module-tree-node
+        [node]="child"
+        [depth]="depth + 1"
+        [selectedModuleId]="selectedModuleId"
+        (select)="onChildSelect($event)"
+      />
+    }
+  </div>
+}

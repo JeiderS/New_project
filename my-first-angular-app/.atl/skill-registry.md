@@ -6,6 +6,7 @@ Last updated: 2026-08-23
 
 ## Sources scanned
 
+- .claude\skills
 - .agents\skills
 - C:\Users\DELL\.config\opencode\skills
 - C:\Users\DELL\.claude\skills
@@ -22,6 +23,7 @@ Last updated: 2026-08-23
 | Skill | Trigger / description | Scope | Path |
 | --- | --- | --- | --- |
 | `angular-architecture` | Defines Angular folder architecture using core/features/shared, domain-first organization, and dependency boundaries. Trigger: when creating new features, restructuring folders, or deciding whether to create a new file or a new folder. | project | `C:\Users\DELL\Desktop\New_project\my-first-angular-app\.agents\skills\angular-architecture\SKILL.md` |
+| `artifact-mockup-workflow` | Trigger: prototype, mockup, design proposal, iterate on UI before coding, Artifact review round, presentame el diseno. Prototype a UI change as an interactive Artifact before writing real code, then iterate with the user. | project | `C:\Users\DELL\Desktop\New_project\my-first-angular-app\.claude\skills\artifact-mockup-workflow\SKILL.md` |
 | `best-practices-for-typing` | Enforces robust TypeScript typing practices for Angular codebases, including strict typing, null safety, type inference, union and tuple modeling, and compiler configuration. Trigger: when writing or refactoring TypeScript models, services, components, or tsconfig typing rules. | project | `C:\Users\DELL\Desktop\New_project\my-first-angular-app\.agents\skills\best-practices-for-typing\SKILL.md` |
 | `best-practices-in-coding-style` | Enforces high-impact TypeScript coding style practices for Angular projects, including naming, explicitness, consistency, function semantics, and comment quality. Trigger: when writing or refactoring TypeScript code, reviewing naming conventions, or standardizing code style across features. | project | `C:\Users\DELL\Desktop\New_project\my-first-angular-app\.agents\skills\best-practices-in-coding-style\SKILL.md` |
 | `branch-pr` | Create Gentle AI pull requests with issue-first checks. Trigger: creating, opening, or preparing PRs for review. | user | `C:\Users\DELL\.config\opencode\skills\branch-pr\SKILL.md` |
@@ -30,7 +32,7 @@ Last updated: 2026-08-23
 | `comment-writer` | Write warm, direct collaboration comments. Trigger: PR feedback, issue replies, reviews, Slack messages, or GitHub comments. | user | `C:\Users\DELL\.config\opencode\skills\comment-writer\SKILL.md` |
 | `gentle-ai-bench` | Trigger: bench, journey, journeys, driven mode, gentle-ai-bench, journey corpus, j-numbers, bench axis. Author and verify gentle-ai bench journeys; go test ./bench never proves driven execution. | user | `C:\Users\DELL\.config\opencode\skills\gentle-ai-bench\SKILL.md` |
 | `go-testing` | Trigger: Go tests, go test coverage, Bubbletea teatest, golden files. Apply focused Go testing patterns. | user | `C:\Users\DELL\.config\opencode\skills\go-testing\SKILL.md` |
-| `interface-design` | This skill is for interface design — dashboards, admin panels, apps, tools, and interactive products. NOT for marketing design (landing pages, marketing sites, campaigns). | project | `C:\Users\DELL\Desktop\New_project\my-first-angular-app\.agents\skills\interface-design\SKILL.md` |
+| `interface-design` | Trigger: dashboard, admin panel, internal tool UI, CRUD module screen, form/table UX, layout, visual tokens, component system. Applies this app's admin-panel design system to new screens: floating detail panel, ag-Grid-style column menu, toggle switches, Material underline inputs, typography tokens. | project | `C:\Users\DELL\Desktop\New_project\my-first-angular-app\.claude\skills\interface-design\SKILL.md` |
 | `issue-creation` | Create and triage GitHub issues from repository evidence. Trigger: issue creation, bug reports, feature requests, or issue approval. | user | `C:\Users\DELL\.config\opencode\skills\issue-creation\SKILL.md` |
 | `judgment-day` | Trigger: judgment day, dual review, adversarial review, juzgar. Run explicit blind dual review with at most two scoped fix/re-judgment rounds. | user | `C:\Users\DELL\.config\opencode\skills\judgment-day\SKILL.md` |
 | `rdd-defect-workflow` | Trigger: RDD, receipt-driven development, review authority, receipt/lineage, correction/recovery, delivery gate/kill switch, bounded review defects. Guide work. | user | `C:\Users\DELL\.config\opencode\skills\rdd-defect-workflow\SKILL.md` |

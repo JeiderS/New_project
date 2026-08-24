@@ -1,0 +1,131 @@
+.grid-pane {
+  padding: 1.25rem 0;
+}
+
+.roles-grid {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  --ag-background-color: var(--surface-elev-2);
+  --ag-foreground-color: var(--ink-primary);
+  --ag-header-background-color: var(--surface-elev-1);
+  --ag-header-foreground-color: var(--ink-primary);
+  --ag-border-color: var(--border-soft);
+  --ag-row-border-color: rgba(71, 85, 105, 0.12);
+  --ag-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
+    sans-serif;
+  --ag-font-size: 13px;
+  --ag-cell-horizontal-padding: 10px;
+  --ag-wrapper-border-radius: var(--radius-sm);
+}
+
+.roles-empty {
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-1);
+  flex: 1;
+  min-height: 180px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 0.35rem;
+  padding: 1rem;
+}
+
+.roles-empty h2,
+.roles-empty p {
+  margin: 0;
+}
+
+.roles-empty h2 {
+  font-size: 1.05rem;
+}
+
+.roles-empty p {
+  color: var(--ink-secondary);
+}
+
+.role-form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.permissions-section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.permissions-section > h3 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-tertiary);
+  letter-spacing: 0.02em;
+}
+
+/* Two-column master-detail layout: module tree (left) + selected module's
+   action toggles (right). Each column scrolls independently so a deep tree
+   or a long action list doesn't grow the modal past the panel's own
+   max-height (see modal.css .modal-dialog-float). */
+.permissions-columns {
+  display: flex;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-1);
+  overflow: hidden;
+}
+
+.permissions-column-title {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-tertiary);
+  padding: 0.6rem 0.7rem 0.4rem;
+}
+
+.permissions-tree-pane {
+  flex: 0 0 40%;
+  max-width: 40%;
+  min-width: 200px;
+  border-right: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.permissions-actions-pane {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.tree-scroll,
+.actions-scroll {
+  overflow-y: auto;
+  max-height: 260px;
+  padding: 0.2rem 0.5rem 0.6rem;
+}
+
+.permissions-empty-hint {
+  margin: 0.5rem 0.2rem;
+  font-size: 0.82rem;
+  color: var(--ink-tertiary);
+}
+
+.permission-check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--ink-secondary);
+  padding: 0.5rem 0.3rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.permission-check:last-child {
+  border-bottom: none;
+}

@@ -49,6 +49,12 @@ export class Modal {
   /** Optional dialog title. Drives `aria-labelledby` when set. */
   title = input<string>();
 
+  /**
+   * Optional small caption rendered inline immediately before the title (e.g. "New" / "Edit").
+   * Only rendered when `position` is `'float'` — `'center'`/`'side'` keep the header title-only.
+   */
+  eyebrow = input<string>();
+
   /** Gates Escape-key dismissal. */
   closeOnEsc = input<boolean>(true);
 
@@ -58,16 +64,19 @@ export class Modal {
   /** Shows/hides the built-in close (X) button. Does not affect ESC/backdrop dismissal. */
   closable = input<boolean>(true);
 
-  /** Dialog width tier. Ignored when `position` is `'side'` (side panel sizes itself). */
+  /** Dialog width tier. Ignored when `position` is `'side'` or `'float'` (both size themselves). */
   size = input<'sm' | 'md' | 'lg'>('md');
 
   /**
    * Layout of the dialog: `'center'` (default) overlays centered with a dimmed backdrop;
    * `'side'` docks a full-height panel to the right, leaving the rest of the screen visible
    * and undimmed — for flows where the underlying view (e.g. a grid) stays usable alongside
-   * the form, like the reference layout this consumer asked to match.
+   * the form, like the reference layout this consumer asked to match; `'float'` is similar to
+   * `'side'` but floats as a card with margin insets on top/right/bottom (never edge-flush),
+   * a tight border radius, and a bounded height instead of full-height — the admin-panel
+   * "floating detail panel" pattern from the `interface-design` skill.
    */
-  position = input<'center' | 'side'>('center');
+  position = input<'center' | 'side' | 'float'>('center');
 
   /** Emitted whenever the modal closes, regardless of trigger. */
   closed = output<void>();

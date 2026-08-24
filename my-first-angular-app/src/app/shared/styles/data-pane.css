@@ -1,0 +1,292 @@
+/*
+ * Shared grid-pane / toolbar / form classes for admin CRUD module screens
+ * (Users, and later Products/Roles/etc.), per the `interface-design` skill.
+ *
+ * Scoped via the `.data-pane` wrapper class — wrap a screen's root template
+ * element in it. Do NOT apply the system font stack / 14px base globally
+ * (that would silently restyle Dashboard/Admin/Login, which nobody asked for).
+ */
+
+.data-pane {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  color: var(--ink-primary);
+}
+
+.data-pane h1,
+.data-pane h2,
+.data-pane h3 {
+  font-weight: 700;
+  margin: 0;
+}
+
+/*
+ * Workspace split: grid pane fixed at exactly half width, detail panel
+ * floats over the right half via <app-modal position="float">. Must be
+ * `flex: 0 0 50%`, not `1 1 50%` — since the modal's floating panel is
+ * `position: fixed` (outside this flex flow), a lone `flex-grow:1` child
+ * would otherwise stretch to fill 100% of the width on its own.
+ */
+.workspace {
+  position: relative;
+  display: flex;
+  min-height: 0;
+  /* Viewport-relative, not percentage-based: the ancestor chain (.content,
+     the routed page's own host element) has no explicit height for a
+     percentage to resolve against. Header is 55px, .content padding is
+     16px top+bottom. Matches the same technique used for the float modal's
+     positioning. */
+  height: calc(100vh - 55px - 2rem);
+}
+
+.grid-pane {
+  flex: 0 0 50%;
+  max-width: 50%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+@media (max-width: 860px) {
+  .grid-pane {
+    flex-basis: 100%;
+    max-width: none;
+  }
+}
+
+/* Pane header: title row + toolbar + toggle row, stacked, no card box */
+.pane-header {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pane-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.pane-title-row h2 {
+  font-size: 1.05rem;
+}
+
+/* Toolbar: search field + primary action */
+.toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.search-field {
+  display: grid;
+  gap: 0.35rem;
+  flex: 1;
+}
+
+.search-field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-tertiary);
+}
+
+.search-field input {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-2);
+  color: var(--ink-primary);
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+  width: 100%;
+}
+
+.search-field input:focus-visible {
+  outline: 2px solid rgba(29, 56, 110, 0.32);
+  outline-offset: 1px;
+}
+
+/* Toggle row: "Show Inactive" (left) + running total (right) */
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.toggle-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--ink-secondary);
+}
+
+.grid-total {
+  font-weight: 600;
+  color: var(--ink-tertiary);
+  white-space: nowrap;
+}
+
+/* Toggle switch — pointer-events fix baked in (see assets/toggle-switch.html) */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+  flex: none;
+}
+
+.switch input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.switch-track {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* REQUIRED: without this the track eats the click */
+  background: var(--surface-inset);
+  border: 1px solid var(--border-soft);
+  border-radius: 999px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.switch-track::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.3);
+  transition: transform 0.15s ease;
+}
+
+.switch input:checked + .switch-track {
+  background: var(--accent-route);
+  border-color: var(--accent-route);
+}
+
+.switch input:checked + .switch-track::before {
+  transform: translateX(13px);
+}
+
+.switch input:focus-visible + .switch-track {
+  outline: 2px solid var(--accent-route);
+  outline-offset: 2px;
+}
+
+/* Status glyph — boolean grid columns, centered circle+icon (never a text pill) */
+.status-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.status-glyph svg {
+  width: 14px;
+  height: 14px;
+}
+
+.status-glyph-active {
+  background: var(--success-tint);
+  color: var(--success);
+}
+
+.status-glyph-inactive {
+  background: var(--surface-inset);
+  color: var(--ink-tertiary);
+}
+
+/* Role chip */
+.role-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  background: var(--surface-inset);
+  color: var(--ink-secondary);
+  font-weight: 600;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+/* Buttons */
+.btn {
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 0.6rem 0.9rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(140deg, var(--accent-route), var(--accent-route-strong));
+  color: #fff;
+}
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border-soft);
+  color: var(--ink-secondary);
+}
+
+/* Material-underline form fields */
+.field-group {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.field-group label {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-tertiary);
+  font-size: 0.8rem;
+}
+
+.field-group input,
+.field-group select {
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  background: var(--surface-elev-2);
+  color: var(--ink-primary);
+  font: inherit;
+  padding: 0.55rem 0.65rem;
+  width: 100%;
+}
+
+.field-group input:hover,
+.field-group select:hover {
+  border-color: var(--ink-secondary);
+}
+
+.field-group input:focus-visible,
+.field-group select:focus-visible {
+  outline: none;
+  border-color: var(--accent-route);
+  box-shadow: 0 0 0 1px var(--accent-route);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}

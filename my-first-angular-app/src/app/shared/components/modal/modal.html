@@ -2,6 +2,7 @@
   #backdrop
   class="modal-backdrop"
   [class.modal-backdrop-side]="position() === 'side'"
+  [class.modal-backdrop-float]="position() === 'float'"
   [class.hidden]="!open()"
   (click)="onBackdrop($event)"
 >
@@ -12,6 +13,7 @@
     [class.modal-md]="size() === 'md' && position() === 'center'"
     [class.modal-lg]="size() === 'lg' && position() === 'center'"
     [class.modal-dialog-side]="position() === 'side'"
+    [class.modal-dialog-float]="position() === 'float'"
     role="dialog"
     aria-modal="true"
     tabindex="-1"
@@ -19,9 +21,14 @@
   >
     @if (title() || closable()) {
       <div class="modal-header">
-        @if (title()) {
-          <h2 [id]="titleId" class="modal-title">{{ title() }}</h2>
-        }
+        <div class="modal-header-text">
+          @if (position() === 'float' && eyebrow()) {
+            <span class="modal-eyebrow">{{ eyebrow() }}</span>
+          }
+          @if (title()) {
+            <h2 [id]="titleId" class="modal-title">{{ title() }}</h2>
+          }
+        </div>
         @if (closable()) {
           <button
             type="button"

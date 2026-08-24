@@ -172,6 +172,8 @@ Reglas clave al usarla:
 
 #### `interface-design`
 
+Definida en `.claude/skills/interface-design/SKILL.md`.
+
 Cargar cuando la tarea incluya:
 - Diseño de dashboards, paneles admin, herramientas internas o flujos de app.
 - Definicion de layout, jerarquia visual, UX de formularios o tablas.
@@ -180,6 +182,28 @@ Cargar cuando la tarea incluya:
 
 No usar para landing pages o marketing sites.
 
+Reglas clave (destiladas del modulo Users, ver la skill para el detalle completo):
+- Pantallas CRUD: grid a media pantalla (`flex: 0 0 50%`) + panel de detalle flotante (no modal centrado ni docked-flush), cerrado por defecto.
+- Switches: `.switch-track` siempre con `pointer-events: none`; envolver en `<div>`, no `<label>`, si el texto no debe togglear.
+- Columnas booleanas como glifo circular centrado, nunca texto "Active/Inactive". Baja nunca borra: desactivar, y los activos siempre ordenan primero.
+- Tipografia: stack de sistema (sin webfont sin embeber), `font-size:14px` base, peso maximo 700 (solo headings grandes), 600 para el resto.
+- Reusar los tokens de `src/styles.css`, nunca inventar paleta nueva.
+
+#### `artifact-mockup-workflow`
+
+Definida en `.claude/skills/artifact-mockup-workflow/SKILL.md`.
+
+Cargar cuando la tarea incluya:
+- Prototipar o "presentar" un diseño de UI antes de programarlo.
+- Iterar sobre un mockup ya publicado como Artifact.
+
+Reglas clave:
+- Prototipo interactivo (HTML/CSS/JS plano) via Artifact antes de tocar codigo real; recien implementar en Angular cuando el usuario aprueba.
+- Republicar siempre en el mismo path para mantener la misma URL.
+- "todo" significa exhaustivo: aplicar a cada instancia y verificar con grep.
+- Despues de mover/borrar un elemento HTML, revisar el JS por referencias `getElementById` huerfanas.
+- Ante un reporte de bug, verificar el codigo real antes de asumir o cambiar algo.
+
 ### 10.3 Matriz rapida de decision
 
 - Estructura de carpetas / limites de arquitectura -> `angular-architecture` (+ `angular-architect` si tambien hay logica Angular).
@@ -187,6 +211,7 @@ No usar para landing pages o marketing sites.
 - Naming, consistencia y legibilidad TS -> `best-practices-in-coding-style`.
 - Tipado estricto, modelos, null safety, tsconfig typing -> `best-practices-for-typing`.
 - UX/UI de producto -> `interface-design` (+ `angular-architect` si hay impacto tecnico Angular).
+- Presentar/prototipar un diseño antes de programarlo -> `artifact-mockup-workflow` (+ `interface-design`).
 
 ### 10.4 Protocolo minimo antes de editar
 

@@ -35,11 +35,27 @@
   border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
+.modal-header-text {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
 .modal-title {
   margin: 0;
   font-size: 1.05rem;
   font-weight: 700;
   color: #fff;
+}
+
+.modal-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: nowrap;
 }
 
 .modal-close-btn {
@@ -107,4 +123,36 @@
 
 .modal-dialog-side .modal-header {
   border-radius: 0;
+}
+
+.modal-backdrop-float {
+  top: 55px;
+  justify-content: flex-end;
+  align-items: stretch;
+  padding: 0;
+  background: transparent;
+}
+
+.modal-dialog-float {
+  /* Matches the grid pane's right edge (sidebar 85px + .content padding
+     16px each side + grid-pane's own 50% share), with a 1rem gap added
+     on top so the panel doesn't sit flush against the grid. Verified
+     against the real rendered layout via Playwright, not guessed. */
+  width: min(calc(50vw - 79px), 820px);
+  max-width: none;
+  height: auto;
+  max-height: calc(100vh - 55px - 2.5rem);
+  margin: 1.25rem 1.25rem 1.25rem 1rem;
+  border-radius: 5px;
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-panel);
+}
+
+.modal-dialog-float .modal-header {
+  border-radius: 5px 5px 0 0;
+}
+
+.modal-dialog-float .modal-footer {
+  justify-content: flex-start;
+  border-top: none;
 }
