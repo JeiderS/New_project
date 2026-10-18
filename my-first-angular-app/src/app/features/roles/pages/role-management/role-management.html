@@ -1,5 +1,5 @@
-<div class="data-pane workspace">
-  <section class="grid-pane" aria-label="Roles registrados">
+<app-page-layout class="data-pane" layout="split" [leftRatio]="50" [rightRatio]="50">
+  <section layout-main class="grid-pane" aria-label="Roles registrados">
     <div class="pane-header">
       <div class="toolbar">
         <div class="search-field">
@@ -22,12 +22,13 @@
     </div>
 
     @if (hasRows()) {
-      <ag-grid-angular
-        class="ag-theme-quartz roles-grid"
+      <app-grid
+        class="app-grid"
         [rowData]="visibleRoles()"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         [gridOptions]="gridOptions"
+        [rowSelection]="true"
         (cellClicked)="onCellClicked($event)"
       />
     } @else {
@@ -44,11 +45,12 @@
     }
   </section>
 
+  <section layout-side class="role-form-pane">
   <app-modal
     [(open)]="modalOpen"
     [title]="modalTitle()"
     [eyebrow]="modalEyebrow()"
-    position="float"
+    position="inline"
   >
     <form [formGroup]="roleForm" class="role-form">
       <div class="field-group">
@@ -106,11 +108,12 @@
       <button
         type="button"
         class="btn btn-primary"
-        [disabled]="roleForm.invalid || saving()"
+        [disabled]="roleForm.invalid"
         (click)="save()"
       >
-        {{ saving() ? 'Guardando...' : 'Guardar' }}
+        Guardar
       </button>
     </div>
   </app-modal>
-</div>
+  </section>
+</app-page-layout>

@@ -1,22 +1,23 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AgGridAngular } from 'ag-grid-angular';
 import {
-  AllCommunityModule,
   CellClickedEvent,
   ColDef,
   GridOptions,
   ICellRendererParams,
-  ModuleRegistry,
 } from 'ag-grid-community';
 import { CreateUserPayload, UpdateUserPayload, User } from '@core/interfaces/user.interface';
 import { Role } from '@core/interfaces/role.interface';
 import { UserService } from '@core/services/user.service';
 import { RoleService } from '@core/services/role.service';
-import { AlertHelper } from '@shared/utils/alert.helper';
+import { LoadingService } from '@core/loading/loading.service';
+import { AlertService } from '@core/alerts/alert.service';
 import { Modal } from '@shared/components/modal/modal';
+import { AppGridComponent } from
+  '@shared/components/app-grid/app-grid.component';
+import { AppPageLayoutComponent } from
+  '@shared/components/app-page-layout/app-page-layout.component';
 
-ModuleRegistry.registerModules([AllCommunityModule]);
 
 type ModalMode = 'create' | 'edit';
 
@@ -30,7 +31,7 @@ const STATUS_ICON = {
 @Component({
   selector: 'app-user-management',
   standalone: true,
-  imports: [AgGridAngular, Modal, ReactiveFormsModule],
+  imports: [Modal, ReactiveFormsModule, AppGridComponent, AppPageLayoutComponent],
   templateUrl: './user-management.html',
   styleUrl: './user-management.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,13 +39,13 @@ const STATUS_ICON = {
 export class UserManagement {
   private readonly userService = inject(UserService);
   private readonly roleService = inject(RoleService);
-  private readonly alert = inject(AlertHelper);
+  private readonly loadingService = inject(LoadingService);
+  private readonly alertService = inject(AlertService);
   private readonly formBuilder = inject(FormBuilder);
 
   readonly users = signal<User[]>([]);
   readonly roles = signal<Role[]>([]);
   readonly loading = signal(false);
-  readonly saving = signal(false);
   readonly searchTerm = signal('');
   readonly showInactive = signal(false);
 
@@ -110,31 +111,25 @@ export class UserManagement {
   // and the menu button silently does nothing. `filter: true` alone still
   // gives the Community-edition filter icon/popup per column.
   readonly defaultColDef: ColDef<User> = {
-    sortable: true,
-    filter: true,
-    resizable: true,
-    comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
-      const a = nodeA?.data;
-      const b = nodeB?.data;
 
-      if (a && b && a.active !== b.active) {
-        const activeFirst = a.active ? -1 : 1;
-        return isDescending ? -activeFirst : activeFirst;
-      }
+  comparator: (valueA, valueB, nodeA, nodeB, isDescending) => {
+    const a = nodeA?.data;
+    const b = nodeB?.data;
 
-      if (valueA === valueB) {
-        return 0;
-      }
+    if (a && b && a.active !== b.active) {
+      const activeFirst = a.active ? -1 : 1;
+      return isDescending ? -activeFirst : activeFirst;
+    }
 
-      return valueA > valueB ? 1 : -1;
-    },
-  };
+    if (valueA === valueB) {
+      return 0;
+    }
 
-  readonly gridOptions: GridOptions<User> = {
-    domLayout: 'normal',
-    rowHeight: 44,
-    headerHeight: 44,
-  };
+    return valueA > valueB ? 1 : -1;
+  },
+};
+
+  readonly gridOptions: GridOptions<User> = {};
 
   readonly visibleUsers = computed(() => {
     const term = this.normalizeText(this.searchTerm());
@@ -168,21 +163,26 @@ export class UserManagement {
   async loadUsers(): Promise<void> {
     try {
       this.loading.set(true);
+      this.loadingService.show('Cargando usuarios...');
       const users = await this.userService.listUsers();
       this.users.set(users);
     } catch (error) {
-      this.alert.showError(error, 'No se pudo cargar el listado de usuarios');
+      this.alertService.error(error, 'No se pudo cargar el listado de usuarios');
     } finally {
       this.loading.set(false);
+      this.loadingService.hide();
     }
   }
 
   async loadRoles(): Promise<void> {
     try {
+      this.loadingService.show();
       const roles = await this.roleService.listRoles();
       this.roles.set(roles);
     } catch (error) {
-      this.alert.showError(error, 'No se pudo cargar el listado de roles');
+      this.alertService.error(error, 'No se pudo cargar el listado de roles');
+    } finally {
+      this.loadingService.hide();
     }
   }
 
@@ -245,7 +245,7 @@ export class UserManagement {
     const raw = this.userForm.getRawValue();
 
     try {
-      this.saving.set(true);
+      this.loadingService.show('Guardando usuario...');
 
       if (this.mode() === 'create') {
         const payload: CreateUserPayload = {
@@ -258,7 +258,7 @@ export class UserManagement {
         };
         const created = await this.userService.createUser(payload);
         this.users.update((list) => [...list, created]);
-        this.alert.showSuccess('Usuario creado correctamente');
+        this.alertService.success('Usuario creado correctamente');
       } else {
         const current = this.selectedUser();
         if (!current) {
@@ -276,14 +276,14 @@ export class UserManagement {
         this.users.update((list) =>
           list.map((user) => (user.id === current.id ? updated : user)),
         );
-        this.alert.showSuccess('Usuario actualizado correctamente');
+        this.alertService.success('Usuario actualizado correctamente');
       }
 
       this.modalOpen.set(false);
     } catch (error) {
-      this.alert.showError(error, 'No se pudo guardar el usuario');
+      this.alertService.error(error, 'No se pudo guardar el usuario');
     } finally {
-      this.saving.set(false);
+      this.loadingService.hide();
     }
   }
 
@@ -307,17 +307,17 @@ export class UserManagement {
     }
 
     try {
-      this.saving.set(true);
+      this.loadingService.show('Desactivando usuario...');
       await this.userService.deactivateUser(current.id);
       this.users.update((list) =>
         list.map((user) => (user.id === current.id ? { ...user, active: false } : user)),
       );
       this.selectedUser.update((user) => (user ? { ...user, active: false } : user));
-      this.alert.showSuccess('Usuario desactivado correctamente');
+      this.alertService.success('Usuario desactivado correctamente');
     } catch (error) {
-      this.alert.showError(error, 'No se pudo desactivar el usuario');
+      this.alertService.error(error, 'No se pudo desactivar el usuario');
     } finally {
-      this.saving.set(false);
+      this.loadingService.hide();
     }
   }
 

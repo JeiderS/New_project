@@ -1,0 +1,233 @@
+<div class="header-content">
+  <button
+    type="button"
+    class="header-label"
+    (click)="params.progressSort($event.shiftKey)"
+    [title]="params.displayName"
+  >
+    <span>{{ params.displayName }}</span>
+
+    @if (params.column.getSort() === 'asc') {
+      <span class="sort-indicator">↑</span>
+    }
+
+    @if (params.column.getSort() === 'desc') {
+      <span class="sort-indicator">↓</span>
+    }
+  </button>
+
+  <button
+    type="button"
+    class="menu-button"
+    aria-label="Opciones de columna"
+    title="Opciones de columna"
+    (click)="toggleMenu($event)"
+  >
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+      <line x1="2" y1="4" x2="14" y2="4" />
+      <line x1="2" y1="8" x2="14" y2="8" />
+      <line x1="2" y1="12" x2="14" y2="12" />
+    </svg>
+  </button>
+</div>
+
+@if (menuVisible) {
+  <div
+    class="column-menu"
+    [style.top.px]="menuTop"
+    [style.left.px]="menuLeft"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="menu-tabs">
+      <button type="button" class="menu-tab" [class.active]="activeTab === 'general'" (click)="selectTab('general')">
+        General
+      </button>
+      <button type="button" class="menu-tab" [class.active]="activeTab === 'filter'" (click)="selectTab('filter')">
+        Filtro
+      </button>
+      <button type="button" class="menu-tab" [class.active]="activeTab === 'columns'" (click)="selectTab('columns')">
+        Columnas
+      </button>
+    </div>
+
+    <div class="menu-body">
+      @switch (activeTab) {
+        @case ('general') {
+          <div class="menu-list">
+            <div class="menu-pin-row">
+              <button type="button" class="menu-item" (click)="togglePinSubmenu($event)">
+                <svg class="menu-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 17v5" />
+                  <path d="M9 3h6l-1 6 3 3H7l3-3z" />
+                </svg>
+                <span class="menu-item-label">Fijar columna</span>
+                <svg class="menu-item-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+              </button>
+
+              @if (pinSubmenuOpen) {
+                <div
+                  class="pin-submenu"
+                  [style.top.px]="pinSubmenuTop"
+                  [style.left.px]="pinSubmenuLeft"
+                  (click)="$event.stopPropagation()"
+                >
+                  <button type="button" class="menu-item" (click)="setPin('left')">Fijar a la izquierda</button>
+                  <button type="button" class="menu-item" (click)="setPin('right')">Fijar a la derecha</button>
+                  <button type="button" class="menu-item" (click)="setPin(null)">No fijar</button>
+                </div>
+              }
+            </div>
+
+            <div class="menu-sep"></div>
+
+            <button type="button" class="menu-item" (click)="autoSizeThisColumn()">
+              <svg class="menu-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 4v16" />
+                <path d="M3 12h6M6 9l-3 3 3 3" />
+                <path d="M21 12h-6M18 9l3 3-3 3" />
+              </svg>
+              <span class="menu-item-label">Ajustar esta columna</span>
+            </button>
+
+            <button type="button" class="menu-item" (click)="autoSizeAllColumns()">
+              <svg class="menu-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <rect x="3.5" y="4" width="17" height="16" rx="1" />
+                <path d="M9.2 4v16M14.8 4v16" />
+              </svg>
+              <span class="menu-item-label">Ajustar todas las columnas</span>
+            </button>
+
+            <div class="menu-sep"></div>
+
+            <button type="button" class="menu-item" (click)="resetColumns()">
+              <svg class="menu-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+                <path d="M3 3v5h5" />
+              </svg>
+              <span class="menu-item-label">Restablecer columnas</span>
+            </button>
+
+            <button type="button" class="menu-item" (click)="openToolPanel()">
+              <svg class="menu-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <rect x="3.5" y="4" width="17" height="16" rx="1" />
+                <path d="M15 4v16" />
+              </svg>
+              <span class="menu-item-label">Panel de columnas</span>
+            </button>
+          </div>
+        }
+
+        @case ('filter') {
+          <div class="menu-pad">
+            <div class="menu-search-field">
+              <svg class="menu-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M20 20l-3.5-3.5" />
+              </svg>
+              <input
+                type="search"
+                class="menu-search"
+                placeholder="Buscar…"
+                [value]="filterSearch"
+                (input)="filterSearch = $any($event.target).value"
+              />
+            </div>
+
+            <div class="menu-check-list">
+              <label class="menu-check menu-check-all">
+                <span class="chk">
+                  <input
+                    type="checkbox"
+                    [checked]="allFilterOptionsChecked"
+                    (change)="toggleAllFilterOptions($any($event.target).checked)"
+                  />
+                  <span class="chk-box" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10" /></svg>
+                  </span>
+                </span>
+                <span>(Seleccionar todo)</span>
+              </label>
+
+              @for (option of visibleFilterOptions; track option.label) {
+                <label class="menu-check">
+                  <span class="chk">
+                    <input
+                      type="checkbox"
+                      [checked]="option.checked"
+                      (change)="toggleFilterOption(option, $any($event.target).checked)"
+                    />
+                    <span class="chk-box" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10" /></svg>
+                    </span>
+                  </span>
+                  <span>{{ option.label }}</span>
+                </label>
+              }
+
+              @if (visibleFilterOptions.length === 0) {
+                <p class="menu-empty">Sin resultados</p>
+              }
+            </div>
+          </div>
+        }
+
+        @case ('columns') {
+          <div class="menu-pad">
+            <div class="menu-search-field">
+              <svg class="menu-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <circle cx="11" cy="11" r="7" />
+                <path d="M20 20l-3.5-3.5" />
+              </svg>
+              <input
+                type="search"
+                class="menu-search"
+                placeholder="Buscar columna…"
+                [value]="columnsSearch"
+                (input)="columnsSearch = $any($event.target).value"
+              />
+            </div>
+
+            <div class="menu-check-list">
+              <label class="menu-check menu-check-all">
+                <span class="chk">
+                  <input
+                    type="checkbox"
+                    [checked]="allColumnsVisible"
+                    (change)="toggleAllColumns($any($event.target).checked)"
+                  />
+                  <span class="chk-box" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10" /></svg>
+                  </span>
+                </span>
+                <span>(Todas las columnas)</span>
+              </label>
+
+              @for (column of visibleColumns; track column.getColId()) {
+                <label class="menu-check menu-check-drag">
+                  <svg class="drag-handle" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true">
+                    <circle cx="3" cy="3" r="1.3" /><circle cx="9" cy="3" r="1.3" />
+                    <circle cx="3" cy="8" r="1.3" /><circle cx="9" cy="8" r="1.3" />
+                    <circle cx="3" cy="13" r="1.3" /><circle cx="9" cy="13" r="1.3" />
+                  </svg>
+                  <span class="chk">
+                    <input
+                      type="checkbox"
+                      [checked]="column.isVisible()"
+                      (change)="toggleColumnVisibility(column, $event)"
+                    />
+                    <span class="chk-box" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10" /></svg>
+                    </span>
+                  </span>
+                  <span>{{ getColumnName(column) }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+}

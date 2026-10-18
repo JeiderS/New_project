@@ -1,41 +1,112 @@
-<!-- <div class="sidebar-wrapper">
-
-  @for (mod of modulos; track mod.nombre) {
-    <app-menu [item]="mod"></app-menu>
+<nav class="sm-rail" #rail aria-label="Menú principal">
+  @for (section of sections(); track section.nombre; let i = $index) {
+    <button
+      type="button"
+      class="sm-rail__item"
+      [class.is-active]="isSectionActive(section, i)"
+      [attr.aria-expanded]="section.children?.length ? openIndex() === i : null"
+      (click)="toggleSection(section, i)"
+    >
+      <i class="{{ section.icon }}" aria-hidden="true"></i>
+      <span class="sm-rail__label">{{ section.nombre }}</span>
+    </button>
   }
+</nav>
 
-</div> -->
-
-
-<div class="sidebar-wrapper" #sidebar>
-
-  @for (mod of modulos(); track mod.nombre) {
-
-    <div class="sidebar-item"
-         (click)="selectMod(mod)">
-
-      <span class="{{mod.icon}}"></span>
-      <p>{{mod.nombre}}</p>
-
+@if (openSection(); as section) {
+  <div class="sm-panel is-open" #panel role="navigation" [attr.aria-label]="section.nombre">
+    <div class="sm-panel__header">
+      <h2 class="sm-panel__title">{{ section.nombre }}</h2>
+      <button
+        type="button"
+        class="sm-panel__close"
+        aria-label="Cerrar submenú"
+        (click)="closePanel(true)"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 6l-6 6 6 6" />
+        </svg>
+      </button>
     </div>
 
-  }
+    <div class="sm-search">
+      <label class="sm-search__box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" />
+          <path d="M20 20l-3.5-3.5" />
+        </svg>
+        <input
+          type="text"
+          class="sm-search__input"
+          placeholder="Buscar…"
+          [attr.aria-label]="'Buscar en ' + section.nombre"
+          [value]="query()"
+          (input)="onSearchInput($any($event.target).value)"
+        />
+      </label>
+    </div>
 
-</div>
+    <div class="sm-list">
+      @for (entry of filteredItems(); track entry.item.nombre) {
+        <div>
+          @if (entry.item.children?.length) {
+            <button
+              type="button"
+              class="sm-item sm-item--parent"
+              [class.is-ancestor]="itemHasCurrent(entry.item)"
+              [attr.aria-expanded]="isExpanded(section, entry.item)"
+              (click)="toggleItem(section, entry.item)"
+            >
+              <i class="{{ entry.item.icon }}" aria-hidden="true"></i>
+              <span class="sm-item__label">{{ entry.item.nombre }}</span>
+              <svg
+                class="sm-item__chev"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
 
-@if (selectedMod) {
+            @if (isExpanded(section, entry.item)) {
+              <div class="sm-children" role="group" [attr.aria-label]="entry.item.nombre">
+                @for (child of entry.children; track child.nombre) {
+                  <a
+                    class="sm-item sm-item--child"
+                    [class.is-current]="isCurrent(child.route)"
+                    [attr.aria-current]="isCurrent(child.route) ? 'page' : null"
+                    [routerLink]="routeFor(child.route)"
+                    (click)="closePanel()"
+                  >
+                    <span class="sm-item__label">{{ child.nombre }}</span>
+                  </a>
+                }
+              </div>
+            }
+          } @else {
+            <a
+              class="sm-item"
+              [class.is-current]="isCurrent(entry.item.route)"
+              [attr.aria-current]="isCurrent(entry.item.route) ? 'page' : null"
+              [routerLink]="routeFor(entry.item.route)"
+              (click)="closePanel()"
+            >
+              <i class="{{ entry.item.icon }}" aria-hidden="true"></i>
+              <span class="sm-item__label">{{ entry.item.nombre }}</span>
+            </a>
+          }
+        </div>
+      }
 
-  <div class="side-panel" #panel>
-
-    <div class="search-box">
-        <input type="text" placeholder="Search">
-        <i class="fa fa-search"></i>
-      </div>
-
-    @for (child of selectedMod.children; track child.nombre) {
-      <app-menu [item]="child" (navigated)="selectedMod = null"></app-menu>
-    }
-
+      @if (filteredItems().length === 0) {
+        <p class="sm-empty">Sin resultados</p>
+      }
+    </div>
   </div>
-
 }

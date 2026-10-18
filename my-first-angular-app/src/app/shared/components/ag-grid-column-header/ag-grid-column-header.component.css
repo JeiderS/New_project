@@ -1,0 +1,352 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  color: inherit;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  gap: 6px;
+}
+
+.header-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.header-label span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sort-indicator {
+  flex-shrink: 0;
+}
+
+.menu-button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 4px;
+  padding: 3px 5px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.menu-button svg {
+  width: 13px;
+  height: 13px;
+}
+
+.menu-button:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* Floating panel — sober system style: white, thin gray border, soft shadow */
+
+.column-menu {
+  --sis-navy: #1e3a6e;
+  --sis-text: #1f2937;
+  --sis-muted: #6b7280;
+  --sis-border: #d5dae1;
+  --sis-divider: #eceff3;
+  --sis-hover: #f3f5f8;
+
+  position: fixed;
+  z-index: 10000;
+  width: 270px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border: 1px solid var(--sis-border);
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--sis-text);
+  box-shadow: 0 6px 16px rgba(17, 24, 39, 0.1);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+}
+
+/* Tab strip — text only, active tab gets the navy underline */
+
+.menu-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid #e3e7ec;
+}
+
+.menu-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 42px;
+  padding-bottom: 8px;
+  margin-bottom: -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--sis-muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+/* Pull the three labels toward the middle so they read closer together,
+   while each tab's clickable area and underline still span its full
+   edge-to-edge third of the strip. */
+.menu-tab:nth-child(1) {
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+
+.menu-tab:nth-child(3) {
+  justify-content: flex-start;
+  padding-left: 10px;
+}
+
+.menu-tab:hover {
+  color: var(--sis-text);
+}
+
+.menu-tab.active {
+  color: var(--sis-navy);
+  border-bottom-color: var(--sis-navy);
+}
+
+/* Tab content ----------------------------------------------------------- */
+
+.menu-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.menu-list {
+  padding: 10px 12px 16px;
+}
+
+.menu-pad {
+  padding: 16px 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-sep {
+  height: 1px;
+  margin: 6px 12px;
+  background: var(--sis-divider);
+}
+
+.menu-pin-row {
+  position: relative;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 32px;
+  border: 0;
+  border-radius: 3px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--sis-text);
+  text-align: left;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: var(--sis-hover);
+}
+
+.menu-item-icon {
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  color: var(--sis-muted);
+}
+
+.menu-item-label {
+  flex: 1;
+}
+
+.menu-item-arrow {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  color: #9ca3af;
+}
+
+.pin-submenu {
+  position: fixed;
+  z-index: 10001;
+  width: 180px;
+  padding: 4px;
+  border: 1px solid var(--sis-border);
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 6px 16px rgba(17, 24, 39, 0.1);
+}
+
+/* Search field ------------------------------------------------------------ */
+
+.menu-search-field {
+  position: relative;
+}
+
+.menu-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  width: 14px;
+  height: 14px;
+  color: #9ca3af;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.menu-search {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 30px;
+  border: 1px solid var(--sis-border);
+  border-radius: 3px;
+  padding: 0 8px 0 28px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--sis-text);
+}
+
+.menu-search::placeholder {
+  color: #9ca3af;
+}
+
+.menu-search:focus-visible {
+  outline: none;
+  border-color: var(--sis-navy);
+  box-shadow: 0 0 0 2px rgba(30, 58, 110, 0.15);
+}
+
+/* Checkbox rows ------------------------------------------------------------ */
+
+.menu-check-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 6px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.menu-check:hover {
+  background: var(--sis-hover);
+}
+
+.menu-check-all {
+  margin-bottom: 4px;
+  padding-bottom: 0;
+  border-bottom: 1px solid var(--sis-divider);
+  border-radius: 0;
+}
+
+.menu-check-drag {
+  height: 28px;
+}
+
+.drag-handle {
+  flex-shrink: 0;
+  width: 10px;
+  height: 14px;
+  color: #c2c8d1;
+}
+
+.menu-empty {
+  margin: 8px 6px;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+/* Custom checkbox — flat navy square with a white check, per the reference;
+   the real <input> stays interactive/accessible, the visual box sits on top
+   with pointer-events disabled so it never eats the click. */
+.chk {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.chk input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.chk-box {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  border: 1.5px solid #9aa3af;
+  border-radius: 2px;
+  background: #ffffff;
+}
+
+.chk-box svg {
+  width: 10px;
+  height: 10px;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.chk input:checked + .chk-box {
+  border-color: var(--sis-navy);
+  background: var(--sis-navy);
+}
+
+.chk input:checked + .chk-box svg {
+  opacity: 1;
+}
+
+.chk input:focus-visible + .chk-box {
+  outline: 2px solid var(--sis-navy);
+  outline-offset: 1px;
+}

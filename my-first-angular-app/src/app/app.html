@@ -1,24 +1,7 @@
 <router-outlet></router-outlet>
 
-@if (alertHelper.alert(); as alert) {
-  <div class="alert-backdrop" (click)="closeAlert()">
-    <section
-      class="alert-modal"
-      role="alertdialog"
-      aria-modal="true"
-      [attr.aria-label]="alert.title"
-      [class.alert-success]="alert.type === 'success'"
-      [class.alert-error]="alert.type === 'error'"
-      (click)="$event.stopPropagation()"
-    >
-      <header class="alert-header">
-        <span class="alert-icon" aria-hidden="true">{{ alert.type === 'success' ? '✓' : '!' }}</span>
-        <h2>{{ alert.title }}</h2>
-      </header>
-      <p class="alert-message">{{ alert.message }}</p>
-      <footer class="alert-actions">
-        <button type="button" class="alert-button" (click)="closeAlert()">Entendido</button>
-      </footer>
-    </section>
-  </div>
-}
+<app-module-loading />
+
+<app-loading />
+
+<app-alert-container />

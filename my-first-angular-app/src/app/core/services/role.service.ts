@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Role } from '@core/interfaces/role.interface';
+import { Role, RoleGrant } from '@core/interfaces/role.interface';
 import { environment } from '../../../environments/environments';
 
 interface ApiResponse<T> {
@@ -37,9 +37,9 @@ export class RoleService {
     return res.data;
   }
 
-  async assignActions(roleId: number, actionIds: number[]): Promise<Role> {
+  async assignActions(roleId: number, grants: RoleGrant[]): Promise<Role> {
     const res = await firstValueFrom(
-      this.http.put<ApiResponse<Role>>(`${this.apiUrl}/${roleId}/actions`, { actionIds }),
+      this.http.put<ApiResponse<Role>>(`${this.apiUrl}/${roleId}/actions`, { grants }),
     );
     return res.data;
   }

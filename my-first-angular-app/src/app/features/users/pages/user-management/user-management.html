@@ -1,5 +1,5 @@
-<div class="data-pane workspace">
-  <section class="grid-pane" aria-label="Usuarios registrados">
+<app-page-layout class="data-pane" layout="split" [leftRatio]="50" [rightRatio]="50">
+  <section layout-main class="grid-pane" aria-label="Usuarios registrados">
     <div class="pane-header">
       <div class="toolbar">
         <div class="search-field">
@@ -34,12 +34,13 @@
     </div>
 
     @if (hasRows()) {
-      <ag-grid-angular
-        class="ag-theme-quartz users-grid"
+      <app-grid
+        class="app-grid"
         [rowData]="visibleUsers()"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         [gridOptions]="gridOptions"
+        [rowSelection]="true"
         (cellClicked)="onCellClicked($event)"
       />
     } @else {
@@ -56,11 +57,12 @@
     }
   </section>
 
-  <app-modal
+    <section layout-side class="user-form-pane">  
+        <app-modal
     [(open)]="modalOpen"
     [title]="modalTitle()"
     [eyebrow]="modalEyebrow()"
-    position="float"
+    position="inline"
   >
     <form [formGroup]="userForm" class="user-form">
       @if (mode() === 'edit') {
@@ -127,11 +129,17 @@
       <button
         type="button"
         class="btn btn-primary"
-        [disabled]="userForm.invalid || saving()"
+        [disabled]="userForm.invalid"
         (click)="save()"
       >
-        {{ saving() ? 'Guardando...' : 'Guardar' }}
+        Guardar
       </button>
     </div>
   </app-modal>
-</div>
+
+    </section>
+  </app-page-layout>
+
+
+  
+

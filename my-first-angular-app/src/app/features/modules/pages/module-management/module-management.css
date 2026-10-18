@@ -2,23 +2,6 @@
   padding: 1.25rem 0;
 }
 
-.modules-grid {
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-  --ag-background-color: var(--surface-elev-2);
-  --ag-foreground-color: var(--ink-primary);
-  --ag-header-background-color: var(--surface-elev-1);
-  --ag-header-foreground-color: var(--ink-primary);
-  --ag-border-color: var(--border-soft);
-  --ag-row-border-color: rgba(71, 85, 105, 0.12);
-  --ag-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-    sans-serif;
-  --ag-font-size: 13px;
-  --ag-cell-horizontal-padding: 10px;
-  --ag-wrapper-border-radius: var(--radius-sm);
-}
-
 .modules-empty {
   border: 1px dashed var(--border-soft);
   border-radius: var(--radius-sm);
@@ -58,40 +41,192 @@
   border-top: 1px solid var(--border-soft);
 }
 
+.module-actions-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 1.9rem;
+}
+
 .module-actions-title {
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--ink-tertiary);
   letter-spacing: 0.02em;
 }
 
-.module-actions-empty {
-  margin: 0;
+.module-actions-count {
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.4rem;
+  box-sizing: border-box;
+  border-radius: 9999px;
+  background: var(--surface-inset);
+  color: var(--ink-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.module-actions-btn {
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  height: 1.9rem;
+  padding: 0 0.7rem;
+}
+
+.module-actions-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.module-actions-btn--outline {
+  border: 1px solid var(--accent-route);
+  background: var(--surface-elev-2);
+  color: var(--accent-route);
+}
+
+.module-actions-btn--outline:hover:not(:disabled) {
+  background: var(--surface-inset);
+}
+
+.module-actions-btn--danger {
+  border: 1px solid var(--danger);
+  background: var(--danger-tint);
+  color: var(--danger);
+}
+
+.module-actions-btn--danger:hover {
+  background: var(--danger-tint);
+  filter: brightness(0.97);
+}
+
+.module-actions-btn--primary {
+  height: 2.35rem;
+  padding: 0 0.85rem;
+  border: 0;
+  background: var(--accent-route);
+  color: #fff;
+}
+
+.module-actions-btn--primary:hover:not(:disabled) {
+  background: var(--accent-route-strong);
+  filter: brightness(1.1);
+}
+
+/* ---- Actions grid --------------------------------------------------- */
+.module-actions-grid-wrap {
+  height: 226px;
+  width: 100%;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.module-actions-cell-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  height: 100%;
+}
+
+.module-actions-cell-name__text {
+  font-weight: 500;
+  color: var(--ink-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.module-actions-tag-new {
+  flex-shrink: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent-route);
+  background: var(--surface-inset);
+  border-radius: 9999px;
+  padding: 0.1rem 0.45rem;
+  line-height: 1.3;
+}
+
+.module-actions-header-center .ag-header-cell-label {
+  justify-content: center;
+}
+
+.module-actions-cell-center {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+}
+
+.module-actions-remove-btn {
+  width: 1.9rem;
+  height: 1.9rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.module-actions-remove-btn:hover {
+  background: var(--danger-tint);
+  color: var(--danger);
+}
+
+.module-actions-remove-btn:focus-visible {
+  outline: 2px solid var(--accent-route);
+  outline-offset: 1px;
+}
+
+/* Row for a not-yet-saved action */
+:host ::ng-deep .module-actions-row-new:not(.ag-row-selected) {
+  background: var(--surface-inset);
+}
+
+/* ---- Empty state (no app-grid rendered) ------------------------------ */
+.module-actions-empty-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: center;
+  padding: 1rem;
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-1);
+}
+
+.module-actions-empty-grid__text {
   font-size: 0.83rem;
   color: var(--ink-secondary);
 }
 
-.module-actions-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.module-actions-empty-grid__hint {
+  font-size: 0.75rem;
+  color: var(--ink-tertiary);
 }
 
-.module-action-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-sm);
-  background: var(--surface-inset);
-  color: var(--ink-secondary);
-  font-weight: 600;
-  font-size: 0.78rem;
-}
-
+/* ---- "Nueva accion" field --------------------------------------------- */
 .module-actions-add {
   display: flex;
   gap: 0.5rem;
@@ -116,4 +251,46 @@
   outline: none;
   border-color: var(--accent-route);
   box-shadow: 0 0 0 1px var(--accent-route);
+}
+
+.module-actions-add input.module-actions-input-dupe {
+  border-color: var(--warning);
+}
+
+.module-actions-dupe-warning {
+  font-size: 0.75rem;
+  color: var(--warning);
+  margin-top: -0.3rem;
+}
+
+/* ---- Modal footer status --------------------------------------------- */
+.module-footer-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  flex-wrap: wrap;
+}
+
+.module-actions-status {
+  font-size: 0.75rem;
+  color: var(--ink-tertiary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.module-actions-status--pending {
+  color: var(--warning);
+}
+
+.module-actions-status--pending::before {
+  content: '';
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 9999px;
+  background: var(--warning);
+}
+
+.module-actions-status--saved {
+  color: var(--success);
 }

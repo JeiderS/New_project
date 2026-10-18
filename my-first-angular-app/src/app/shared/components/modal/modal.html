@@ -3,6 +3,7 @@
   class="modal-backdrop"
   [class.modal-backdrop-side]="position() === 'side'"
   [class.modal-backdrop-float]="position() === 'float'"
+  [class.modal-backdrop-inline]="position() === 'inline'"
   [class.hidden]="!open()"
   (click)="onBackdrop($event)"
 >
@@ -14,6 +15,7 @@
     [class.modal-lg]="size() === 'lg' && position() === 'center'"
     [class.modal-dialog-side]="position() === 'side'"
     [class.modal-dialog-float]="position() === 'float'"
+    [class.modal-dialog-inline]="position() === 'inline'"
     role="dialog"
     aria-modal="true"
     tabindex="-1"
@@ -22,7 +24,7 @@
     @if (title() || closable()) {
       <div class="modal-header">
         <div class="modal-header-text">
-          @if (position() === 'float' && eyebrow()) {
+          @if ((position() === 'float' || position() === 'inline') && eyebrow()) {
             <span class="modal-eyebrow">{{ eyebrow() }}</span>
           }
           @if (title()) {

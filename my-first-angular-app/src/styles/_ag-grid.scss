@@ -1,0 +1,198 @@
+.app-grid {
+  display: block;
+  width: 100%;
+  height: 400px;
+  min-height: 300px;
+}
+
+
+/* Encabezados */
+.app-grid .ag-header {
+  letter-spacing: 0.2px;
+  margin-bottom: 4px;
+}
+
+.app-grid .ag-header-cell-text {
+  font-size: 12px;
+}
+
+/* The last header column keeps no separator on its right (the Theming API's
+   headerColumnBorder param draws one after every column, including the
+   last). */
+.app-grid .ag-header-cell:last-child::after {
+  display: none;
+}
+
+/* Celdas: centrado vertical (el tema por defecto no usa flex en .ag-cell) */
+.app-grid .ag-cell {
+  display: flex;
+  align-items: center;
+  line-height: normal;
+}
+
+/* Selección */
+.app-grid .ag-row-selected {
+  font-weight: 500;
+}
+
+/* Filtros e inputs */
+.app-grid .ag-input-field-input,
+.app-grid .ag-picker-field-wrapper {
+  border-radius: 4px;
+}
+
+/* Paginación */
+.app-grid .ag-paging-panel {
+  min-height: 32px;
+  font-size: 11px;
+}
+
+/* Scrollbar */
+.app-grid ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.app-grid ::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.35);
+  border-radius: 8px;
+}
+
+.app-grid ::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 85, 105, 0.55);
+}
+
+/* Menú de opciones de las columnas */
+.app-grid .ag-menu {
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(29, 56, 110, 0.12);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-size: 12px;
+}
+
+/* Opciones del menú */
+.app-grid .ag-menu-option {
+  color: #1e293b;
+}
+
+/* Fondo al pasar el mouse */
+.app-grid .ag-menu-option:hover {
+  background-color: #f1f5f9;
+}
+
+/* Texto de las opciones */
+.app-grid .ag-menu-option-text {
+  color: #1e293b;
+}
+
+/* ==========================================================
+   Casillas de selección (20 px, esquinas de 3 px)
+   Solo aplican cuando una tabla puntual declara row selection
+   (AppGridComponent [rowSelection]="true"); no agregan nada
+   visible en las tablas que no lo usan.
+   ========================================================== */
+.app-grid .ag-checkbox-input-wrapper {
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  border: 1.5px solid #b4bdcc;
+  border-radius: 3px;
+  background-color: #ffffff;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 14px 14px;
+  box-shadow: none;
+  font-size: 0;
+  line-height: 0;
+  cursor: pointer;
+  transition: border-color 0.12s, background-color 0.12s;
+}
+
+.app-grid .ag-checkbox-input-wrapper::after {
+  display: none;
+  content: none;
+}
+
+.app-grid .ag-checkbox-input-wrapper input {
+  cursor: pointer;
+}
+
+.app-grid .ag-checkbox-input-wrapper:hover {
+  border-color: #1d386e;
+}
+
+.app-grid .ag-checkbox-input-wrapper:focus-within,
+.app-grid .ag-checkbox-input-wrapper:active {
+  border-color: #1d386e;
+  box-shadow: 0 0 0 3px rgba(30, 58, 110, 0.14);
+}
+
+/* Marcada: fondo azul + check blanco */
+.app-grid .ag-checkbox-input-wrapper.ag-checked {
+  background-color: #1d386e;
+  border-color: #1d386e;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l4 4 10-10'/%3E%3C/svg%3E");
+}
+
+/* Parcial (encabezado): fondo azul + rayita blanca */
+.app-grid .ag-checkbox-input-wrapper.ag-indeterminate {
+  background-color: #1d386e;
+  border-color: #1d386e;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='6' y='10.75' width='12' height='2.5' rx='1' fill='%23ffffff'/%3E%3C/svg%3E");
+}
+
+/* Deshabilitada */
+.app-grid .ag-checkbox-input-wrapper.ag-disabled {
+  background-color: #f3f5f8;
+  border-color: #e3e7ec;
+  cursor: not-allowed;
+}
+
+/* En el encabezado azul la casilla se invierte */
+.app-grid .ag-header .ag-checkbox-input-wrapper {
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.app-grid .ag-header .ag-checkbox-input-wrapper:hover {
+  border-color: #ffffff;
+}
+
+.app-grid .ag-header .ag-checkbox-input-wrapper.ag-checked {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e3a6e' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l4 4 10-10'/%3E%3C/svg%3E");
+}
+
+.app-grid .ag-header .ag-checkbox-input-wrapper.ag-indeterminate {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='6' y='10.75' width='12' height='2.5' rx='1' fill='%231e3a6e'/%3E%3C/svg%3E");
+}
+
+/* Columna de selección: casilla centrada, sin el padding normal de celda */
+.app-grid .sis-col-seleccion,
+.app-grid .sis-col-seleccion .ag-cell-wrapper,
+.app-grid .sis-col-seleccion .ag-header-select-all {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+}
+
+.app-grid .sis-col-seleccion .ag-selection-checkbox {
+  margin: 0;
+}
+
+/* The header cell also renders an empty .ag-header-cell-comp-wrapper next to
+   the select-all checkbox (label/sort/menu slot, unused since this column
+   has no headerName) — the base theme gives it `width:100%`, so it still
+   claims flex space and pushes the checkbox off-center. `display:none`
+   removes it from the flex layout entirely (a zero-width-but-still-flex
+   sibling would still reserve a `gap` between the two items, which alone
+   is enough to throw off centering), leaving the checkbox as the only flex
+   content left to center. */
+.app-grid .sis-col-seleccion .ag-header-cell-comp-wrapper {
+  display: none;
+}

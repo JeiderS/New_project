@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { Action, CreateActionPayload } from '@core/interfaces/action.interface';
+import { Action, CreateActionPayload, UpdateActionPayload } from '@core/interfaces/action.interface';
 import { environment } from '../../../environments/environments';
 
 interface ApiResponse<T> {
@@ -23,11 +23,22 @@ export class ActionService {
     return res.data;
   }
 
-  async createAction(moduleId: number, name: string): Promise<Action> {
-    const payload: CreateActionPayload = { moduleId, name };
+  async createAction(code: string, name: string): Promise<Action> {
+    const payload: CreateActionPayload = { code, name };
     const res = await firstValueFrom(
       this.http.post<ApiResponse<Action>>(this.apiUrl, payload),
     );
     return res.data;
+  }
+
+  async updateAction(id: number, payload: UpdateActionPayload): Promise<Action> {
+    const res = await firstValueFrom(
+      this.http.put<ApiResponse<Action>>(`${this.apiUrl}/${id}`, payload),
+    );
+    return res.data;
+  }
+
+  async deleteAction(id: number): Promise<void> {
+    await firstValueFrom(this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`));
   }
 }

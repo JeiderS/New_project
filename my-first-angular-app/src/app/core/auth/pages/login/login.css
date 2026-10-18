@@ -4,66 +4,22 @@
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  background-image: url('/fondo-login.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .auth-layout {
   width: min(500px, 100%);
 }
 
-.auth-story,
 .auth-card {
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(6px);
-}
-
-.auth-story {
-  padding: 1.75rem;
-}
-
-.auth-kicker {
-  display: inline-flex;
-  background: rgba(15, 118, 110, 0.12);
-  color: var(--accent-route-strong);
-  border-radius: 999px;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.auth-story h1 {
-  margin: 0.9rem 0 0;
-  font-size: clamp(1.7rem, 3.5vw, 2.25rem);
-  line-height: 1.12;
-}
-
-.auth-story p {
-  margin: 1rem 0 0;
-  color: var(--ink-secondary);
-  line-height: 1.5;
-}
-
-.auth-story ul {
-  margin: 1.2rem 0 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 0.65rem;
-}
-
-.auth-story li {
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  background: rgba(248, 250, 252, 0.88);
-  padding: 0.65rem 0.8rem;
-  color: var(--ink-secondary);
-  font-weight: 500;
-}
-
-.auth-card {
+  box-shadow: 0 20px 45px rgba(15, 30, 60, 0.25);
   padding: 1.75rem;
 }
 
@@ -176,12 +132,6 @@
 }
 
 @media (min-width: 992px) {
-  .auth-layout {
-    grid-template-columns: 1.08fr 0.92fr;
-    gap: 1.2rem;
-  }
-
-  .auth-story,
   .auth-card {
     padding: 2rem;
   }

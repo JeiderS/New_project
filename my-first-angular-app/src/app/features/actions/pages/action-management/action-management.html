@@ -1,0 +1,83 @@
+<app-page-layout class="data-pane" layout="split" [leftRatio]="50" [rightRatio]="50">
+  <section layout-main class="grid-pane" aria-label="Catalogo de acciones">
+    <div class="pane-header">
+      <div class="toolbar">
+        <div class="search-field">
+          <label for="actions-search">Buscar</label>
+          <input
+            id="actions-search"
+            type="search"
+            placeholder="Buscar por codigo o nombre"
+            [value]="searchTerm()"
+            (input)="onSearch($any($event.target).value)"
+          />
+        </div>
+
+        <button type="button" class="btn btn-primary" (click)="openCreate()">Nueva accion</button>
+      </div>
+
+      <div class="toggle-row">
+        <span class="grid-total">Total: {{ visibleActions().length }} acciones</span>
+      </div>
+    </div>
+
+    @if (hasRows()) {
+      <app-grid
+        class="app-grid"
+        [rowData]="visibleActions()"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+        [rowSelection]="true"
+        (cellClicked)="onCellClicked($event)"
+      />
+    } @else {
+      <div class="actions-empty" role="status" aria-live="polite">
+        <h2>Sin resultados</h2>
+        <p>
+          {{
+            loading()
+              ? 'Cargando acciones...'
+              : 'No encontramos acciones con ese criterio. Proba otro texto de busqueda.'
+          }}
+        </p>
+      </div>
+    }
+  </section>
+
+  <section layout-side class="action-form-pane">
+    <app-modal
+      [(open)]="modalOpen"
+      [title]="modalTitle()"
+      [eyebrow]="modalEyebrow()"
+      position="inline"
+    >
+      <form [formGroup]="actionForm" class="action-form">
+        <div class="field-group">
+          <label for="action-code">Codigo</label>
+          <input id="action-code" type="text" formControlName="code" maxlength="120" />
+        </div>
+
+        <div class="field-group">
+          <label for="action-name">Nombre</label>
+          <input id="action-name" type="text" formControlName="name" maxlength="100" />
+        </div>
+      </form>
+
+      <div modal-footer>
+        @if (mode() === 'edit') {
+          <button type="button" class="btn btn-danger" (click)="deleteAction()">Eliminar</button>
+        }
+        <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="actionForm.invalid"
+          (click)="save()"
+        >
+          Guardar
+        </button>
+      </div>
+    </app-modal>
+  </section>
+</app-page-layout>

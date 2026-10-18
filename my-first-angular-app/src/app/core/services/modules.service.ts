@@ -51,4 +51,11 @@ export class ModulesService {
     );
     return res.data;
   }
+
+  async syncModuleActions(moduleId: number, actionIds: number[]): Promise<AppModule> {
+    const res = await firstValueFrom(
+      this.http.put<ApiResponse<AppModule>>(`${this.apiUrl}/${moduleId}/actions`, { actionIds }),
+    );
+    return res.data;
+  }
 }

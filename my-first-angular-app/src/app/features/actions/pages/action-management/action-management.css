@@ -1,0 +1,49 @@
+.grid-pane {
+  padding: 1.25rem 0;
+}
+
+.actions-empty {
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-1);
+  flex: 1;
+  min-height: 180px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 0.35rem;
+  padding: 1rem;
+}
+
+.actions-empty h2,
+.actions-empty p {
+  margin: 0;
+}
+
+.actions-empty h2 {
+  font-size: 1.05rem;
+}
+
+.actions-empty p {
+  color: var(--ink-secondary);
+}
+
+.action-form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+/* Real destructive delete — not present in data-pane.css since Users/Modules
+   only ever deactivate. Mirrors .btn-primary/.btn-ghost's shape with the
+   same --danger/--danger-tint tokens module-management already uses for its
+   actions-section "Quitar"/danger affordances. */
+.btn-danger {
+  background: var(--danger-tint);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: var(--danger-tint);
+  filter: brightness(0.97);
+}

@@ -6,6 +6,7 @@ export interface AppModule {
   parentId?: number;
   isActive: boolean;
   sortOrder: number;
+  actionIds: number[];
 }
 
 export interface CreateModulePayload {

@@ -1,0 +1,9 @@
+
+<ag-grid-angular
+  class="app-grid"
+  [gridOptions]="gridOptionsForGrid"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  (cellClicked)="cellClicked.emit($event)"
+  (cellDoubleClicked)="cellDoubleClicked.emit($event)"
+/>

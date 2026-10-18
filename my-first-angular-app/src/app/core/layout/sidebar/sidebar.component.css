@@ -1,88 +1,255 @@
-.sidebar-wrapper {
-  width: 85px;
-  background-color: #1d386e;
-  height: calc(100vh - 55px);
+/* AppSideMenu — icon rail + grey panel that opens OVER the content (doesn't
+   push it). Adapted from the menu-lateral reference package: same markup/
+   behavior, project's own navy accent and font, Font Awesome icon classes
+   (the real module data) instead of inline SVG. */
+
+:host {
+  position: relative;
+  display: flex;
+  height: 100%;
+  z-index: 50;
+}
+
+/* ---------- Icon rail ---------- */
+
+.sm-rail {
+  width: 92px;
+  flex-shrink: 0;
+  background: var(--accent-route, #1d386e);
   display: flex;
   flex-direction: column;
 }
 
-.sidebar-item {
-  padding: 15px 5px;
-  text-align: center;
+.sm-rail__item {
+  height: 70px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
   color: #ffffff;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 6px;
   cursor: pointer;
-  transition: background 0.2s;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.sidebar-item:hover {
-  background-color: #3949ab;
-}
-
-.sidebar-item.active {
-  background-color: #ffffff;
-  color: #1a237e;
-}
-
-.sidebar-item span {
-  font-size: 24px;
-  margin-bottom: 5px;
-  display: block;
-}
-
-.sidebar-item p {
-  font-size: 11px;
-  margin: 0;
+.sm-rail__label {
+  text-align: center;
   line-height: 1.2;
-  word-wrap: break-word;
 }
 
-.sidebar-wrapper {
-  float: left;
+.sm-rail__item:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.side-panel {
+.sm-rail__item i {
+  font-size: 20px;
+}
+
+.sm-rail__item.is-active {
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 3px 0 0 #ffffff;
+  font-weight: 600;
+}
+
+.sm-rail__item:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: -4px;
+}
+
+/* ---------- Grey panel (opens over the content) ---------- */
+
+.sm-panel {
   position: absolute;
-  left: 85px;
-  top: 55px;
-  width: 200px;
-  height: 100%;
-  background: #fff;
-  border-left: 1px solid #ddd;
-  padding: 17px;
+  left: 92px;
+  top: 0;
+  bottom: 0;
+  width: 240px;
+  box-sizing: border-box;
+  background: #f7f8fa;
+  border-right: 1px solid #e3e7ec;
+  box-shadow: 8px 0 24px rgba(17, 24, 39, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sm-panel__header {
+  padding: 16px 16px 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sm-panel__title {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.sm-panel__close {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  font-size: 14px;
-  z-index: 100;
 }
 
-.module-group {
-  position: relative;
+.sm-panel__close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sm-panel__close:hover {
+  background: #eceff3;
+  color: #374151;
+}
+
+/* Search */
+
+.sm-search {
+  padding: 0 16px 14px;
+  flex-shrink: 0;
+}
+
+.sm-search__box {
+  height: 32px;
+  box-sizing: border-box;
+  border: 1px solid #d5dae1;
+  border-radius: 3px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+}
+
+.sm-search__box:focus-within {
+  border-color: var(--accent-route, #1d386e);
+  box-shadow: 0 0 0 2px rgba(30, 58, 110, 0.15);
+}
+
+.sm-search__box svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  color: #9ca3af;
+}
+
+.sm-search__input {
+  border: 0;
+  outline: 0;
+  flex-grow: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 13px;
+  background: transparent;
+  color: #1f2937;
+}
+
+/* List */
+
+.sm-list {
+  padding: 0 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm-item {
   width: 100%;
-}
-
-.panel-item {
+  height: 34px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 3px;
+  padding: 0 10px;
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  background: transparent;
+  color: #1f2937;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-.sub-item {
-  margin-bottom: 20px;
-  padding-left: 20px;
+.sm-item:hover {
+  background: #eef1f5;
 }
 
-.search-box {
-  padding: 10px;
-  border-bottom: 1px solid #4814d7;
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+.sm-item:focus-visible {
+  outline: 2px solid var(--accent-route, #1d386e);
+  outline-offset: -2px;
 }
 
-.search-box input {
-  border: none;
-  outline: none;
-  width: 100%;
+.sm-item i {
+  flex-shrink: 0;
+  width: 16px;
   font-size: 14px;
+  text-align: center;
+}
+
+.sm-item__label {
+  flex-grow: 1;
+}
+
+.sm-item__chev {
+  flex-shrink: 0;
+  color: #9ca3af;
+  transition: transform 0.15s ease;
+}
+
+.sm-item[aria-expanded='true'] .sm-item__chev {
+  transform: rotate(180deg);
+}
+
+/* Current page and its parent */
+
+.sm-item.is-current {
+  background: #eaf0f8;
+  color: var(--accent-route, #1d386e);
+  font-weight: 600;
+}
+
+.sm-item.is-ancestor {
+  color: var(--accent-route, #1d386e);
+  font-weight: 600;
+}
+
+/* Children (accordion) */
+
+.sm-children {
+  margin: 2px 0 6px 18px;
+  padding-left: 10px;
+  border-left: 1px solid #dfe4ec;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sm-item--child {
+  height: 30px;
+  color: #374151;
+}
+
+.sm-empty {
+  margin: 4px 10px;
+  font-size: 13px;
+  color: #6b7280;
 }

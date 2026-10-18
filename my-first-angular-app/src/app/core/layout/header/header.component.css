@@ -31,47 +31,6 @@
     font-weight: 300;
 }
 
-.timer-badge {
-    background-color: #2979ff; /* Azul brillante del timer */
-    padding: 5px 15px;
-    border-radius: 4px;
-    margin-right: 15px;
-    font-weight: bold;
-}
-
-.btn-camera {
-    background-color: #1976d2;
-    border: none;
-    color: white;
-    padding: 6px 10px;
-    border-radius: 5px;
-}
-
-.alert-update {
-    background-color: #fbc02d; /* Amarillo de advertencia */
-    color: #333;
-    padding: 5px 15px;
-    border-radius: 4px;
-    font-weight: 600;
-    margin-right: 20px;
-    cursor: pointer;
-}
-
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-left: 1px solid rgba(255,255,255,0.2);
-    padding-left: 15px;
-}
-
-.avatar-circle {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-}
-
 .user-profile {
   position: relative;
   display: flex;

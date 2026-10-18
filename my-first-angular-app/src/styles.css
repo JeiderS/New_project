@@ -1,12 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
-@import 'ag-grid-community/styles/ag-grid.css';
-@import 'ag-grid-community/styles/ag-theme-quartz.css';
 @import './app/shared/styles/data-pane.css';
+@import './styles/_ag-grid.scss';
 
 :root {
-  --surface-canvas: #ffffff;
+  --surface-canvas: #f5f6f8;
   --surface-elev-1: #f8fafc;
   --surface-elev-2: #ffffff;
   --surface-inset: #e4ebf0;
@@ -20,6 +19,8 @@
   --accent-signal: #c2410c;
   --success: #166534;
   --success-tint: rgba(22, 101, 52, 0.12);
+  --warning: #b45309;
+  --warning-tint: rgba(180, 83, 9, 0.12);
   --danger: #b91c1c;
   --danger-tint: rgba(185, 28, 28, 0.12);
   --radius-sm: 10px;
@@ -36,13 +37,30 @@
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--ink-primary);
   background: var(--surface-canvas);
 }
 
 html, body {
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-size: 16px;
+}
+
+/* The routed page is the element Angular inserts right after <router-outlet>
+   inside LayoutComponent's `.content` (see layout.component.css, which sets
+   `.content { display: flex; flex-direction: column }`). This selector must
+   live here, globally unscoped: Angular's per-component view encapsulation
+   rewrites a bare `*` into `[_ngcontent-xxx]`, scoped to the stylesheet's
+   OWNER component — which never matches a different component's host
+   element, so this rule written inside layout.component.css silently
+   matched nothing. Stretching the routed page to fill `.content` here means
+   any page's `height: 100%` chain (e.g. app-page-layout) resolves against a
+   real pixel height, without every feature component redeclaring
+   `:host { height: 100% }` itself. */
+.content > router-outlet + * {
+  flex: 1;
+  min-height: 0;
 }

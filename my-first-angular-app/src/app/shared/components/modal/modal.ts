@@ -74,9 +74,12 @@ export class Modal {
    * the form, like the reference layout this consumer asked to match; `'float'` is similar to
    * `'side'` but floats as a card with margin insets on top/right/bottom (never edge-flush),
    * a tight border radius, and a bounded height instead of full-height — the admin-panel
-   * "floating detail panel" pattern from the `interface-design` skill.
+   * "floating detail panel" pattern from the `interface-design` skill; `'inline'` renders with
+   * no `position: fixed` and no backdrop, filling whatever container it's placed in — for a
+   * true split-pane layout (e.g. one `app-page-layout` column holding the grid, another
+   * holding this panel) instead of an overlay.
    */
-  position = input<'center' | 'side' | 'float'>('center');
+  position = input<'center' | 'side' | 'float' | 'inline'>('center');
 
   /** Emitted whenever the modal closes, regardless of trigger. */
   closed = output<void>();

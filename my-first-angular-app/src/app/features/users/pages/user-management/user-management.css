@@ -2,23 +2,6 @@
   padding: 1.25rem 0;
 }
 
-.users-grid {
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-  --ag-background-color: var(--surface-elev-2);
-  --ag-foreground-color: var(--ink-primary);
-  --ag-header-background-color: var(--surface-elev-1);
-  --ag-header-foreground-color: var(--ink-primary);
-  --ag-border-color: var(--border-soft);
-  --ag-row-border-color: rgba(71, 85, 105, 0.12);
-  --ag-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial,
-    sans-serif;
-  --ag-font-size: 13px;
-  --ag-cell-horizontal-padding: 10px;
-  --ag-wrapper-border-radius: var(--radius-sm);
-}
-
 .users-empty {
   border: 1px dashed var(--border-soft);
   border-radius: var(--radius-sm);

@@ -1,0 +1,220 @@
+/* AppAlert — large centered alert over a dark blurred backdrop (same backdrop
+   language as the Tipo 2 loader). One at a time; AlertService queues the rest.
+   z-index above the loader (9999) so an alert can replace it after a failed
+   blocking call. */
+
+.app-alert-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(10, 18, 36, 0.55);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  animation: app-alert-backdrop-in 180ms ease;
+}
+
+.app-alert {
+  --c: var(--accent-route, #1d386e);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 380px;
+  box-sizing: border-box;
+  padding: 28px 24px 22px;
+  background: var(--surface-elev-2, #ffffff);
+  border-radius: var(--radius-sm, 6px);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--ink-primary, #1f2937);
+  animation: app-alert-in 180ms ease;
+}
+
+.app-alert:focus {
+  outline: none;
+}
+
+/* Color per type */
+.app-alert[data-type='success'] {
+  --c: var(--success, #166534);
+}
+.app-alert[data-type='error'] {
+  --c: var(--danger, #b91c1c);
+}
+.app-alert[data-type='warning'] {
+  --c: var(--warning, #b45309);
+}
+.app-alert[data-type='info'] {
+  --c: var(--accent-route, #1d386e);
+}
+.app-alert[data-type='session'] {
+  --c: var(--warning, #b45309);
+}
+.app-alert[data-type='confirm'] {
+  --c: var(--accent-route, #1d386e);
+}
+.app-alert[data-type='confirm'][data-danger] {
+  --c: var(--danger, #b91c1c);
+}
+
+/* Icon: solid circle + pulsing translucent halo (same shape language as AppLoader) */
+.app-alert__icon {
+  width: 76px;
+  height: 76px;
+  display: block;
+  overflow: visible;
+}
+.app-alert__halo {
+  fill: var(--c);
+  transform-origin: 120px 120px;
+  animation: app-alert-halo 2.4s ease-in-out infinite;
+}
+.app-alert__core {
+  fill: var(--c);
+}
+.app-alert__glyph {
+  fill: none;
+  stroke: #ffffff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.app-alert__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.app-alert__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--ink-primary, #111827);
+}
+.app-alert__message {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-secondary, #4b5563);
+}
+
+.app-alert__actions {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  padding-top: 4px;
+}
+.app-alert__btn {
+  flex: 1;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.app-alert__btn:focus-visible {
+  outline: 2px solid var(--accent-route, #1d386e);
+  outline-offset: 2px;
+}
+.app-alert__btn--secondary {
+  border: 1px solid var(--border-soft, #d5dae1);
+  background: #ffffff;
+  color: var(--ink-secondary, #374151);
+  font-weight: 500;
+}
+.app-alert__btn--secondary:hover {
+  background: #f3f5f8;
+}
+.app-alert__btn--primary {
+  border: 0;
+  background: var(--accent-route, #1d386e);
+  color: #ffffff;
+  font-weight: 600;
+}
+.app-alert__btn--primary:hover {
+  filter: brightness(1.12);
+}
+.app-alert[data-danger] .app-alert__btn--primary {
+  background: var(--danger, #b91c1c);
+}
+
+/* Buttonless: whole dialog is clickable to dismiss early */
+.app-alert--auto {
+  padding-bottom: 28px;
+  cursor: pointer;
+}
+
+/* Shortening line while a buttonless alert counts down to auto-close */
+.app-alert__progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--c);
+  opacity: 0.7;
+  animation-name: app-alert-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes app-alert-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes app-alert-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes app-alert-progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
+}
+
+@keyframes app-alert-halo {
+  0%,
+  100% {
+    transform: scale(0.86);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-alert__halo {
+    animation: none;
+    opacity: 0.15;
+  }
+  .app-alert-backdrop,
+  .app-alert {
+    animation: none;
+  }
+}

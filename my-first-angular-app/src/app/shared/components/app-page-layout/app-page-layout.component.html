@@ -1,0 +1,23 @@
+
+<div
+  class="page-layout"
+  [class.layout-single]="layout() === 'single'"
+  [class.layout-split]="layout() === 'split'"
+  [class.layout-left-stacked-right]="layout() === 'left-stacked-right'"
+  [style.--left-ratio]="leftRatio() + 'fr'"
+  [style.--right-ratio]="rightRatio() + 'fr'"
+>
+  @if (layout() === 'single') {
+    <div class="layout-single-content">
+      <ng-content />
+    </div>
+  } @else {
+    <div class="layout-main">
+      <ng-content select="[layout-main]" />
+    </div>
+
+    <aside class="layout-side">
+      <ng-content select="[layout-side]" />
+    </aside>
+  }
+</div>

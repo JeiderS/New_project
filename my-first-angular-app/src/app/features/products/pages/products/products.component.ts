@@ -96,9 +96,21 @@ export class Products {
 
   readonly gridOptions: GridOptions<Product> = {
     domLayout: 'normal',
-    rowHeight: 44,
-    headerHeight: 44,
     suppressCellFocus: true,
+    // Declared explicitly here, same as any other screen that needs it —
+    // row selection is opt-in per grid, never a hidden shared default.
+    rowSelection: { mode: 'multiRow', checkboxes: true, headerCheckbox: true, enableClickSelection: false },
+    selectionColumnDef: {
+      width: 56,
+      minWidth: 56,
+      maxWidth: 56,
+      resizable: false,
+      pinned: 'left',
+      lockPosition: 'left',
+      suppressHeaderMenuButton: true,
+      cellClass: 'sis-col-seleccion',
+      headerClass: 'sis-col-seleccion',
+    },
   };
 
   readonly filteredProducts = computed(() => {

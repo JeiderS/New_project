@@ -1,0 +1,86 @@
+@if (alertService.current(); as alert) {
+  <div class="app-alert-backdrop is-visible" (click)="onBackdropClick()" (keydown)="onKeydown($event)">
+    <div
+      #dialog
+      class="app-alert"
+      [class.app-alert--auto]="!alert.opts.buttons"
+      [attr.data-type]="alert.opts.type"
+      [attr.data-danger]="alert.opts.danger"
+      [attr.role]="alert.opts.buttons ? 'alertdialog' : 'status'"
+      [attr.aria-modal]="alert.opts.buttons ? true : null"
+      aria-labelledby="app-alert-title"
+      aria-describedby="app-alert-message"
+      tabindex="-1"
+      (click)="$event.stopPropagation()"
+    >
+      <svg class="app-alert__icon" viewBox="0 0 240 240" aria-hidden="true" focusable="false">
+        <circle class="app-alert__halo" cx="120" cy="120" r="116" />
+        <circle class="app-alert__core" cx="120" cy="120" r="72" />
+        @switch (alert.opts.type) {
+          @case ('success') {
+            <path class="app-alert__glyph" stroke-width="16" d="M88 122l22 22 44-46" />
+          }
+          @case ('error') {
+            <path class="app-alert__glyph" stroke-width="16" d="M95 95l50 50M145 95l-50 50" />
+          }
+          @case ('warning') {
+            <path class="app-alert__glyph" stroke-width="16" d="M120 86v42M120 156v1" />
+          }
+          @case ('info') {
+            <path class="app-alert__glyph" stroke-width="16" d="M120 112v44M120 84v1" />
+          }
+          @case ('session') {
+            <circle class="app-alert__glyph" stroke-width="11" cx="120" cy="124" r="34" />
+            <path class="app-alert__glyph" stroke-width="11" d="M120 106v18l12 10M108 80h24" />
+          }
+          @case ('confirm') {
+            @if (alert.opts.danger) {
+              <path
+                class="app-alert__glyph"
+                stroke-width="11"
+                d="M88 96h64M108 96V84h24v12M96 96l5 56a8 8 0 0 0 8 7h22a8 8 0 0 0 8-7l5-56"
+              />
+            } @else {
+              <path
+                class="app-alert__glyph"
+                stroke-width="14"
+                d="M102 100a18 18 0 1 1 26 16c-6 3-8 7-8 13M120 156v1"
+              />
+            }
+          }
+        }
+      </svg>
+
+      <div class="app-alert__text">
+        <h2 class="app-alert__title" id="app-alert-title">{{ alert.opts.title }}</h2>
+        <p class="app-alert__message" id="app-alert-message">{{ alert.opts.message }}</p>
+      </div>
+
+      @if (alert.opts.buttons) {
+        <div class="app-alert__actions">
+          @if (alert.opts.secondaryText) {
+            <button
+              #secondaryBtn
+              type="button"
+              class="app-alert__btn app-alert__btn--secondary"
+              (click)="respond('secondary')"
+            >
+              {{ alert.opts.secondaryText }}
+            </button>
+          }
+          <button #primaryBtn type="button" class="app-alert__btn app-alert__btn--primary" (click)="respond('primary')">
+            {{ alert.opts.primaryText }}
+          </button>
+        </div>
+      }
+
+      @if (alert.opts.autoClose > 0) {
+        <div
+          class="app-alert__progress"
+          aria-hidden="true"
+          [style.animation-duration.ms]="alert.opts.autoClose"
+        ></div>
+      }
+    </div>
+  </div>
+}

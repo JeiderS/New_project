@@ -8,7 +8,7 @@
  */
 
 .data-pane {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   color: var(--ink-primary);
 }
@@ -40,16 +40,26 @@
 }
 
 .grid-pane {
-  flex: 0 0 50%;
-  max-width: 50%;
   min-width: 0;
+  min-height: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
 }
 
+/* Only the legacy `.workspace` split (Roles: grid pinned to the left 50%,
+   detail panel floating over the right half via <app-modal position="float">)
+   needs this fixed share. A `.grid-pane` placed in an `app-page-layout` cell
+   instead takes the width that layout's leftRatio/rightRatio already grants —
+   adding a second 50% here would halve it again. */
+.workspace > .grid-pane {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
 @media (max-width: 860px) {
-  .grid-pane {
+  .workspace > .grid-pane {
     flex-basis: 100%;
     max-width: none;
   }
@@ -59,6 +69,16 @@
 .pane-header {
   display: grid;
   gap: 0.75rem;
+  flex: 0 0 auto;
+}
+
+/* The grid itself is the one flex item that should absorb all remaining
+   vertical space in the pane. flex-basis: 0 (not `auto`, which would fall
+   back to the app-grid component's own `height: 100%` and overflow the
+   pane) lets flex-grow do the actual sizing. */
+.grid-pane > .app-grid {
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 .pane-title-row {

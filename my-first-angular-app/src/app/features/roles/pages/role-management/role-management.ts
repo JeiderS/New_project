@@ -1,32 +1,30 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AgGridAngular } from 'ag-grid-angular';
 import {
-  AllCommunityModule,
   CellClickedEvent,
   ColDef,
   GridOptions,
   ICellRendererParams,
-  ModuleRegistry,
 } from 'ag-grid-community';
 import { Action } from '@core/interfaces/action.interface';
 import { AppModule } from '@core/interfaces/module.interface';
-import { Role } from '@core/interfaces/role.interface';
+import { Role, RoleGrant } from '@core/interfaces/role.interface';
 import { ActionService } from '@core/services/action.service';
 import { ModulesService } from '@core/services/modules.service';
 import { RoleService } from '@core/services/role.service';
-import { AlertHelper } from '@shared/utils/alert.helper';
+import { LoadingService } from '@core/loading/loading.service';
+import { AlertService } from '@core/alerts/alert.service';
 import { Modal } from '@shared/components/modal/modal';
+import { AppGridComponent } from '@shared/components/app-grid/app-grid.component';
+import { AppPageLayoutComponent } from '@shared/components/app-page-layout/app-page-layout.component';
 import { ModuleTreeItem, ModuleTreeNode } from './module-tree-node/module-tree-node';
-
-ModuleRegistry.registerModules([AllCommunityModule]);
 
 type ModalMode = 'create' | 'edit';
 
 @Component({
   selector: 'app-role-management',
   standalone: true,
-  imports: [AgGridAngular, Modal, ReactiveFormsModule, ModuleTreeNode],
+  imports: [AppGridComponent, Modal, ReactiveFormsModule, ModuleTreeNode, AppPageLayoutComponent],
   templateUrl: './role-management.html',
   styleUrl: './role-management.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,20 +33,24 @@ export class RoleManagement {
   private readonly roleService = inject(RoleService);
   private readonly actionService = inject(ActionService);
   private readonly modulesService = inject(ModulesService);
-  private readonly alert = inject(AlertHelper);
+  private readonly loadingService = inject(LoadingService);
+  private readonly alertService = inject(AlertService);
   private readonly formBuilder = inject(FormBuilder);
 
   readonly roles = signal<Role[]>([]);
   readonly actions = signal<Action[]>([]);
   readonly modules = signal<AppModule[]>([]);
   readonly loading = signal(false);
-  readonly saving = signal(false);
   readonly searchTerm = signal('');
 
   readonly modalOpen = signal(false);
   readonly mode = signal<ModalMode>('create');
   readonly selectedRole = signal<Role | null>(null);
-  readonly selectedActionIds = signal<Set<number>>(new Set());
+
+  /** Keyed "<moduleId>:<actionId>" because Actions are a global reusable
+   *  catalog now — the same actionId can be granted under one module and not
+   *  another, so a flat Set<actionId> can't tell those apart. */
+  readonly selectedGrantKeys = signal<Set<string>>(new Set());
 
   /** Which module's actions are shown in the permissions picker's right pane. */
   readonly selectedTreeModuleId = signal<number | null>(null);
@@ -73,12 +75,22 @@ export class RoleManagement {
    *  sidebar, so ModuleMenuService's visibility filtering doesn't apply. */
   readonly moduleTree = computed<ModuleTreeItem[]>(() => this.buildModuleTree(this.modules()));
 
+  /** Actions assigned to the selected tree module, resolved via
+   *  `AppModule.actionIds` (the ModuleActions join table) against the global
+   *  action catalog — actions no longer carry a moduleId of their own. */
   readonly selectedModuleActions = computed<Action[]>(() => {
     const moduleId = this.selectedTreeModuleId();
     if (moduleId === null) {
       return [];
     }
-    return this.actions().filter((action) => action.moduleId === moduleId);
+
+    const module = this.modules().find((m) => m.id === moduleId);
+    if (!module) {
+      return [];
+    }
+
+    const actionIds = new Set(module.actionIds);
+    return this.actions().filter((action) => actionIds.has(action.id));
   });
 
   readonly columnDefs: ColDef<Role>[] = [
@@ -87,27 +99,16 @@ export class RoleManagement {
       headerName: 'Permisos',
       minWidth: 140,
       flex: 0.9,
-      valueGetter: ({ data }) => data?.actionIds.length ?? 0,
+      valueGetter: ({ data }) => data?.grants.length ?? 0,
       cellRenderer: ({ value }: ICellRendererParams<Role, number>) =>
         `<span class="role-chip">${value ?? 0} permisos</span>`,
     },
   ];
 
-  // menuTabs (generalMenuTab/filterMenuTab/columnsMenuTab) needs ag-Grid
-  // Enterprise's ColumnMenuModule, which this project doesn't have (only
-  // AllCommunityModule is registered) — using it throws ag-Grid error #200
-  // and the menu button silently does nothing. `filter: true` alone still
-  // gives the Community-edition filter icon/popup per column.
-  readonly defaultColDef: ColDef<Role> = {
-    sortable: true,
-    filter: true,
-    resizable: true,
-  };
+  readonly defaultColDef: ColDef<Role> = {};
 
   readonly gridOptions: GridOptions<Role> = {
     domLayout: 'normal',
-    rowHeight: 44,
-    headerHeight: 44,
   };
 
   readonly visibleRoles = computed(() => {
@@ -132,30 +133,38 @@ export class RoleManagement {
   async loadRoles(): Promise<void> {
     try {
       this.loading.set(true);
+      this.loadingService.show('Cargando roles...');
       const roles = await this.roleService.listRoles();
       this.roles.set(roles);
     } catch (error) {
-      this.alert.showError(error, 'No se pudo cargar el listado de roles');
+      this.alertService.error(error, 'No se pudo cargar el listado de roles');
     } finally {
       this.loading.set(false);
+      this.loadingService.hide();
     }
   }
 
   async loadActions(): Promise<void> {
     try {
+      this.loadingService.show();
       const actions = await this.actionService.listActions();
       this.actions.set(actions);
     } catch (error) {
-      this.alert.showError(error, 'No se pudo cargar el catalogo de permisos');
+      this.alertService.error(error, 'No se pudo cargar el catalogo de permisos');
+    } finally {
+      this.loadingService.hide();
     }
   }
 
   async loadModules(): Promise<void> {
     try {
+      this.loadingService.show();
       const modules = await this.modulesService.listModules();
       this.modules.set(modules);
     } catch (error) {
-      this.alert.showError(error, 'No se pudo cargar el listado de modulos');
+      this.alertService.error(error, 'No se pudo cargar el listado de modulos');
+    } finally {
+      this.loadingService.hide();
     }
   }
 
@@ -172,7 +181,7 @@ export class RoleManagement {
   openCreate(): void {
     this.mode.set('create');
     this.selectedRole.set(null);
-    this.selectedActionIds.set(new Set());
+    this.selectedGrantKeys.set(new Set());
     this.selectedTreeModuleId.set(null);
     this.roleForm.reset({ name: '' });
     this.modalOpen.set(true);
@@ -181,7 +190,9 @@ export class RoleManagement {
   openEdit(role: Role): void {
     this.mode.set('edit');
     this.selectedRole.set(role);
-    this.selectedActionIds.set(new Set(role.actionIds));
+    this.selectedGrantKeys.set(
+      new Set(role.grants.map((g) => this.grantKey(g.moduleId, g.actionId))),
+    );
     this.selectedTreeModuleId.set(null);
     this.roleForm.reset({ name: role.name });
     this.modalOpen.set(true);
@@ -192,25 +203,34 @@ export class RoleManagement {
   }
 
   isActionChecked(actionId: number): boolean {
-    return this.selectedActionIds().has(actionId);
+    const moduleId = this.selectedTreeModuleId();
+    if (moduleId === null) {
+      return false;
+    }
+    return this.selectedGrantKeys().has(this.grantKey(moduleId, actionId));
   }
 
+  /** Actions are a normalized, module-agnostic catalog (bare verbs like
+   *  "View"/"Create"/"Edit"/"Delete" reused across every module via
+   *  ModuleActions) — the display name alone is the label, no module-prefix
+   *  stripping needed anymore. */
   actionLabel(action: Action): string {
-    if (action.moduleName && action.code.startsWith(action.moduleName)) {
-      const verb = action.code.slice(action.moduleName.length);
-      return verb || action.name;
-    }
-
     return action.name;
   }
 
   onActionToggle(actionId: number, checked: boolean): void {
-    this.selectedActionIds.update((current) => {
+    const moduleId = this.selectedTreeModuleId();
+    if (moduleId === null) {
+      return;
+    }
+
+    const key = this.grantKey(moduleId, actionId);
+    this.selectedGrantKeys.update((current) => {
       const next = new Set(current);
       if (checked) {
-        next.add(actionId);
+        next.add(key);
       } else {
-        next.delete(actionId);
+        next.delete(key);
       }
       return next;
     });
@@ -223,16 +243,16 @@ export class RoleManagement {
     }
 
     const name = this.roleForm.getRawValue().name ?? '';
-    const actionIds = Array.from(this.selectedActionIds());
+    const grants = this.grantsFromSelection();
 
     try {
-      this.saving.set(true);
+      this.loadingService.show('Guardando rol...');
 
       if (this.mode() === 'create') {
         const created = await this.roleService.createRole(name);
-        const withActions = await this.roleService.assignActions(created.id, actionIds);
+        const withActions = await this.roleService.assignActions(created.id, grants);
         this.roles.update((list) => [...list, withActions]);
-        this.alert.showSuccess('Rol creado correctamente');
+        this.alertService.success('Rol creado correctamente');
       } else {
         const current = this.selectedRole();
         if (!current) {
@@ -240,23 +260,34 @@ export class RoleManagement {
         }
 
         await this.roleService.updateRole(current.id, name);
-        const withActions = await this.roleService.assignActions(current.id, actionIds);
+        const withActions = await this.roleService.assignActions(current.id, grants);
         this.roles.update((list) =>
           list.map((role) => (role.id === current.id ? withActions : role)),
         );
-        this.alert.showSuccess('Rol actualizado correctamente');
+        this.alertService.success('Rol actualizado correctamente');
       }
 
       this.modalOpen.set(false);
     } catch (error) {
-      this.alert.showError(error, 'No se pudo guardar el rol');
+      this.alertService.error(error, 'No se pudo guardar el rol');
     } finally {
-      this.saving.set(false);
+      this.loadingService.hide();
     }
   }
 
   private normalizeText(value: string): string {
     return value.trim().toLowerCase();
+  }
+
+  private grantKey(moduleId: number, actionId: number): string {
+    return `${moduleId}:${actionId}`;
+  }
+
+  private grantsFromSelection(): RoleGrant[] {
+    return Array.from(this.selectedGrantKeys()).map((key) => {
+      const [moduleId, actionId] = key.split(':').map(Number);
+      return { moduleId, actionId };
+    });
   }
 
   /** Groups the flat AppModule[] by parentId into a tree, mirroring the

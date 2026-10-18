@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { AlertHelper } from '../../../../shared/utils/alert.helper';
+import { AlertService } from '@core/alerts/alert.service';
 import { ModulesService } from '@core/services/modules.service';
+import { LoadingService } from '@core/loading/loading.service';
 import { MenuItem } from '@shared/models/menu-item.model';
 
 @Component({
@@ -14,14 +15,14 @@ import { MenuItem } from '@shared/models/menu-item.model';
 })
 export class Login {
   signInForm!: FormGroup;
-  loading = false;
 
   constructor(
     private readonly authService: AuthService,
     private readonly formBuilder: FormBuilder,
     private readonly router: Router,
-    private readonly alert: AlertHelper,
+    private readonly alertService: AlertService,
     private readonly modulesService: ModulesService,
+    private readonly loadingService: LoadingService,
   ) {
     this.initForm();
   }
@@ -37,7 +38,7 @@ export class Login {
 
   async onSubmit(): Promise<void> {
     try {
-      this.loading = true;
+      this.loadingService.show('Iniciando sesion...');
       const email = this.signInForm.value.email as string;
       const password = this.signInForm.value.password as string;
 
@@ -45,9 +46,9 @@ export class Login {
       const landingRoute = await this.resolveLandingRoute();
       this.router.navigate([landingRoute]);
     } catch (error) {
-      this.alert.showError(error, 'No se pudo iniciar sesion');
+      this.alertService.error(error, 'No se pudo iniciar sesion');
     } finally {
-      this.loading = false;
+      this.loadingService.hide();
     }
   }
 

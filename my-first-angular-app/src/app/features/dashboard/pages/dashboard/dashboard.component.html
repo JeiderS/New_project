@@ -1,46 +1,14 @@
-<main class="ops-main">
-
-
-  <section class="ops-metrics">
-    <article>
-      <p>Viajes activos</p>
-      <h2>28</h2>
-      <span>+12% vs ayer</span>
-    </article>
-    <article>
-      <p>Entregas a tiempo</p>
-      <h2>93%</h2>
-      <span class="ok">Objetivo superado</span>
-    </article>
-    <article>
-      <p>Alertas abiertas</p>
-      <h2>4</h2>
-      <span class="warn">Requiere atencion</span>
-    </article>
-    <article>
-      <p>Alertas abiertas</p>
-      <h2>4</h2>
-      <span class="warn">Requiere atencion</span>
-    </article>
+<app-page-layout
+  layout="left-stacked-right"
+  [leftRatio]="30"
+  [rightRatio]="70"
+>
+  <section layout-main>
+    <app-grid />
   </section>
 
-  <section class="ops-grid">
-    <article class="ops-card">
-      <h3>Rutas con mayor demora</h3>
-      <ul>
-        <li><span>Rosario - Cordoba</span> <strong>+18 min</strong></li>
-        <li><span>San Luis - Mendoza</span> <strong>+11 min</strong></li>
-        <li><span>Buenos Aires - La Plata</span> <strong>+7 min</strong></li>
-      </ul>
-    </article>
-
-    <article class="ops-card">
-      <h3>Ultimas incidencias</h3>
-      <ul>
-        <li><span>Neumatico pinchado</span> <strong>Camion 17</strong></li>
-        <li><span>Demora por trafico</span> <strong>Ruta RN9</strong></li>
-        <li><span>Reprogramacion de entrega</span> <strong>Cliente Alpha</strong></li>
-      </ul>
-    </article>
+  <section layout-side>
+    <app-grid />
+    <app-grid />
   </section>
-</main>
+</app-page-layout>

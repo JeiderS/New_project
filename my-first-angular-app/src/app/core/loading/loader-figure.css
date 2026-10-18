@@ -1,0 +1,84 @@
+/* Shared loader figure — one shape for the whole system, per app-loader's
+   design: translucent pulsing halo + solid core + two spinning white arcs,
+   in the app's navy blue. Imported by both loading.component.css (Tipo 2,
+   overlay) and module-loading.component.css (Tipo 1, module nav) so neither
+   duplicates the keyframes. */
+
+.loader-figure {
+  /* Angular's emulated view encapsulation scopes every selector in this
+     imported stylesheet to the consuming component, including `:root` —
+     which then never matches the real <html> element, silently leaving the
+     custom property undefined (and the SVG fill falling back to black).
+     Defining it here instead, on a selector that's actually scoped
+     correctly, is what makes it apply. Uses the app's real accent blue
+     (--accent-route) so the loader matches the rest of the UI exactly. */
+  --loader-figure-color: var(--accent-route, #1d386e);
+  display: block;
+  overflow: visible;
+  width: var(--loader-figure-size, 120px);
+  height: var(--loader-figure-size, 120px);
+}
+
+.loader-figure__halo {
+  fill: var(--loader-figure-color);
+  transform-origin: 120px 120px;
+  animation: loader-figure-halo 2.1s ease-in-out infinite;
+}
+
+.loader-figure__core {
+  fill: var(--loader-figure-color);
+}
+
+.loader-figure__spin {
+  transform-origin: 120px 120px;
+  animation: loader-figure-spin 1.3s linear infinite;
+}
+
+.loader-figure__arc {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 8;
+  stroke-linecap: round;
+  /* two opposite arcs: half the circumference (pi * 25 ~= 78.54) repeated */
+  stroke-dasharray: 22 56.54;
+  animation: loader-figure-arc 2.1s ease-in-out infinite;
+}
+
+@keyframes loader-figure-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-figure-halo {
+  0%,
+  100% {
+    transform: scale(0.84);
+    opacity: 0.32;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.18;
+  }
+}
+
+@keyframes loader-figure-arc {
+  0%,
+  100% {
+    stroke-dasharray: 22 56.54;
+  }
+  50% {
+    stroke-dasharray: 44 34.54;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-figure__spin {
+    animation-duration: 3s;
+  }
+
+  .loader-figure__halo,
+  .loader-figure__arc {
+    animation: none;
+  }
+}

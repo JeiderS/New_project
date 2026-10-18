@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "e2e": "playwright test"
   },
   "prettier": {
     "printWidth": 100,
@@ -29,7 +30,6 @@
     "@angular/forms": "^21.1.0",
     "@angular/platform-browser": "^21.1.0",
     "@angular/router": "^21.1.0",
-    "@supabase/supabase-js": "^2.93.3",
     "ag-grid-angular": "^35.2.0",
     "ag-grid-community": "^35.2.0",
     "font-awesome": "^4.7.0",
@@ -39,6 +39,7 @@
   "devDependencies": {
     "@angular/build": "^21.1.2",
     "@angular/compiler-cli": "^21.1.0",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4.1.12",
     "jsdom": "^27.1.0",
     "playwright": "^1.62.1",

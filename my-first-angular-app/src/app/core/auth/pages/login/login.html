@@ -32,8 +32,8 @@
           autocomplete="current-password"
         />
 
-        <button type="submit" [disabled]="signInForm.invalid || loading">
-          {{ loading ? 'Ingresando...' : 'Entrar al inventario' }}
+        <button type="submit" [disabled]="signInForm.invalid">
+          Entrar al inventario
         </button>
       </form>
 

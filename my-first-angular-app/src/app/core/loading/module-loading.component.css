@@ -1,0 +1,41 @@
+@import './loader-figure.css';
+
+/* Tipo 1 — module navigation: tap EVERYTHING to a blank white screen,
+   header and sidebar included, no text. Higher z-index than the overlay
+   (Tipo 2) and the modal/alert layers — a full module swap should always
+   win the stack, though in practice the two rarely overlap. */
+.module-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  animation: module-loading-fade-in 140ms ease-out;
+}
+
+.module-loading__svg {
+  --loader-figure-size: 120px;
+}
+
+.module-loading__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes module-loading-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

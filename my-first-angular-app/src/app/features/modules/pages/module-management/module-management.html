@@ -1,5 +1,5 @@
-<div class="data-pane workspace">
-  <section class="grid-pane" aria-label="Modulos registrados">
+<app-page-layout class="data-pane" layout="split" [leftRatio]="50" [rightRatio]="50">
+  <section layout-main class="grid-pane" aria-label="Modulos registrados">
     <div class="pane-header">
       <div class="toolbar">
         <div class="search-field">
@@ -34,12 +34,13 @@
     </div>
 
     @if (hasRows()) {
-      <ag-grid-angular
-        class="ag-theme-quartz modules-grid"
+      <app-grid
+        class="app-grid"
         [rowData]="visibleModules()"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         [gridOptions]="gridOptions"
+        [rowSelection]="true"
         (cellClicked)="onCellClicked($event)"
       />
     } @else {
@@ -56,11 +57,12 @@
     }
   </section>
 
+  <section layout-side class="module-form-pane">
   <app-modal
     [(open)]="modalOpen"
     [title]="modalTitle()"
     [eyebrow]="modalEyebrow()"
-    position="float"
+    position="inline"
   >
     <form [formGroup]="moduleForm" class="module-form">
       @if (mode() === 'edit') {
@@ -112,49 +114,109 @@
 
     @if (showActionsSection()) {
       <div class="module-actions-section">
-        <h3 class="module-actions-title">Acciones</h3>
+        <div class="module-actions-head">
+          <h3 class="module-actions-title">
+            Acciones
+            <span class="module-actions-count">{{ actionCount() }}</span>
+          </h3>
 
-        @if (loadingActions()) {
-          <p class="module-actions-empty">Cargando acciones...</p>
-        } @else if (moduleActions().length === 0) {
-          <p class="module-actions-empty">Este modulo aun no tiene acciones.</p>
-        } @else {
-          <ul class="module-actions-list">
-            @for (action of moduleActions(); track action.id) {
-              <li class="module-action-chip">{{ action.name }}</li>
+          @if (draftRows().length > 0) {
+            @if (selectedActionCount() > 0) {
+              <button
+                type="button"
+                class="btn module-actions-btn module-actions-btn--danger"
+                (click)="removeSelectedActions()"
+              >
+                {{
+                  selectedActionCount() === 1
+                    ? 'Quitar 1 seleccionada'
+                    : 'Quitar ' + selectedActionCount() + ' seleccionadas'
+                }}
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="btn module-actions-btn module-actions-btn--outline"
+                [disabled]="allDefaultsLoaded()"
+                (click)="loadDefaults()"
+              >
+                Cargar predeterminadas
+              </button>
             }
-          </ul>
+          }
+        </div>
+
+        @if (draftRows().length === 0) {
+          <div class="module-actions-empty-grid">
+            <span class="module-actions-empty-grid__text">Este modulo aun no tiene acciones.</span>
+            <button
+              type="button"
+              class="btn module-actions-btn module-actions-btn--outline"
+              (click)="loadDefaults()"
+            >
+              Cargar predeterminadas
+            </button>
+            <span class="module-actions-empty-grid__hint">Ver &middot; Crear &middot; Editar &middot; Eliminar</span>
+          </div>
+        } @else {
+          <div class="module-actions-grid-wrap">
+            <app-grid
+              [rowData]="draftRows()"
+              [columnDefs]="actionColumnDefs"
+              [defaultColDef]="actionDefaultColDef"
+              [gridOptions]="actionGridOptions"
+              [rowSelection]="true"
+              (cellClicked)="onActionCellClicked($event)"
+            />
+          </div>
         }
 
         <div class="module-actions-add">
           <input
             type="text"
             placeholder="Nueva accion (ej. Exportar reporte)"
+            aria-label="Nueva accion"
+            [class.module-actions-input-dupe]="duplicateWarning()"
             [value]="newActionName()"
-            (input)="newActionName.set($any($event.target).value)"
+            (input)="onNewActionNameInput($any($event.target).value)"
+            (keydown.enter)="addAction()"
           />
           <button
             type="button"
-            class="btn btn-ghost"
+            class="btn module-actions-btn module-actions-btn--primary"
             [disabled]="!canAddAction()"
             (click)="addAction()"
           >
-            {{ addingAction() ? 'Agregando...' : 'Agregar' }}
+            + Agregar
           </button>
         </div>
+
+        @if (duplicateWarning()) {
+          <span class="module-actions-dupe-warning">Esa accion ya existe en este modulo.</span>
+        }
       </div>
     }
 
-    <div modal-footer>
-      <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+    <div modal-footer class="module-footer-row">
+      @if (mode() === 'edit') {
+        <span
+          class="module-actions-status"
+          [class.module-actions-status--pending]="actionsFooterStatusState() === 'pending'"
+          [class.module-actions-status--saved]="actionsFooterStatusState() === 'saved'"
+        >
+          {{ actionsFooterStatusText() }}
+        </span>
+      }
+      <button type="button" class="btn btn-ghost" (click)="onCancelEdit()">Cancelar</button>
       <button
         type="button"
         class="btn btn-primary"
         [disabled]="moduleForm.invalid || saving()"
         (click)="save()"
       >
-        {{ saving() ? 'Guardando...' : 'Guardar' }}
+        {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
       </button>
     </div>
   </app-modal>
-</div>
+  </section>
+</app-page-layout>

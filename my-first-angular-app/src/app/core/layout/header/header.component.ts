@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/auth/services/auth.service';
-import { AlertHelper } from '@shared/utils/alert.helper';
+import { AlertService } from '@core/alerts/alert.service';
 
 @Component({
   selector: 'app-header',
@@ -30,7 +30,7 @@ export class HeaderComponent {
 
   constructor(
     private readonly router: Router,
-    private readonly alert: AlertHelper,
+    private readonly alertService: AlertService,
   ) {}
 
   toggleMenu() {
@@ -39,7 +39,7 @@ export class HeaderComponent {
 
   signOut(): void {
     this.authService.signOut();
-    this.alert.showSuccess('Sesion cerrada correctamente');
+    this.alertService.success('Sesion cerrada correctamente');
     this.router.navigate(['/login']);
   }
 
