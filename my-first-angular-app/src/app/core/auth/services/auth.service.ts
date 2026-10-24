@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { environment } from '../../../../environments/environments';
 
 export interface AuthData {
@@ -55,6 +55,28 @@ export class AuthService {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
     this.user.set(null);
+  }
+
+  /** Revoca el refresh token en el backend y limpia la sesión local. */
+  async logout(): Promise<void> {
+    try {
+      await firstValueFrom(this.http.post(`${this.apiUrl}/logout`, {}));
+    } catch {
+      // El logout del lado del cliente debe funcionar aunque el backend no
+      // responda (ej. sin conexión): la cookie puede quedar viva un poco más,
+      // pero el usuario no debe quedar atrapado en la pantalla.
+    }
+    this.signOut();
+  }
+
+  /** Pide un access token nuevo usando el refresh token (cookie httpOnly). */
+  refreshToken(): Observable<string> {
+    return this.http.post<ApiResponse<AuthData>>(`${this.apiUrl}/refresh`, {}).pipe(
+      map((res) => {
+        this.setSession(res.data);
+        return res.data.token;
+      }),
+    );
   }
 
   private setSession(data: AuthData): void {

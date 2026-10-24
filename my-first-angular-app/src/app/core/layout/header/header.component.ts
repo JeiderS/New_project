@@ -37,8 +37,8 @@ export class HeaderComponent {
     this.menuOpen = !this.menuOpen;
   }
 
-  signOut(): void {
-    this.authService.signOut();
+  async signOut(): Promise<void> {
+    await this.authService.logout();
     this.alertService.success('Sesion cerrada correctamente');
     this.router.navigate(['/login']);
   }
