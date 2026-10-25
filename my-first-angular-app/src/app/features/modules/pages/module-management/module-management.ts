@@ -10,6 +10,7 @@ import { AppModule, CreateModulePayload, UpdateModulePayload } from '@core/inter
 import { Action } from '@core/interfaces/action.interface';
 import { ModulesService } from '@core/services/modules.service';
 import { ActionService } from '@core/services/action.service';
+import { ModuleContext } from '@core/constants/module-context';
 import { LoadingService } from '@core/loading/loading.service';
 import { AlertService } from '@core/alerts/alert.service';
 import { Modal } from '@shared/components/modal/modal';
@@ -270,7 +271,7 @@ export class ModuleManagement {
     try {
       this.loading.set(true);
       this.loadingService.show('Cargando modulos...');
-      const modules = await this.modulesService.listModules();
+      const modules = await this.modulesService.listModules(ModuleContext.Modules);
       this.modules.set(modules);
     } catch (error) {
       this.alertService.error(error, 'No se pudo cargar el listado de modulos');
@@ -282,7 +283,7 @@ export class ModuleManagement {
 
   async loadActionCatalog(): Promise<void> {
     try {
-      const actions = await this.actionService.listActions();
+      const actions = await this.actionService.listActions(ModuleContext.Modules);
       this.actionCatalog.set(actions);
     } catch (error) {
       this.alertService.error(error, 'No se pudo cargar el catalogo de acciones');

@@ -51,6 +51,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/roles/roles.routes').then((m) => m.ROLES_ROUTES),
       },
+      {
+        path: 'actions',
+        loadChildren: () =>
+          import('./features/actions/actions.routes').then((m) => m.ACTIONS_ROUTES),
+      },
     ],
   },
   {

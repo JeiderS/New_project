@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environments';
 import { MenuItem } from '@shared/models/menu-item.model';
 import { AppModule, CreateModulePayload, UpdateModulePayload } from '@core/interfaces/module.interface';
+import { ModuleContextValue } from '@core/constants/module-context';
 
 interface ApiResponse<T> {
   statusCode: number;
@@ -26,8 +27,13 @@ export class ModulesService {
     return res.data;
   }
 
-  async listModules(): Promise<AppModule[]> {
-    const res = await firstValueFrom(this.http.get<ApiResponse<AppModule[]>>(this.apiUrl));
+  /** moduleContext: desde qué pantalla se pide el listado (ver X-Module-Code). */
+  async listModules(moduleContext: ModuleContextValue): Promise<AppModule[]> {
+    const res = await firstValueFrom(
+      this.http.get<ApiResponse<AppModule[]>>(this.apiUrl, {
+        headers: { 'X-Module-Code': moduleContext },
+      }),
+    );
     return res.data;
   }
 

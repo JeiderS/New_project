@@ -9,9 +9,10 @@ import {
 import { Action } from '@core/interfaces/action.interface';
 import { AppModule } from '@core/interfaces/module.interface';
 import { Role, RoleGrant } from '@core/interfaces/role.interface';
+import { RoleService } from '@core/services/role.service';
 import { ActionService } from '@core/services/action.service';
 import { ModulesService } from '@core/services/modules.service';
-import { RoleService } from '@core/services/role.service';
+import { ModuleContext } from '@core/constants/module-context';
 import { LoadingService } from '@core/loading/loading.service';
 import { AlertService } from '@core/alerts/alert.service';
 import { Modal } from '@shared/components/modal/modal';
@@ -147,7 +148,7 @@ export class RoleManagement {
   async loadActions(): Promise<void> {
     try {
       this.loadingService.show();
-      const actions = await this.actionService.listActions();
+      const actions = await this.actionService.listActions(ModuleContext.Roles);
       this.actions.set(actions);
     } catch (error) {
       this.alertService.error(error, 'No se pudo cargar el catalogo de permisos');
@@ -159,7 +160,7 @@ export class RoleManagement {
   async loadModules(): Promise<void> {
     try {
       this.loadingService.show();
-      const modules = await this.modulesService.listModules();
+      const modules = await this.modulesService.listModules(ModuleContext.Roles);
       this.modules.set(modules);
     } catch (error) {
       this.alertService.error(error, 'No se pudo cargar el listado de modulos');

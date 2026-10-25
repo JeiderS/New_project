@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Action, CreateActionPayload, UpdateActionPayload } from '@core/interfaces/action.interface';
+import { ModuleContextValue } from '@core/constants/module-context';
 import { environment } from '../../../environments/environments';
 
 interface ApiResponse<T> {
@@ -18,8 +19,13 @@ export class ActionService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/actions`;
 
-  async listActions(): Promise<Action[]> {
-    const res = await firstValueFrom(this.http.get<ApiResponse<Action[]>>(this.apiUrl));
+  /** moduleContext: desde qué pantalla se pide el catálogo (ver X-Module-Code). */
+  async listActions(moduleContext: ModuleContextValue): Promise<Action[]> {
+    const res = await firstValueFrom(
+      this.http.get<ApiResponse<Action[]>>(this.apiUrl, {
+        headers: { 'X-Module-Code': moduleContext },
+      }),
+    );
     return res.data;
   }
 
