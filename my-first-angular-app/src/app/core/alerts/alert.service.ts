@@ -1,5 +1,11 @@
 import { Injectable, signal } from '@angular/core';
-import { ActiveAlert, AlertOptions, AlertResult, AlertType, ResolvedAlertOptions } from './alert.types';
+import {
+  ActiveAlert,
+  AlertOptions,
+  AlertResult,
+  AlertType,
+  ResolvedAlertOptions,
+} from './alert.types';
 
 const AUTO_CLOSE_DEFAULT = 2500;
 
@@ -64,7 +70,11 @@ export class AlertService {
   // existing call site (alertService.success('...'), .error(err, 'fallback'))
   // keeps working unchanged against this generic engine.
 
-  success(message: string, title = 'Operacion exitosa', opts?: Partial<AlertOptions>): Promise<AlertResult> {
+  success(
+    message: string,
+    title = 'Operacion exitosa',
+    opts?: Partial<AlertOptions>,
+  ): Promise<AlertResult> {
     return this.show({ type: 'success', title, message, ...opts });
   }
 
@@ -91,13 +101,25 @@ export class AlertService {
   }
 
   /** Resolves true when the user confirms. */
-  confirm(message: string, title = 'Confirmar accion', opts?: Partial<AlertOptions>): Promise<boolean> {
-    return this.show({ type: 'confirm', title, message, ...opts }).then((result) => result === 'primary');
+  confirm(
+    message: string,
+    title = 'Confirmar accion',
+    opts?: Partial<AlertOptions>,
+  ): Promise<boolean> {
+    return this.show({ type: 'confirm', title, message, ...opts }).then(
+      (result) => result === 'primary',
+    );
   }
 
   /** Resolves true when the user chooses to stay connected. */
-  session(message: string, title = 'Tu sesion esta por vencer', opts?: Partial<AlertOptions>): Promise<boolean> {
-    return this.show({ type: 'session', title, message, ...opts }).then((result) => result === 'primary');
+  session(
+    message: string,
+    title = 'Tu sesion esta por vencer',
+    opts?: Partial<AlertOptions>,
+  ): Promise<boolean> {
+    return this.show({ type: 'session', title, message, ...opts }).then(
+      (result) => result === 'primary',
+    );
   }
 
   private advance(): void {
@@ -119,7 +141,8 @@ export class AlertService {
           ? true
           : defaults.buttons;
 
-    let autoClose = opts.autoClose !== undefined ? opts.autoClose || 0 : buttons ? 0 : AUTO_CLOSE_DEFAULT;
+    let autoClose =
+      opts.autoClose !== undefined ? opts.autoClose || 0 : buttons ? 0 : AUTO_CLOSE_DEFAULT;
     if (!buttons && autoClose <= 0) {
       autoClose = AUTO_CLOSE_DEFAULT;
     }
@@ -132,7 +155,8 @@ export class AlertService {
       primaryText: opts.primaryText ?? defaults.primaryText ?? 'Entendido',
       secondaryText: opts.secondaryText ?? defaults.secondaryText ?? null,
       danger: !!opts.danger,
-      dismissible: opts.dismissible !== undefined ? !!opts.dismissible : defaults.dismissible !== false,
+      dismissible:
+        opts.dismissible !== undefined ? !!opts.dismissible : defaults.dismissible !== false,
       autoClose,
     };
   }
