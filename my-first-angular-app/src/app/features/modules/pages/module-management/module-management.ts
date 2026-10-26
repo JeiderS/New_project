@@ -1,16 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CellClickedEvent, ColDef, GridOptions, ICellRendererParams } from 'ag-grid-community';
 import {
-  CellClickedEvent,
-  ColDef,
-  GridOptions,
-  ICellRendererParams,
-} from 'ag-grid-community';
-import { AppModule, CreateModulePayload, UpdateModulePayload } from '@core/interfaces/module.interface';
+  AppModule,
+  CreateModulePayload,
+  UpdateModulePayload,
+} from '@core/interfaces/module.interface';
 import { Action } from '@core/interfaces/action.interface';
 import { ModulesService } from '@core/services/modules.service';
 import { ActionService } from '@core/services/action.service';
-import { ModuleContext } from '@core/constants/module-context';
 import { LoadingService } from '@core/loading/loading.service';
 import { AlertService } from '@core/alerts/alert.service';
 import { Modal } from '@shared/components/modal/modal';
@@ -68,7 +66,6 @@ export class ModuleManagement {
   private readonly formBuilder = inject(FormBuilder);
 
   readonly modules = signal<AppModule[]>([]);
-  readonly loading = signal(false);
   readonly searchTerm = signal('');
   readonly showInactive = signal(false);
 
@@ -149,14 +146,14 @@ export class ModuleManagement {
   });
 
   readonly columnDefs: ColDef<AppModule>[] = [
-    { headerName: 'Nombre', field: 'name', minWidth: 200, flex: 1.3 },
-    { headerName: 'Ruta', field: 'route', minWidth: 160, flex: 1 },
-    { headerName: 'Icono', field: 'icon', minWidth: 140, flex: 0.9 },
-    { headerName: 'Orden', field: 'sortOrder', minWidth: 90, flex: 0.5 },
+    { headerName: 'Nombre', field: 'name', width: 200, flex: 1.3 },
+    { headerName: 'Ruta', field: 'route', width: 160, flex: 1 },
+    { headerName: 'Icono', field: 'icon', width: 140, flex: 0.9 },
+    { headerName: 'Orden', field: 'sortOrder', width: 90, flex: 0.5 },
     {
       headerName: 'Estado',
       field: 'isActive',
-      minWidth: 90,
+      width: 90,
       flex: 0.6,
       cellStyle: { textAlign: 'center' },
       cellRenderer: ({ value }: ICellRendererParams<AppModule, boolean>) =>
@@ -196,7 +193,6 @@ export class ModuleManagement {
       headerName: 'Accion',
       field: 'name',
       flex: 1,
-      tooltipField: 'name',
       cellRenderer: ({ data }: ICellRendererParams<DraftActionRow, string>) =>
         !data
           ? ''
@@ -207,12 +203,7 @@ export class ModuleManagement {
     {
       headerName: 'Quitar',
       colId: 'remove',
-      width: 72,
-      minWidth: 72,
-      maxWidth: 72,
-      sortable: false,
-      filter: false,
-      resizable: false,
+      width: 100,
       headerClass: 'module-actions-header-center',
       cellClass: 'module-actions-cell-center',
       cellRenderer: () =>
@@ -220,16 +211,8 @@ export class ModuleManagement {
     },
   ];
 
-  readonly actionDefaultColDef: ColDef<DraftActionRow> = {
-    sortable: false,
-    filter: false,
-    resizable: false,
-  };
-
   readonly actionGridOptions: GridOptions<DraftActionRow> = {
     getRowId: (params) => params.data.code,
-    rowHeight: 38,
-    headerHeight: 36,
     suppressCellFocus: true,
     animateRows: false,
     rowClassRules: {
@@ -260,8 +243,6 @@ export class ModuleManagement {
     });
   });
 
-  readonly hasRows = computed(() => this.visibleModules().length > 0);
-
   constructor() {
     this.loadModules();
     this.loadActionCatalog();
@@ -269,21 +250,19 @@ export class ModuleManagement {
 
   async loadModules(): Promise<void> {
     try {
-      this.loading.set(true);
       this.loadingService.show('Cargando modulos...');
-      const modules = await this.modulesService.listModules(ModuleContext.Modules);
+      const modules = await this.modulesService.listModules();
       this.modules.set(modules);
     } catch (error) {
       this.alertService.error(error, 'No se pudo cargar el listado de modulos');
     } finally {
-      this.loading.set(false);
       this.loadingService.hide();
     }
   }
 
   async loadActionCatalog(): Promise<void> {
     try {
-      const actions = await this.actionService.listActions(ModuleContext.Modules);
+      const actions = await this.actionService.listActions();
       this.actionCatalog.set(actions);
     } catch (error) {
       this.alertService.error(error, 'No se pudo cargar el catalogo de acciones');
@@ -414,7 +393,9 @@ export class ModuleManagement {
 
   async onCancelEdit(): Promise<void> {
     if (this.pendingActionChanges() > 0) {
-      const confirmed = await this.alertService.confirm('Tienes cambios sin guardar. Deseas descartarlos?');
+      const confirmed = await this.alertService.confirm(
+        'Tienes cambios sin guardar. Deseas descartarlos?',
+      );
       if (!confirmed) {
         return;
       }
@@ -464,26 +445,26 @@ export class ModuleManagement {
         return;
       }
 
+      const draft = this.draftRows();
       const payload: UpdateModulePayload = {
         name: raw.name ?? '',
         icon: raw.icon || undefined,
         route: raw.route || undefined,
         parentId: raw.parentId ?? undefined,
         sortOrder: raw.sortOrder ?? 0,
+        actionIds: draft.filter((row) => row.id != null).map((row) => row.id!),
+        newActions: draft
+          .filter((row) => row.id == null)
+          .map((row) => ({ code: row.code, name: row.name })),
       };
 
-      const resolvedRows = await this.resolveDraftActionIds();
-      const actionIds = resolvedRows.map((row) => row.id!);
+      const updatedModule = await this.modulesService.updateModule(current.id, payload);
+      const resolvedRows = await this.reconcileActionRows(updatedModule.actionIds);
 
-      const [updatedModule, syncedModule] = await Promise.all([
-        this.modulesService.updateModule(current.id, payload),
-        this.modulesService.syncModuleActions(current.id, actionIds),
-      ]);
-
-      const merged: AppModule = { ...updatedModule, actionIds: syncedModule.actionIds };
-
-      this.modules.update((list) => list.map((module) => (module.id === current.id ? merged : module)));
-      this.selectedModule.set(merged);
+      this.modules.update((list) =>
+        list.map((module) => (module.id === current.id ? updatedModule : module)),
+      );
+      this.selectedModule.set(updatedModule);
       this.savedRows.set(resolvedRows);
       this.draftRows.set(resolvedRows);
       this.selectedActionRows.set([]);
@@ -499,24 +480,18 @@ export class ModuleManagement {
     }
   }
 
-  /** Creates every id-less draft row in the backend catalog, in order,
-   *  stopping on the first failure (e.g. a 409 on a colliding code) so a
-   *  partial action set never reaches `syncModuleActions`. */
-  private async resolveDraftActionIds(): Promise<DraftActionRow[]> {
-    const resolved: DraftActionRow[] = [];
+  /** After `updateModule` creates/syncs actions server-side in one request,
+   *  resolves the final `actionIds` back into named rows. Refetches the
+   *  catalog (rather than trusting the local signal) because it may now be
+   *  missing the actions the backend just created. */
+  private async reconcileActionRows(actionIds: number[]): Promise<DraftActionRow[]> {
+    const catalog = await this.actionService.listActions();
+    this.actionCatalog.set(catalog);
 
-    for (const row of this.draftRows()) {
-      if (row.id != null) {
-        resolved.push(row);
-        continue;
-      }
-
-      const created = await this.actionService.createAction(row.code, row.name);
-      this.actionCatalog.update((list) => [...list, created]);
-      resolved.push({ id: created.id, code: created.code, name: row.name });
-    }
-
-    return resolved;
+    return actionIds
+      .map((id) => catalog.find((action) => action.id === id))
+      .filter((action): action is Action => !!action)
+      .map((action) => ({ id: action.id, code: action.code, name: action.name }));
   }
 
   /** Fired only on the active -> inactive transition of the in-form toggle; there is no

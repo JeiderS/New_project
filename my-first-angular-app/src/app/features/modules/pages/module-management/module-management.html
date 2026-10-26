@@ -33,94 +33,85 @@
       </div>
     </div>
 
-    @if (hasRows()) {
-      <app-grid
-        class="app-grid"
-        [rowData]="visibleModules()"
-        [columnDefs]="columnDefs"
-        [defaultColDef]="defaultColDef"
-        [gridOptions]="gridOptions"
-        [rowSelection]="true"
-        (cellClicked)="onCellClicked($event)"
-      />
-    } @else {
-      <div class="modules-empty" role="status" aria-live="polite">
-        <h2>Sin resultados</h2>
-        <p>
-          {{
-            loading()
-              ? 'Cargando modulos...'
-              : 'No encontramos modulos con ese criterio. Proba otro texto de busqueda.'
-          }}
-        </p>
-      </div>
-    }
+    <app-grid
+      class="app-grid"
+      [rowData]="visibleModules()"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [gridOptions]="gridOptions"
+      [rowSelection]="true"
+      (cellClicked)="onCellClicked($event)"
+    />
   </section>
 
   <section layout-side class="module-form-pane">
-  <app-modal
-    [(open)]="modalOpen"
-    [title]="modalTitle()"
-    [eyebrow]="modalEyebrow()"
-    position="inline"
-  >
-    <form [formGroup]="moduleForm" class="module-form">
-      @if (mode() === 'edit') {
-        <div class="toggle-field">
-          <span>Activo</span>
-          <span class="switch">
+    <app-modal
+      [(open)]="modalOpen"
+      [title]="modalTitle()"
+      [eyebrow]="modalEyebrow()"
+      position="inline"
+    >
+      <form [formGroup]="moduleForm" class="module-form">
+        @if (mode() === 'edit') {
+          <div class="toggle-field">
+            <span>Activo</span>
+            <span class="switch">
+              <input
+                type="checkbox"
+                [checked]="activeToggle()"
+                (change)="onActiveToggleChange($any($event.target).checked)"
+              />
+              <span class="switch-track"></span>
+            </span>
+          </div>
+        }
+
+        <div class="field-group">
+          <label for="module-name">Nombre</label>
+          <input id="module-name" type="text" formControlName="name" />
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label for="module-icon">Icono</label>
             <input
-              type="checkbox"
-              [checked]="activeToggle()"
-              (change)="onActiveToggleChange($any($event.target).checked)"
+              id="module-icon"
+              type="text"
+              formControlName="icon"
+              placeholder="fa fa-chart-bar"
             />
-            <span class="switch-track"></span>
-          </span>
+          </div>
+          <div class="field-group">
+            <label for="module-route">Ruta</label>
+            <input id="module-route" type="text" formControlName="route" placeholder="/dashboard" />
+          </div>
         </div>
-      }
 
-      <div class="field-group">
-        <label for="module-name">Nombre</label>
-        <input id="module-name" type="text" formControlName="name" />
-      </div>
-
-      <div class="field-row">
-        <div class="field-group">
-          <label for="module-icon">Icono</label>
-          <input id="module-icon" type="text" formControlName="icon" placeholder="fa fa-chart-bar" />
+        <div class="field-row">
+          <div class="field-group">
+            <label for="module-parent">Modulo padre</label>
+            <select id="module-parent" formControlName="parentId">
+              <option [ngValue]="null">Sin padre</option>
+              @for (option of parentOptions(); track option.id) {
+                <option [ngValue]="option.id">{{ option.name }}</option>
+              }
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="module-sort-order">Orden</label>
+            <input id="module-sort-order" type="number" formControlName="sortOrder" />
+          </div>
         </div>
-        <div class="field-group">
-          <label for="module-route">Ruta</label>
-          <input id="module-route" type="text" formControlName="route" placeholder="/dashboard" />
-        </div>
-      </div>
+      </form>
 
-      <div class="field-row">
-        <div class="field-group">
-          <label for="module-parent">Modulo padre</label>
-          <select id="module-parent" formControlName="parentId">
-            <option [ngValue]="null">Sin padre</option>
-            @for (option of parentOptions(); track option.id) {
-              <option [ngValue]="option.id">{{ option.name }}</option>
-            }
-          </select>
-        </div>
-        <div class="field-group">
-          <label for="module-sort-order">Orden</label>
-          <input id="module-sort-order" type="number" formControlName="sortOrder" />
-        </div>
-      </div>
-    </form>
+      @if (showActionsSection()) {
+        <div class="module-actions-section">
+          <div class="module-actions-head">
+            <h3 class="module-actions-title">
+              Acciones
+              <span class="module-actions-count">{{ actionCount() }}</span>
+            </h3>
 
-    @if (showActionsSection()) {
-      <div class="module-actions-section">
-        <div class="module-actions-head">
-          <h3 class="module-actions-title">
-            Acciones
-            <span class="module-actions-count">{{ actionCount() }}</span>
-          </h3>
-
-          @if (draftRows().length > 0) {
             @if (selectedActionCount() > 0) {
               <button
                 type="button"
@@ -143,80 +134,64 @@
                 Cargar predeterminadas
               </button>
             }
-          }
-        </div>
-
-        @if (draftRows().length === 0) {
-          <div class="module-actions-empty-grid">
-            <span class="module-actions-empty-grid__text">Este modulo aun no tiene acciones.</span>
-            <button
-              type="button"
-              class="btn module-actions-btn module-actions-btn--outline"
-              (click)="loadDefaults()"
-            >
-              Cargar predeterminadas
-            </button>
-            <span class="module-actions-empty-grid__hint">Ver &middot; Crear &middot; Editar &middot; Eliminar</span>
           </div>
-        } @else {
+
           <div class="module-actions-grid-wrap">
             <app-grid
               [rowData]="draftRows()"
               [columnDefs]="actionColumnDefs"
-              [defaultColDef]="actionDefaultColDef"
               [gridOptions]="actionGridOptions"
-              [rowSelection]="true"
+              [maxHeight]="226"
               (cellClicked)="onActionCellClicked($event)"
             />
           </div>
-        }
 
-        <div class="module-actions-add">
-          <input
-            type="text"
-            placeholder="Nueva accion (ej. Exportar reporte)"
-            aria-label="Nueva accion"
-            [class.module-actions-input-dupe]="duplicateWarning()"
-            [value]="newActionName()"
-            (input)="onNewActionNameInput($any($event.target).value)"
-            (keydown.enter)="addAction()"
-          />
-          <button
-            type="button"
-            class="btn module-actions-btn module-actions-btn--primary"
-            [disabled]="!canAddAction()"
-            (click)="addAction()"
-          >
-            + Agregar
-          </button>
+          <div class="module-actions-add">
+            <input
+              type="text"
+              placeholder="Nueva accion (ej. Exportar reporte)"
+              aria-label="Nueva accion"
+              [class.module-actions-input-dupe]="duplicateWarning()"
+              [value]="newActionName()"
+              (input)="onNewActionNameInput($any($event.target).value)"
+              (keydown.enter)="addAction()"
+            />
+            <button
+              type="button"
+              class="btn btn-primary"
+              [disabled]="!canAddAction()"
+              (click)="addAction()"
+            >
+              + Agregar
+            </button>
+          </div>
+
+          @if (duplicateWarning()) {
+            <span class="module-actions-dupe-warning">Esa accion ya existe en este modulo.</span>
+          }
         </div>
-
-        @if (duplicateWarning()) {
-          <span class="module-actions-dupe-warning">Esa accion ya existe en este modulo.</span>
-        }
-      </div>
-    }
-
-    <div modal-footer class="module-footer-row">
-      @if (mode() === 'edit') {
-        <span
-          class="module-actions-status"
-          [class.module-actions-status--pending]="actionsFooterStatusState() === 'pending'"
-          [class.module-actions-status--saved]="actionsFooterStatusState() === 'saved'"
-        >
-          {{ actionsFooterStatusText() }}
-        </span>
       }
-      <button type="button" class="btn btn-ghost" (click)="onCancelEdit()">Cancelar</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        [disabled]="moduleForm.invalid || saving()"
-        (click)="save()"
-      >
-        {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
-      </button>
-    </div>
-  </app-modal>
+
+      <div modal-footer class="module-footer-row">
+        @if (mode() === 'edit') {
+          <span
+            class="module-actions-status"
+            [class.module-actions-status--pending]="actionsFooterStatusState() === 'pending'"
+            [class.module-actions-status--saved]="actionsFooterStatusState() === 'saved'"
+          >
+            {{ actionsFooterStatusText() }}
+          </span>
+        }
+        <button type="button" class="btn btn-ghost" (click)="onCancelEdit()">Cancelar</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="moduleForm.invalid || saving()"
+          (click)="save()"
+        >
+          {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
+    </app-modal>
   </section>
 </app-page-layout>

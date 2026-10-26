@@ -1,44 +1,12 @@
-.grid-pane {
-  padding: 1.25rem 0;
-}
-
-.modules-empty {
-  border: 1px dashed var(--border-soft);
-  border-radius: var(--radius-sm);
-  background: var(--surface-elev-1);
-  flex: 1;
-  min-height: 180px;
-  display: grid;
-  place-content: center;
-  text-align: center;
-  gap: 0.35rem;
-  padding: 1rem;
-}
-
-.modules-empty h2,
-.modules-empty p {
-  margin: 0;
-}
-
-.modules-empty h2 {
-  font-size: 1.05rem;
-}
-
-.modules-empty p {
-  color: var(--ink-secondary);
-}
 
 .module-form {
   display: grid;
-  gap: 0.9rem;
+  gap: 0.5rem;
 }
 
 .module-actions-section {
   display: grid;
-  gap: 0.6rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-soft);
+  gap: 0.5rem;
 }
 
 .module-actions-head {
@@ -73,68 +41,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-.module-actions-btn {
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  white-space: nowrap;
-  height: 1.9rem;
-  padding: 0 0.7rem;
-}
-
-.module-actions-btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.module-actions-btn--outline {
-  border: 1px solid var(--accent-route);
-  background: var(--surface-elev-2);
-  color: var(--accent-route);
-}
-
-.module-actions-btn--outline:hover:not(:disabled) {
-  background: var(--surface-inset);
-}
-
-.module-actions-btn--danger {
-  border: 1px solid var(--danger);
-  background: var(--danger-tint);
-  color: var(--danger);
-}
-
-.module-actions-btn--danger:hover {
-  background: var(--danger-tint);
-  filter: brightness(0.97);
-}
-
-.module-actions-btn--primary {
-  height: 2.35rem;
-  padding: 0 0.85rem;
-  border: 0;
-  background: var(--accent-route);
-  color: #fff;
-}
-
-.module-actions-btn--primary:hover:not(:disabled) {
-  background: var(--accent-route-strong);
-  filter: brightness(1.1);
-}
-
-/* ---- Actions grid --------------------------------------------------- */
-.module-actions-grid-wrap {
-  height: 226px;
-  width: 100%;
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
 }
 
 .module-actions-cell-name {
@@ -201,29 +107,6 @@
 /* Row for a not-yet-saved action */
 :host ::ng-deep .module-actions-row-new:not(.ag-row-selected) {
   background: var(--surface-inset);
-}
-
-/* ---- Empty state (no app-grid rendered) ------------------------------ */
-.module-actions-empty-grid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  text-align: center;
-  padding: 1rem;
-  border: 1px dashed var(--border-soft);
-  border-radius: var(--radius-sm);
-  background: var(--surface-elev-1);
-}
-
-.module-actions-empty-grid__text {
-  font-size: 0.83rem;
-  color: var(--ink-secondary);
-}
-
-.module-actions-empty-grid__hint {
-  font-size: 0.75rem;
-  color: var(--ink-tertiary);
 }
 
 /* ---- "Nueva accion" field --------------------------------------------- */

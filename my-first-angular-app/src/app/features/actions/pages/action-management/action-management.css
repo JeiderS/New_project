@@ -30,7 +30,7 @@
 
 .action-form {
   display: grid;
-  gap: 0.9rem;
+  gap: 0.6rem;
 }
 
 /* Real destructive delete — not present in data-pane.css since Users/Modules

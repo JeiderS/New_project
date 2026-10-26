@@ -206,14 +206,19 @@
   background: #fff;
 }
 
-/* Inline panel — fills its container, no overlay/backdrop/fixed positioning */
+/* Inline panel — no overlay/backdrop/fixed positioning. The backdrop reserves
+   the full container height so the dialog has something definite to cap
+   itself against, but `align-items: flex-start` (not `stretch`) lets the
+   dialog shrink-wrap its own content instead of always stretching to fill
+   it — the footer sits right after the content, and only grows into a
+   scrollable body once content actually exceeds the available height. */
 .modal-backdrop-inline {
   position: static;
   inset: auto;
   z-index: auto;
   display: flex;
   justify-content: stretch;
-  align-items: stretch;
+  align-items: flex-start;
   width: 100%;
   height: 100%;
   padding: 0;
@@ -224,8 +229,8 @@
 .modal-dialog-inline {
   width: 100%;
   max-width: none;
-  height: 100%;
-  max-height: none;
+  height: auto;
+  max-height: 100%;
   border-radius: 8px;
   box-shadow: none;
 }

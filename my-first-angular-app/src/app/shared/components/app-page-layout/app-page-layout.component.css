@@ -37,9 +37,13 @@
    descendants (a grid, a panel) have something real to resolve against.
    Scoped to `split` only: `left-stacked-right` already has its own rule
    below for the same elements (a single pane can hold 2 stacked children,
-   so it must not get a hardcoded flex column here too). */
-.layout-split .layout-main > [layout-main],
-.layout-split .layout-side > [layout-side] {
+   so it must not get a hardcoded flex column here too).
+   `::ng-deep` is required here: projected content keeps the view-encapsulation
+   attribute of the component that declared it (the consumer page), not this
+   component's, so a plain scoped selector silently never matches it. `:host`
+   keeps the pierce scoped to this component's own instances. */
+:host ::ng-deep .layout-split .layout-main > [layout-main],
+:host ::ng-deep .layout-split .layout-side > [layout-side] {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -58,8 +62,8 @@
   min-width: 0;
 }
 
-.layout-left-stacked-right .layout-main > [layout-main],
-.layout-left-stacked-right .layout-side > [layout-side] {
+:host ::ng-deep .layout-left-stacked-right .layout-main > [layout-main],
+:host ::ng-deep .layout-left-stacked-right .layout-side > [layout-side] {
   min-height: 0;
   min-width: 0;
   overflow: auto;
