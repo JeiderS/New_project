@@ -4,7 +4,6 @@ import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environments';
 import { MenuItem } from '@shared/models/menu-item.model';
 import { AppModule, CreateModulePayload, UpdateModulePayload } from '@core/interfaces/module.interface';
-import { ModuleContextValue } from '@core/constants/module-context';
 
 interface ApiResponse<T> {
   statusCode: number;
@@ -27,13 +26,8 @@ export class ModulesService {
     return res.data;
   }
 
-  /** moduleContext: desde qué pantalla se pide el listado (ver X-Module-Code). */
-  async listModules(moduleContext: ModuleContextValue): Promise<AppModule[]> {
-    const res = await firstValueFrom(
-      this.http.get<ApiResponse<AppModule[]>>(this.apiUrl, {
-        headers: { 'X-Module-Code': moduleContext },
-      }),
-    );
+  async listModules(): Promise<AppModule[]> {
+    const res = await firstValueFrom(this.http.get<ApiResponse<AppModule[]>>(this.apiUrl));
     return res.data;
   }
 
@@ -54,13 +48,6 @@ export class ModulesService {
   async deactivateModule(id: number): Promise<AppModule> {
     const res = await firstValueFrom(
       this.http.patch<ApiResponse<AppModule>>(`${this.apiUrl}/${id}/deactivate`, {}),
-    );
-    return res.data;
-  }
-
-  async syncModuleActions(moduleId: number, actionIds: number[]): Promise<AppModule> {
-    const res = await firstValueFrom(
-      this.http.put<ApiResponse<AppModule>>(`${this.apiUrl}/${moduleId}/actions`, { actionIds }),
     );
     return res.data;
   }
