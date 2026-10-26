@@ -1,0 +1,106 @@
+<app-page-layout class="data-pane" layout="split" [leftRatio]="70" [rightRatio]="30">
+  <section layout-main class="grid-pane" aria-label="Categorias registradas">
+    <div class="pane-header">
+      <div class="toolbar">
+        <div class="search-field">
+          <label for="categories-search">Buscar</label>
+          <input
+            id="categories-search"
+            type="search"
+            placeholder="Buscar por nombre o descripcion"
+            [value]="searchTerm()"
+            (input)="onSearch($any($event.target).value)"
+          />
+        </div>
+
+        <button type="button" class="btn btn-primary" (click)="openCreate()">Nueva categoria</button>
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle-field">
+          <span>Mostrar inactivos</span>
+          <span class="switch">
+            <input
+              type="checkbox"
+              [checked]="showInactive()"
+              (change)="onShowInactiveChange($any($event.target).checked)"
+            />
+            <span class="switch-track"></span>
+          </span>
+        </div>
+
+        <span class="grid-total">Total: {{ visibleCategories().length }} categorias</span>
+      </div>
+    </div>
+
+    @if (hasRows()) {
+      <app-grid
+        class="app-grid"
+        [rowData]="visibleCategories()"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+        [rowSelection]="true"
+        (cellClicked)="onCellClicked($event)"
+      />
+    } @else {
+      <div class="categories-empty" role="status" aria-live="polite">
+        <h2>Sin resultados</h2>
+        <p>
+          {{
+            loading()
+              ? 'Cargando categorias...'
+              : 'No encontramos categorias con ese criterio. Proba otro texto de busqueda.'
+          }}
+        </p>
+      </div>
+    }
+  </section>
+
+  <section layout-side class="category-form-pane">
+    <app-modal
+      [(open)]="modalOpen"
+      [title]="modalTitle()"
+      [eyebrow]="modalEyebrow()"
+      position="inline"
+    >
+      <form [formGroup]="categoryForm" class="category-form">
+        @if (mode() === 'edit') {
+          <div class="toggle-field">
+            <span>Activo</span>
+            <span class="switch">
+              <input
+                type="checkbox"
+                [checked]="activeToggle()"
+                (change)="onActiveToggleChange($any($event.target).checked)"
+              />
+              <span class="switch-track"></span>
+            </span>
+          </div>
+        }
+
+        <div class="field-group">
+          <label for="category-name">Nombre</label>
+          <input id="category-name" type="text" formControlName="name" />
+        </div>
+
+        <div class="field-group">
+          <label for="category-description">Descripcion</label>
+          <input id="category-description" type="text" formControlName="description" />
+        </div>
+      </form>
+
+      <div modal-footer>
+        <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="categoryForm.invalid"
+          (click)="save()"
+        >
+          Guardar cambios
+        </button>
+      </div>
+    </app-modal>
+  </section>
+</app-page-layout>
