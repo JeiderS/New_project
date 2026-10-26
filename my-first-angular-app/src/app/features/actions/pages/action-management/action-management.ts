@@ -3,7 +3,6 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CellClickedEvent, ColDef, GridOptions } from 'ag-grid-community';
 import { Action, CreateActionPayload, UpdateActionPayload } from '@core/interfaces/action.interface';
 import { ActionService } from '@core/services/action.service';
-import { ModuleContext } from '@core/constants/module-context';
 import { LoadingService } from '@core/loading/loading.service';
 import { AlertService } from '@core/alerts/alert.service';
 import { Modal } from '@shared/components/modal/modal';
@@ -82,7 +81,7 @@ export class ActionManagement {
     try {
       this.loading.set(true);
       this.loadingService.show('Cargando acciones...');
-      const actions = await this.actionService.listActions(ModuleContext.Actions);
+      const actions = await this.actionService.listActions();
       this.actions.set(actions);
     } catch (error) {
       this.alertService.error(error, 'No se pudo cargar el listado de acciones');
