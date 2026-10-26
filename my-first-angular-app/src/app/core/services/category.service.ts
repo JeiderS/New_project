@@ -41,9 +41,9 @@ export class CategoryService {
     return res.data;
   }
 
-  async deactivateCategory(id: number): Promise<Category> {
+  async setCategoryStatus(id: number, isActive: boolean): Promise<Category> {
     const res = await firstValueFrom(
-      this.http.patch<ApiResponse<Category>>(`${this.apiUrl}/${id}/deactivate`, {}),
+      this.http.patch<ApiResponse<Category>>(`${this.apiUrl}/${id}/status`, { isActive }),
     );
     return res.data;
   }

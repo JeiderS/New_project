@@ -217,35 +217,30 @@ export class CategoryManagement {
     }
   }
 
-  /** Fired only on the active -> inactive transition of the in-form toggle; there is no
-   *  reactivate endpoint, so flipping it back on before saving is a no-op. */
+  /** Applies immediately (PATCH /status), both directions — unlike Modules/Users,
+   *  Categories has a real reactivate endpoint, so this is not a save()-time field. */
   async onActiveToggleChange(checked: boolean): Promise<void> {
-    const wasActive = this.activeToggle();
-    this.activeToggle.set(checked);
-
-    if (wasActive && !checked) {
-      await this.deactivate();
-      this.activeToggle.set(this.selectedCategory()?.isActive ?? checked);
-    }
-  }
-
-  async deactivate(): Promise<void> {
     const current = this.selectedCategory();
 
     if (!current) {
+      this.activeToggle.set(checked);
       return;
     }
 
     try {
-      this.loadingService.show('Desactivando categoria...');
-      const deactivated = await this.categoryService.deactivateCategory(current.id);
+      this.loadingService.show(checked ? 'Activando categoria...' : 'Desactivando categoria...');
+      const updated = await this.categoryService.setCategoryStatus(current.id, checked);
       this.categories.update((list) =>
-        list.map((category) => (category.id === current.id ? deactivated : category)),
+        list.map((category) => (category.id === current.id ? updated : category)),
       );
-      this.selectedCategory.set(deactivated);
-      this.alertService.success('Categoria desactivada correctamente');
+      this.selectedCategory.set(updated);
+      this.activeToggle.set(updated.isActive);
+      this.alertService.success(
+        checked ? 'Categoria activada correctamente' : 'Categoria desactivada correctamente',
+      );
     } catch (error) {
-      this.alertService.error(error, 'No se pudo desactivar la categoria');
+      this.alertService.error(error, 'No se pudo actualizar el estado de la categoria');
+      this.activeToggle.set(current.isActive);
     } finally {
       this.loadingService.hide();
     }
