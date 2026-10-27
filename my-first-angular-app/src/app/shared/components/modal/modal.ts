@@ -10,6 +10,12 @@ import {
   viewChild,
 } from '@angular/core';
 
+/** One entry of the optional tab strip — see `tabs` input below. */
+export interface ModalTab {
+  id: string;
+  label: string;
+}
+
 /**
  * Generic content-projection modal shell.
  *
@@ -81,6 +87,18 @@ export class Modal {
    */
   position = input<'center' | 'side' | 'float' | 'inline'>('center');
 
+  /**
+   * Optional tab strip rendered between the header and the body. Omitted (the default, empty
+   * array): no tab strip renders and the dialog is byte-identical to the non-tabbed layout —
+   * purely additive. When provided, the consumer is responsible for showing/hiding its own
+   * projected content per tab (e.g. `[hidden]="activeTab() !== 'info'"`), reading the active id
+   * off the two-way `[(activeTab)]` binding below — the same idiom as `[(open)]`.
+   */
+  tabs = input<ModalTab[]>([]);
+
+  /** Two-way bindable active tab id: `[(activeTab)]`. Defaults to the first `tabs()` entry. */
+  activeTab = model<string>('');
+
   /** Emitted whenever the modal closes, regardless of trigger. */
   closed = output<void>();
 
@@ -97,6 +115,16 @@ export class Modal {
         queueMicrotask(() => this.focusFirstElement());
       } else if (this.previouslyFocused) {
         this.restoreFocus();
+      }
+    });
+
+    // No-op whenever `tabs()` is the default empty array, so non-tabbed consumers never
+    // observe `activeTab` changing.
+    effect(() => {
+      const tabList = this.tabs();
+
+      if (tabList.length > 0 && !tabList.some((tab) => tab.id === this.activeTab())) {
+        this.activeTab.set(tabList[0].id);
       }
     });
 

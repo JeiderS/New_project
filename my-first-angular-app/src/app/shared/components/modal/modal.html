@@ -44,6 +44,23 @@
       </div>
     }
 
+    @if (tabs().length > 0) {
+      <div class="modal-tabs" role="tablist">
+        @for (tab of tabs(); track tab.id) {
+          <button
+            type="button"
+            role="tab"
+            class="modal-tab"
+            [class.modal-tab-active]="activeTab() === tab.id"
+            [attr.aria-selected]="activeTab() === tab.id"
+            (click)="activeTab.set(tab.id)"
+          >
+            {{ tab.label }}
+          </button>
+        }
+      </div>
+    }
+
     <div class="modal-body">
       <ng-content />
     </div>

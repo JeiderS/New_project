@@ -5,7 +5,9 @@
 .loading-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 900;
+  /* Above app-modal's fixed overlay (z-index: 1000) so a save/load spinner
+     always sits in front of an open center/side/float modal, never behind it. */
+  z-index: 1500;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -103,6 +103,35 @@
   outline-offset: 2px;
 }
 
+/* Tab strip — only rendered when `tabs()` is non-empty */
+.modal-tabs {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.25rem;
+  padding: 0.625rem 1.25rem 0;
+  border-bottom: 1px solid #e8edf4;
+}
+
+.modal-tab {
+  padding: 0.5rem 0.875rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #64748b;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-tab:hover,
+.modal-tab-active {
+  color: #1d386e;
+}
+
+.modal-tab-active {
+  border-bottom-color: #1d386e;
+}
+
 /* Body */
 .modal-body {
   flex: 1 1 auto;

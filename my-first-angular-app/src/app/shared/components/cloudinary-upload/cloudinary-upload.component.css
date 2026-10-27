@@ -1,0 +1,54 @@
+.cloudinary-upload {
+  display: grid;
+  gap: 0.6rem;
+  justify-items: start;
+}
+
+.cloudinary-preview {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border: 1px solid var(--border-soft, #e2e8f0);
+  border-radius: 8px;
+  background: var(--surface-elev-1, #f8fafc);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.cloudinary-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cloudinary-placeholder {
+  color: var(--ink-tertiary, #94a3b8);
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.cloudinary-input-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--border-soft, #e2e8f0);
+  border-radius: 6px;
+  background: #fff;
+  color: #1d386e;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cloudinary-input-label input[type='file'] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+

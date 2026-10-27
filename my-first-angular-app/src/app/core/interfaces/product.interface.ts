@@ -1,14 +1,11 @@
-export type ProductStatus = 'activo' | 'bajo-stock' | 'sin-stock' | 'inactivo';
-
 export interface Product {
-  id: string;
+  id: number;
+  imageUrl?: string;
   name: string;
-  sku: string;
-  category: string;
+  description?: string;
   price: number;
-  stock: number;
-  status: ProductStatus;
-  brand?: string;
-  unit?: string;
-  notes?: string;
+  categoryId: number;
+  isActive: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
