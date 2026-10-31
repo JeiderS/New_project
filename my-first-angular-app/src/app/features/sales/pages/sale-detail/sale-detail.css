@@ -1,0 +1,35 @@
+.grid-pane {
+  padding: 1.25rem 0;
+}
+
+.sale-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.sale-detail-empty {
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-1);
+  flex: 1;
+  min-height: 180px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 0.35rem;
+  padding: 1rem;
+}
+
+.sale-detail-empty h2,
+.sale-detail-empty p {
+  margin: 0;
+}
+
+.sale-detail-empty h2 {
+  font-size: 1.05rem;
+}
+
+.sale-detail-empty p {
+  color: var(--ink-secondary);
+}

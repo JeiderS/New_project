@@ -1,0 +1,41 @@
+<app-page-layout class="data-pane" layout="single">
+  <section class="grid-pane" aria-label="Detalle de la venta">
+    <div class="pane-header">
+      <div class="toolbar">
+        <h2>Venta {{ sale()?.number ?? '' }}</h2>
+      </div>
+
+      <div class="sale-summary">
+        <div class="field-group">
+          <label>Fecha</label>
+          <input type="text" [value]="formattedDate()" readonly />
+        </div>
+
+        <div class="field-group">
+          <label>Origen</label>
+          <input type="text" [value]="originLabel()" readonly />
+        </div>
+
+        <div class="field-group">
+          <label>Total</label>
+          <input type="text" [value]="formattedTotal()" readonly />
+        </div>
+      </div>
+    </div>
+
+    @if (hasRows()) {
+      <app-grid
+        class="app-grid"
+        [rowData]="sale()?.lines ?? []"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+      />
+    } @else {
+      <div class="sale-detail-empty" role="status" aria-live="polite">
+        <h2>Sin resultados</h2>
+        <p>{{ loading() ? 'Cargando venta...' : 'No encontramos lineas para esta venta.' }}</p>
+      </div>
+    }
+  </section>
+</app-page-layout>

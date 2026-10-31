@@ -1,0 +1,94 @@
+<app-page-layout class="data-pane" layout="single">
+  <section class="grid-pane" aria-label="Ventas registradas">
+    <div class="pane-header">
+      <div class="toolbar">
+        <h2>Ventas</h2>
+        <button type="button" class="btn btn-primary" (click)="openCreate()">Registrar venta</button>
+      </div>
+
+      <div class="toggle-row">
+        <span class="grid-total">Total: {{ sales().length }} ventas</span>
+      </div>
+    </div>
+
+    @if (hasRows()) {
+      <app-grid
+        class="app-grid"
+        [rowData]="sales()"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+        (cellClicked)="onCellClicked($event)"
+      />
+    } @else {
+      <div class="sales-empty" role="status" aria-live="polite">
+        <h2>Sin resultados</h2>
+        <p>{{ loading() ? 'Cargando ventas...' : 'Todavia no hay ventas registradas.' }}</p>
+      </div>
+    }
+  </section>
+
+  <app-modal [(open)]="modalOpen" title="Registrar venta" position="center" size="lg">
+    <div class="sale-form">
+      <div class="sale-lines">
+        @for (line of lineViews(); track $index) {
+          <div class="sale-line">
+            <div class="field-group">
+              <label [attr.for]="'sale-line-product-' + $index">Producto</label>
+              <select
+                [id]="'sale-line-product-' + $index"
+                [value]="line.productId ?? ''"
+                (change)="updateLineProduct($index, $any($event.target).value)"
+              >
+                <option value="">Seleccionar producto</option>
+                @for (product of products(); track product.id) {
+                  <option [value]="product.id">{{ product.name }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label [attr.for]="'sale-line-quantity-' + $index">Cantidad</label>
+              <input
+                [id]="'sale-line-quantity-' + $index"
+                type="number"
+                min="1"
+                step="1"
+                [value]="line.quantity ?? ''"
+                (input)="updateLineQuantity($index, $any($event.target).value)"
+              />
+            </div>
+
+            <div class="field-group">
+              <label>Precio</label>
+              <input type="text" [value]="line.price" readonly />
+            </div>
+
+            <div class="field-group">
+              <label>Subtotal</label>
+              <input type="text" [value]="line.subtotal" readonly />
+            </div>
+          </div>
+        }
+      </div>
+
+      <button type="button" class="btn btn-ghost" (click)="addLine()">Agregar linea</button>
+
+      <div class="sale-total">
+        <span>Total de la venta</span>
+        <strong>{{ total() }}</strong>
+      </div>
+
+      @if (saveError()) {
+        <p class="modal-error" role="alert">{{ saveError() }}</p>
+      }
+    </div>
+
+    <div modal-footer>
+      <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+      <button type="button" class="btn btn-primary" [disabled]="!canSave() || saving()" (click)="save()">
+        Confirmar venta
+      </button>
+    </div>
+  </app-modal>
+</app-page-layout>
