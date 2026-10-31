@@ -1,0 +1,43 @@
+<app-page-layout class="data-pane" layout="single">
+  <section class="grid-pane" aria-label="Historial de movimientos">
+    <div class="pane-header">
+      <div class="toolbar">
+        <div class="search-field">
+          <label for="movements-search">Buscar</label>
+          <input
+            id="movements-search"
+            type="search"
+            placeholder="Buscar por producto"
+            [value]="searchTerm()"
+            (input)="onSearch($any($event.target).value)"
+          />
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <span class="grid-total">Total: {{ visibleMovements().length }} movimientos</span>
+      </div>
+    </div>
+
+    @if (hasRows()) {
+      <app-grid
+        class="app-grid"
+        [rowData]="visibleMovements()"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+      />
+    } @else {
+      <div class="movements-empty" role="status" aria-live="polite">
+        <h2>Sin resultados</h2>
+        <p>
+          {{
+            loading()
+              ? 'Cargando movimientos...'
+              : 'No encontramos movimientos con ese criterio. Proba otro texto de busqueda.'
+          }}
+        </p>
+      </div>
+    }
+  </section>
+</app-page-layout>

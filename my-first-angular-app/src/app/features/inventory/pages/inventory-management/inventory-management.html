@@ -1,0 +1,86 @@
+<app-page-layout class="data-pane" layout="single">
+  <section class="grid-pane" aria-label="Existencias registradas">
+    <div class="pane-header">
+      <div class="toolbar">
+        <div class="search-field">
+          <label for="inventory-search">Buscar</label>
+          <input
+            id="inventory-search"
+            type="search"
+            placeholder="Buscar por producto o categoria"
+            [value]="searchTerm()"
+            (input)="onSearch($any($event.target).value)"
+          />
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <span class="grid-total">Total: {{ visibleInventories().length }} existencias</span>
+      </div>
+    </div>
+
+    @if (hasRows()) {
+      <app-grid
+        class="app-grid"
+        [rowData]="visibleInventories()"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+        (cellClicked)="onCellClicked($event)"
+      />
+    } @else {
+      <div class="inventory-empty" role="status" aria-live="polite">
+        <h2>Sin resultados</h2>
+        <p>
+          {{
+            loading()
+              ? 'Cargando existencias...'
+              : 'No encontramos existencias con ese criterio. Proba otro texto de busqueda.'
+          }}
+        </p>
+      </div>
+    }
+  </section>
+
+  <app-modal [(open)]="modalOpen" [title]="modalTitle()" position="center" size="sm">
+    <form [formGroup]="movementForm" class="movement-form">
+      <div class="field-group">
+        <label for="movement-product">Producto</label>
+        <input id="movement-product" type="text" [value]="selectedInventory()?.productName ?? ''" readonly />
+      </div>
+
+      @if (mode() === 'out') {
+        <div class="field-group">
+          <label for="movement-stock">Existencias disponibles</label>
+          <input id="movement-stock" type="text" [value]="selectedInventory()?.quantity ?? 0" readonly />
+        </div>
+      }
+
+      <div class="field-group">
+        <label for="movement-quantity">{{ mode() === 'in' ? 'Cantidad' : 'Cantidad a retirar' }}</label>
+        <input id="movement-quantity" type="number" min="0.001" step="0.001" formControlName="quantity" />
+      </div>
+
+      <div class="field-group">
+        <label for="movement-description">Descripcion</label>
+        <input id="movement-description" type="text" formControlName="description" />
+      </div>
+
+      @if (saveError()) {
+        <p class="modal-error" role="alert">{{ saveError() }}</p>
+      }
+    </form>
+
+    <div modal-footer>
+      <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="movementForm.invalid || saving()"
+        (click)="save()"
+      >
+        {{ saveButtonLabel() }}
+      </button>
+    </div>
+  </app-modal>
+</app-page-layout>

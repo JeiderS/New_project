@@ -310,3 +310,55 @@
   grid-template-columns: 1fr 1fr;
   gap: 0.6rem;
 }
+
+/* Row action buttons inside an ag-Grid cellRenderer — must live here, not in
+   a component's own .css: that HTML is set via innerHTML by ag-Grid, never
+   passes through Angular's template compiler, so it never gets the
+   view-encapsulation attribute and scoped component styles never match it
+   (same reason .status-glyph above lives here instead of in product-management.css). */
+.row-actions {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  height: 100%;
+}
+
+.row-action-btn {
+  border: 1px solid var(--border-soft);
+  background: var(--surface-elev-1);
+  color: var(--ink-primary);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+}
+
+.row-action-btn:hover {
+  background: var(--surface-elev-2);
+}
+
+.row-action-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.row-action-btn:disabled:hover {
+  background: var(--surface-elev-1);
+}
+
+/* Quantity cell — same cellRenderer-in-ag-Grid reason as above. */
+.qty-badge {
+  font-weight: 600;
+  color: var(--ink-primary);
+}
+
+.qty-badge--zero {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--danger-tint);
+  color: var(--danger);
+  font-size: 0.78rem;
+  font-weight: 600;
+}

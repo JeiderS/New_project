@@ -1,0 +1,43 @@
+.grid-pane {
+  padding: 1.25rem 0;
+}
+
+.inventory-empty {
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-1);
+  flex: 1;
+  min-height: 180px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 0.35rem;
+  padding: 1rem;
+}
+
+.inventory-empty h2,
+.inventory-empty p {
+  margin: 0;
+}
+
+.inventory-empty h2 {
+  font-size: 1.05rem;
+}
+
+.inventory-empty p {
+  color: var(--ink-secondary);
+}
+
+.movement-form {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.modal-error {
+  margin: 0;
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-sm);
+  background: var(--danger-tint);
+  color: var(--danger);
+  font-size: 0.85rem;
+}
