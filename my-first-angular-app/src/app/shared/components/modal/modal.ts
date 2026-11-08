@@ -14,6 +14,8 @@ import {
 export interface ModalTab {
   id: string;
   label: string;
+  /** Renders the tab greyed out and unselectable. Omitted: enabled. */
+  disabled?: boolean;
 }
 
 /**

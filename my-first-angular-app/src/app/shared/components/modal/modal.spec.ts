@@ -333,4 +333,34 @@ describe('Modal', () => {
       expect(dialog?.classList.contains('modal-md')).toBe(false);
     });
   });
+
+  describe('tabs input', () => {
+    const getTabs = () =>
+      Array.from(fixture.nativeElement.querySelectorAll('.modal-tab')) as HTMLButtonElement[];
+
+    beforeEach(() => {
+      fixture.componentRef.setInput('tabs', [
+        { id: 'in', label: 'Entrada' },
+        { id: 'out', label: 'Salida', disabled: true },
+      ]);
+      fixture.detectChanges();
+    });
+
+    it('keeps tabs without disabled enabled and selectable', () => {
+      const [inTab] = getTabs();
+
+      expect(inTab.disabled).toBe(false);
+      expect(component.activeTab()).toBe('in');
+    });
+
+    it('disables a tab flagged disabled so it cannot be selected', () => {
+      const [, outTab] = getTabs();
+
+      outTab.click();
+      fixture.detectChanges();
+
+      expect(outTab.disabled).toBe(true);
+      expect(component.activeTab()).toBe('in');
+    });
+  });
 });

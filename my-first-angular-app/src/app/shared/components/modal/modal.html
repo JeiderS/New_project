@@ -53,6 +53,7 @@
             class="modal-tab"
             [class.modal-tab-active]="activeTab() === tab.id"
             [attr.aria-selected]="activeTab() === tab.id"
+            [disabled]="tab.disabled"
             (click)="activeTab.set(tab.id)"
           >
             {{ tab.label }}
