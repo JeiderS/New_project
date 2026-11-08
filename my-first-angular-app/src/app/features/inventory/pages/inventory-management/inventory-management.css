@@ -2,6 +2,15 @@
   padding: 1.25rem 0;
 }
 
+.inventory-help {
+  margin: 0;
+  color: var(--ink-secondary);
+}
+
+.search-field {
+  flex: 0 1 380px;
+}
+
 .inventory-empty {
   border: 1px dashed var(--border-soft);
   border-radius: var(--radius-sm);
@@ -28,9 +37,60 @@
   color: var(--ink-secondary);
 }
 
+.modal-subtitle {
+  margin: -0.75rem 0 1rem;
+  color: var(--ink-tertiary);
+}
+
+.modal-subtitle strong {
+  color: var(--ink-primary);
+}
+
 .movement-form {
   display: grid;
-  gap: 0.6rem;
+  gap: 1rem;
+}
+
+.qty-stepper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.qty-stepper .btn {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 8px;
+}
+
+.field-group .qty-stepper input {
+  flex: 1;
+  height: 44px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.field-group .qty-stepper input.qty-input--error {
+  border-color: #fca5a5;
+  background: #fef2f2;
+}
+
+.qty-hint {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-tertiary);
+}
+
+.qty-hint--error {
+  color: var(--danger);
+}
+
+.movements-empty {
+  margin: 2rem 0;
+  text-align: center;
+  color: var(--ink-tertiary);
 }
 
 .modal-error {

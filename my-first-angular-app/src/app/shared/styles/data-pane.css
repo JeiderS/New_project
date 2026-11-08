@@ -311,54 +311,77 @@
   gap: 0.6rem;
 }
 
-/* Row action buttons inside an ag-Grid cellRenderer — must live here, not in
-   a component's own .css: that HTML is set via innerHTML by ag-Grid, never
-   passes through Angular's template compiler, so it never gets the
-   view-encapsulation attribute and scoped component styles never match it
-   (same reason .status-glyph above lives here instead of in product-management.css). */
-.row-actions {
-  display: flex;
-  gap: 0.35rem;
-  align-items: center;
-  height: 100%;
-}
-
-.row-action-btn {
-  border: 1px solid var(--border-soft);
-  background: var(--surface-elev-1);
-  color: var(--ink-primary);
-  border-radius: var(--radius-sm);
-  font-size: 0.75rem;
-  padding: 0.2rem 0.5rem;
+/* Inventory grid cells — set via ag-Grid cellRenderer/cellClass, which never
+   pass through Angular's template compiler, so they never get the
+   view-encapsulation attribute and must live here (same reason as
+   .status-glyph above). */
+.row-clickable {
   cursor: pointer;
 }
 
-.row-action-btn:hover {
-  background: var(--surface-elev-2);
-}
-
-.row-action-btn:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.row-action-btn:disabled:hover {
-  background: var(--surface-elev-1);
-}
-
-/* Quantity cell — same cellRenderer-in-ag-Grid reason as above. */
-.qty-badge {
+.cell-strong {
   font-weight: 600;
   color: var(--ink-primary);
 }
 
-.qty-badge--zero {
+.cell-muted {
+  color: var(--ink-tertiary);
+}
+
+.cell-chevron {
+  color: var(--ink-tertiary);
+  text-align: center;
+}
+
+.cell-in {
+  font-weight: 600;
+  color: var(--success);
+}
+
+.cell-out {
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.stock-qty {
+  display: inline-block;
+  min-width: 2.5rem;
+  margin-right: 0.75rem;
+  text-align: right;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink-primary);
+}
+
+.stock-qty--low {
+  color: var(--accent-signal);
+}
+
+.stock-qty--zero {
+  color: var(--danger);
+}
+
+.pill {
   display: inline-flex;
   align-items: center;
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-sm);
-  background: var(--danger-tint);
-  color: var(--danger);
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 600;
+  line-height: 1.4;
+}
+
+.pill--success {
+  background: #f0fdf4;
+  color: var(--success);
+}
+
+.pill--warning {
+  background: #fff7ed;
+  color: var(--accent-signal);
+}
+
+.pill--danger {
+  background: #fef2f2;
+  color: var(--danger);
 }

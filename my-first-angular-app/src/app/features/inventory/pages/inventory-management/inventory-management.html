@@ -1,21 +1,22 @@
 <app-page-layout class="data-pane" layout="single">
   <section class="grid-pane" aria-label="Existencias registradas">
     <div class="pane-header">
+      <p class="inventory-help">
+        Toca un producto para registrar una entrada o una salida, o ver sus movimientos.
+      </p>
+
       <div class="toolbar">
         <div class="search-field">
-          <label for="inventory-search">Buscar</label>
           <input
             id="inventory-search"
             type="search"
-            placeholder="Buscar por producto o categoria"
+            aria-label="Buscar"
+            placeholder="Buscar por producto o categoría"
             [value]="searchTerm()"
             (input)="onSearch($any($event.target).value)"
           />
         </div>
-      </div>
-
-      <div class="toggle-row">
-        <span class="grid-total">Total: {{ visibleInventories().length }} existencias</span>
+        <span class="grid-total">{{ visibleInventories().length }} productos</span>
       </div>
     </div>
 
@@ -26,7 +27,7 @@
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         [gridOptions]="gridOptions"
-        (cellClicked)="onCellClicked($event)"
+        (cellClicked)="$event.data && openMovement($event.data)"
       />
     } @else {
       <div class="inventory-empty" role="status" aria-live="polite">
@@ -42,45 +43,71 @@
     }
   </section>
 
-  <app-modal [(open)]="modalOpen" [title]="modalTitle()" position="center" size="sm">
-    <form [formGroup]="movementForm" class="movement-form">
-      <div class="field-group">
-        <label for="movement-product">Producto</label>
-        <input id="movement-product" type="text" [value]="selectedInventory()?.productName ?? ''" readonly />
-      </div>
+  <app-modal
+    [(open)]="modalOpen"
+    [title]="selectedInventory()?.productName ?? ''"
+    position="center"
+    size="lg"
+    [tabs]="tabs()"
+    [activeTab]="activeTab()"
+    (activeTabChange)="onTabChange($event)"
+  >
+    <p class="modal-subtitle">
+      {{ selectedInventory()?.categoryName }} · hay <strong>{{ currentStock() }}</strong>
+    </p>
 
-      @if (mode() === 'out') {
+    @if (activeTab() === 'history') {
+      @if (movements().length > 0) {
+        <app-grid [rowData]="movements()" [columnDefs]="movementColumnDefs" [maxHeight]="360" />
+      } @else {
+        <p class="movements-empty">Este producto todavía no tiene movimientos.</p>
+      }
+    } @else {
+      <form [formGroup]="movementForm" class="movement-form" (ngSubmit)="save()">
         <div class="field-group">
-          <label for="movement-stock">Existencias disponibles</label>
-          <input id="movement-stock" type="text" [value]="selectedInventory()?.quantity ?? 0" readonly />
+          <label for="movement-quantity">¿Cuántas unidades {{ isOut() ? 'salen' : 'entran' }}?</label>
+          <div class="qty-stepper">
+            <button type="button" class="btn btn-ghost" aria-label="Restar" (click)="stepQuantity(-1)">−</button>
+            <input
+              id="movement-quantity"
+              type="number"
+              min="0"
+              step="0.001"
+              formControlName="quantity"
+              [class.qty-input--error]="exceedsStock()"
+            />
+            <button type="button" class="btn btn-ghost" aria-label="Sumar" (click)="stepQuantity(1)">+</button>
+          </div>
+          @if (exceedsStock()) {
+            <p class="qty-hint qty-hint--error">Solo hay {{ currentStock() }}.</p>
+          } @else if ((quantity() ?? 0) > 0) {
+            <p class="qty-hint">Quedarán {{ remaining() }}</p>
+          }
         </div>
-      }
 
-      <div class="field-group">
-        <label for="movement-quantity">{{ mode() === 'in' ? 'Cantidad' : 'Cantidad a retirar' }}</label>
-        <input id="movement-quantity" type="number" min="0.001" step="0.001" formControlName="quantity" />
+        <div class="field-group">
+          <label for="movement-description">Descripción · opcional</label>
+          <input
+            id="movement-description"
+            type="text"
+            formControlName="description"
+            [placeholder]="isOut() ? 'Ej.: dos bolsas rotas' : 'Ej.: producción del día'"
+          />
+        </div>
+
+        @if (saveError()) {
+          <p class="modal-error" role="alert">{{ saveError() }}</p>
+        }
+      </form>
+    }
+
+    @if (activeTab() !== 'history') {
+      <div modal-footer>
+        <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+        <button type="button" class="btn btn-primary" [disabled]="!canSave()" (click)="save()">
+          {{ isOut() ? 'Guardar salida' : 'Guardar entrada' }}
+        </button>
       </div>
-
-      <div class="field-group">
-        <label for="movement-description">Descripcion</label>
-        <input id="movement-description" type="text" formControlName="description" />
-      </div>
-
-      @if (saveError()) {
-        <p class="modal-error" role="alert">{{ saveError() }}</p>
-      }
-    </form>
-
-    <div modal-footer>
-      <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        [disabled]="movementForm.invalid || saving()"
-        (click)="save()"
-      >
-        {{ saveButtonLabel() }}
-      </button>
-    </div>
+    }
   </app-modal>
 </app-page-layout>

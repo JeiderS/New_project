@@ -28,9 +28,9 @@ export class InventoryService {
     return res.data;
   }
 
-  async listMovements(): Promise<InventoryMovement[]> {
+  async listMovements(inventoryId: number): Promise<InventoryMovement[]> {
     const res = await firstValueFrom(
-      this.http.get<ApiResponse<InventoryMovement[]>>(`${this.apiUrl}/movements`),
+      this.http.get<ApiResponse<InventoryMovement[]>>(`${this.apiUrl}/${inventoryId}/movements`),
     );
     return res.data;
   }

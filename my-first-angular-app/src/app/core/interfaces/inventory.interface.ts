@@ -12,6 +12,8 @@ export interface InventoryMovement {
   productName: string;
   movementType: 'IN' | 'OUT';
   quantity: number;
+  /** Stock left right after this movement. */
+  stockAfter: number;
   description: string | null;
   createdAt: string;
 }
