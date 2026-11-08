@@ -30,6 +30,20 @@
 
   <app-modal [(open)]="modalOpen" title="Registrar venta" position="center" size="lg">
     <div class="sale-form">
+      <div class="field-group">
+        <label for="sale-customer">Cliente</label>
+        <select
+          id="sale-customer"
+          [value]="selectedCustomerId() ?? ''"
+          (change)="updateSelectedCustomer($any($event.target).value)"
+        >
+          <option value="">Sin cliente</option>
+          @for (customer of customers(); track customer.id) {
+            <option [value]="customer.id">{{ customer.name }}</option>
+          }
+        </select>
+      </div>
+
       <div class="sale-lines">
         @for (line of lineViews(); track $index) {
           <div class="sale-line">

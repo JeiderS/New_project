@@ -4,8 +4,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CellClickedEvent, ColDef, GridOptions } from 'ag-grid-community';
 import { SaleListItem } from '@core/interfaces/sale.interface';
 import { Product } from '@core/interfaces/product.interface';
+import { Customer } from '@core/interfaces/customer.interface';
 import { SaleService } from '@core/services/sale.service';
 import { ProductService } from '@core/services/product.service';
+import { CustomerService } from '@core/services/customer.service';
 import { LoadingService } from '@core/loading/loading.service';
 import { AlertService } from '@core/alerts/alert.service';
 import { Modal } from '@shared/components/modal/modal';
@@ -33,16 +35,19 @@ const ORIGIN_LABEL: Record<SaleListItem['origin'], string> = {
 export class SaleManagement {
   private readonly saleService = inject(SaleService);
   private readonly productService = inject(ProductService);
+  private readonly customerService = inject(CustomerService);
   private readonly loadingService = inject(LoadingService);
   private readonly alertService = inject(AlertService);
   private readonly router = inject(Router);
 
   readonly sales = signal<SaleListItem[]>([]);
   readonly products = signal<Product[]>([]);
+  readonly customers = signal<Customer[]>([]);
   readonly loading = signal(false);
 
   readonly modalOpen = signal(false);
   readonly lines = signal<SaleLineRow[]>([]);
+  readonly selectedCustomerId = signal<number | null>(null);
   readonly saving = signal(false);
   readonly saveError = signal<string | null>(null);
 
@@ -106,6 +111,7 @@ export class SaleManagement {
   constructor() {
     this.loadSales();
     this.loadProducts();
+    this.loadCustomers();
   }
 
   async loadSales(): Promise<void> {
@@ -131,6 +137,15 @@ export class SaleManagement {
     }
   }
 
+  async loadCustomers(): Promise<void> {
+    try {
+      const customers = await this.customerService.listCustomers();
+      this.customers.set(customers);
+    } catch (error) {
+      this.alertService.error(error, 'No se pudo cargar el listado de clientes');
+    }
+  }
+
   onCellClicked(event: CellClickedEvent<SaleListItem>): void {
     if (event.data) {
       this.router.navigate(['/sales', event.data.saleId]);
@@ -139,8 +154,13 @@ export class SaleManagement {
 
   openCreate(): void {
     this.lines.set([{ productId: null, quantity: 1 }]);
+    this.selectedCustomerId.set(null);
     this.saveError.set(null);
     this.modalOpen.set(true);
+  }
+
+  updateSelectedCustomer(rawCustomerId: string): void {
+    this.selectedCustomerId.set(rawCustomerId ? Number(rawCustomerId) : null);
   }
 
   addLine(): void {
@@ -177,7 +197,7 @@ export class SaleManagement {
       this.saving.set(true);
       this.loadingService.show('Registrando venta...');
 
-      await this.saleService.registerSale(lines);
+      await this.saleService.registerSale(lines, this.selectedCustomerId());
 
       this.alertService.success('Venta registrada correctamente');
       this.modalOpen.set(false);

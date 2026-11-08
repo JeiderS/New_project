@@ -1,0 +1,116 @@
+<app-page-layout class="data-pane" layout="split" [leftRatio]="70" [rightRatio]="30">
+  <section layout-main class="grid-pane" aria-label="Clientes registrados">
+    <div class="pane-header">
+      <div class="toolbar">
+        <div class="search-field">
+          <label for="customers-search">Buscar</label>
+          <input
+            id="customers-search"
+            type="search"
+            placeholder="Buscar por nombre o telefono"
+            [value]="searchTerm()"
+            (input)="onSearch($any($event.target).value)"
+          />
+        </div>
+
+        <button type="button" class="btn btn-primary" (click)="openCreate()">Agregar cliente</button>
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle-field">
+          <span>Mostrar inactivos</span>
+          <span class="switch">
+            <input
+              type="checkbox"
+              [checked]="showInactive()"
+              (change)="onShowInactiveChange($any($event.target).checked)"
+            />
+            <span class="switch-track"></span>
+          </span>
+        </div>
+
+        <span class="grid-total">Total: {{ visibleCustomers().length }} clientes</span>
+      </div>
+    </div>
+
+    @if (hasRows()) {
+      <app-grid
+        class="app-grid"
+        [rowData]="visibleCustomers()"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [gridOptions]="gridOptions"
+        [rowSelection]="true"
+        (cellClicked)="onCellClicked($event)"
+      />
+    } @else {
+      <div class="customers-empty" role="status" aria-live="polite">
+        <h2>Sin resultados</h2>
+        <p>
+          {{
+            loading()
+              ? 'Cargando clientes...'
+              : 'No encontramos clientes con ese criterio. Proba otro texto de busqueda.'
+          }}
+        </p>
+      </div>
+    }
+  </section>
+
+  <section layout-side class="customer-form-pane">
+    <app-modal
+      [(open)]="modalOpen"
+      [title]="modalTitle()"
+      [eyebrow]="modalEyebrow()"
+      position="inline"
+    >
+      <form [formGroup]="customerForm" class="customer-form">
+        @if (mode() === 'edit') {
+          <div class="toggle-field">
+            <span>Activo</span>
+            <span class="switch">
+              <input
+                type="checkbox"
+                [checked]="activeToggle()"
+                (change)="onActiveToggleChange($any($event.target).checked)"
+              />
+              <span class="switch-track"></span>
+            </span>
+          </div>
+        }
+
+        <div class="field-group">
+          <label for="customer-name">Nombre</label>
+          <input id="customer-name" type="text" formControlName="name" />
+        </div>
+
+        <div class="field-group">
+          <label for="customer-phone">Telefono</label>
+          <input id="customer-phone" type="text" formControlName="phone" />
+        </div>
+
+        <div class="field-group">
+          <label for="customer-email">Email</label>
+          <input id="customer-email" type="text" formControlName="email" />
+        </div>
+
+        <div class="field-group">
+          <label for="customer-address">Direccion</label>
+          <input id="customer-address" type="text" formControlName="address" />
+        </div>
+      </form>
+
+      <div modal-footer>
+        <button type="button" class="btn btn-ghost" (click)="modalOpen.set(false)">Cancelar</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="customerForm.invalid"
+          (click)="save()"
+        >
+          Guardar cambios
+        </button>
+      </div>
+    </app-modal>
+  </section>
+</app-page-layout>

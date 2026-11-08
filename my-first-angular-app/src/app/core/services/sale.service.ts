@@ -13,6 +13,7 @@ interface ApiResponse<T> {
 
 interface RegisterSalePayload {
   lines: { productId: number; quantity: number }[];
+  customerId?: number | null;
 }
 
 @Injectable({
@@ -34,8 +35,11 @@ export class SaleService {
     return res.data;
   }
 
-  async registerSale(lines: { productId: number; quantity: number }[]): Promise<SaleDetail> {
-    const payload: RegisterSalePayload = { lines };
+  async registerSale(
+    lines: { productId: number; quantity: number }[],
+    customerId?: number | null,
+  ): Promise<SaleDetail> {
+    const payload: RegisterSalePayload = { lines, customerId };
     const res = await firstValueFrom(
       this.http.post<ApiResponse<SaleDetail>>(this.apiUrl, payload),
     );

@@ -1,0 +1,34 @@
+.grid-pane {
+  padding: 1.25rem 0;
+}
+
+.customers-empty {
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-elev-1);
+  flex: 1;
+  min-height: 180px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  gap: 0.35rem;
+  padding: 1rem;
+}
+
+.customers-empty h2,
+.customers-empty p {
+  margin: 0;
+}
+
+.customers-empty h2 {
+  font-size: 1.05rem;
+}
+
+.customers-empty p {
+  color: var(--ink-secondary);
+}
+
+.customer-form {
+  display: grid;
+  gap: 0.6rem;
+}

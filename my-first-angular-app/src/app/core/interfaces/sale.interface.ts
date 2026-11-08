@@ -21,4 +21,6 @@ export interface SaleDetail {
   origin: 'MANUAL' | 'WEB';
   total: number;
   lines: SaleLine[];
+  customerId: number | null;
+  customerName: string | null;
 }

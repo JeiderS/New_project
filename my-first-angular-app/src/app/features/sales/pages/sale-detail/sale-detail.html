@@ -20,6 +20,13 @@
           <label>Total</label>
           <input type="text" [value]="formattedTotal()" readonly />
         </div>
+
+        @if (sale()?.customerName) {
+          <div class="field-group">
+            <label>Cliente</label>
+            <input type="text" [value]="sale()?.customerName" readonly />
+          </div>
+        }
       </div>
     </div>
 
